@@ -1,0 +1,149 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+const RADIUS = 80;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
+function QuestionInfoSidebar() {
+  const [question, setQuestion] = useState({
+    easy: 12,
+    medium: 80,
+    hard: 20,
+    totalQuestion: 300,
+  });
+
+  const [solved, setSolved] = useState(0);
+  const [hovered, setHovered] = useState<"easy" | "medium" | "hard" | null>(
+    null
+  );
+
+  useEffect(() => {
+    setSolved(question.easy + question.medium + question.hard);
+  }, [question]);
+
+  const easyPercent = question.easy / question.totalQuestion;
+  const mediumPercent = question.medium / question.totalQuestion;
+  const hardPercent = question.hard / question.totalQuestion;
+
+  const easyLength = CIRCUMFERENCE * easyPercent;
+  const mediumLength = CIRCUMFERENCE * mediumPercent;
+  const hardLength = CIRCUMFERENCE * hardPercent;
+
+  return (
+    <div className="w-1/3 bg-secondary-bg h-95 border-gray-400 border-2   rounded-xl p-6">
+      <h2 className="text-white text-lg font-semibold mb-6">Problems Solved</h2>
+
+      {/* Ring */}
+      <div className="relative w-44 h-44 mx-auto">
+        <svg className="w-full h-full -rotate-90">
+          {/* Background */}
+          <circle
+            cx="88"
+            cy="88"
+            r={RADIUS}
+            stroke="rgba(255,255,255,0.1)"
+            strokeWidth="10"
+            fill="none"
+          />
+
+          {/* Easy */}
+          <circle
+            cx="88"
+            cy="88"
+            r={RADIUS}
+            stroke="#22c55e"
+            strokeWidth="10"
+            fill="none"
+            strokeDasharray={`${easyLength} ${CIRCUMFERENCE}`}
+            strokeDashoffset={0}
+            strokeLinecap="round"
+            className="cursor-pointer transition-opacity"
+            onMouseEnter={() => setHovered("easy")}
+            onMouseLeave={() => setHovered(null)}
+          />
+
+          {/* Medium */}
+          <circle
+            cx="88"
+            cy="88"
+            r={RADIUS}
+            stroke="#facc15"
+            strokeWidth="10"
+            fill="none"
+            strokeDasharray={`${mediumLength} ${CIRCUMFERENCE}`}
+            strokeDashoffset={-easyLength}
+            strokeLinecap="round"
+            className="cursor-pointer transition-opacity"
+            onMouseEnter={() => setHovered("medium")}
+            onMouseLeave={() => setHovered(null)}
+          />
+
+          {/* Hard */}
+          <circle
+            cx="88"
+            cy="88"
+            r={RADIUS}
+            stroke="#ef4444"
+            strokeWidth="10"
+            fill="none"
+            strokeDasharray={`${hardLength} ${CIRCUMFERENCE}`}
+            strokeDashoffset={-(easyLength + mediumLength)}
+            strokeLinecap="round"
+            className="cursor-pointer transition-opacity"
+            onMouseEnter={() => setHovered("hard")}
+            onMouseLeave={() => setHovered(null)}
+          />
+        </svg>
+
+        {/* Center Info */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+          {hovered ? (
+            <>
+              <span className="text-3xl font-bold">{question[hovered]}</span>
+              <span className="text-sm capitalize text-white/70">
+                {hovered}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="text-3xl font-bold">
+                {solved}/{question.totalQuestion}
+              </span>
+              <span className="text-sm text-white/60">Solved</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="mt-6 space-y-3">
+        <StatRow label="Easy" value={question.easy} color="bg-green-500" />
+        <StatRow label="Medium" value={question.medium} color="bg-yellow-400" />
+        <StatRow label="Hard" value={question.hard} color="bg-red-500" />
+      </div>
+    </div>
+  );
+}
+
+function StatRow({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number;
+  color: string;
+}) {
+  return (
+    <div className="flex items-center justify-between text-sm text-white">
+      <div className="flex items-center gap-2">
+        <span className={`w-2 h-2 rounded-full ${color}`} />
+        <span>{label}</span>
+      </div>
+      <span className="font-medium">{value}</span>
+    </div>
+  );
+}
+
+export default QuestionInfoSidebar;

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+<<<<<<< Updated upstream
 @theme {
     --color-divBg: #1E1E1E;
     --color-bg: #121313;
@@ -14,4 +15,25 @@ select:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #121313 inset;
   -webkit-text-fill-color: white;
   transition: background-color 5000s ease-in-out 0s;
+=======
+body{
+  background-color: #121313;
+}
+
+@theme inline {
+  --color-primary-bg: #121313;
+  --color-secondary-bg: #1E1E1E;
+  --color-primary-hero: #129274;
+  --color-secondary-hero: #64ACFF;
+  --color-primary-font: #FFFFFF;
+  --color-secondary-font: #B1AAA6;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+>>>>>>> Stashed changes
 }
