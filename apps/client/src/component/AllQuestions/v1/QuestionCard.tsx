@@ -37,7 +37,7 @@ function QuestionCard({
       {/* Title */}
       <div className="flex-1 max-w-[60%]">
         <Link
-          href={`/problems/${id}`}
+          href={`/admin-dashboard/problems/${id}`}
           className="text-md text-white group-hover:text-blue-400 truncate"
         >
           {name}
