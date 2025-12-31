@@ -50,3 +50,26 @@ body{
 .animate-fadeIn{
   animation: fadeIn 1s ease-out;
 }
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 22px; /* was 28px */
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+
+.icon-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 14px;
+  width: 80px;
+  font-size: 12px;
+}
