@@ -176,6 +176,43 @@ class DsaQuestionController {
       return res.status(200).json(apiResponse(500, error.message, null));
     }
   }
+  async getAdminDsaProblemById(req: Request, res: Response) {
+    try {
+      const problemId = req.params.id;
+      if (!problemId) throw new Error("problem id is needed");
+
+      const dbProblem = await prismaClient.problem.findUnique({
+        where: { id: problemId },
+      });
+
+      if (!dbProblem) throw new Error("db problem not found");
+
+      const data = await prismaClient.problem.findUnique({
+        where: { id: dbProblem.id },
+        include: {
+          testCases: {
+            where: {
+              testType: "EXAMPLE",
+            },
+          },
+          problemTemplates: true,
+          problemTopics: true,
+          solution: {
+            where: {
+              problemId: dbProblem.id,
+            },
+          },
+        },
+      });
+
+      return res
+        .status(200)
+        .json(apiResponse(200, "fetched successfully", data));
+    } catch (error: any) {
+      console.log(error);
+      return res.status(200).json(apiResponse(500, error.message, null));
+    }
+  }
   //TODO: implement pagination service
   async getDsaProblemByTag(req: Request, res: Response) {
     try {
