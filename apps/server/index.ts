@@ -13,6 +13,8 @@ import "dotenv/config";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import problemsRouter from "./routes/dsa-question.route";
+import type { JwtPayload } from "./utils/type";
+import router from "./routes";
 dotenv.config({ path: "../.env" });
 
 const app: Express = express();
@@ -28,6 +30,9 @@ app.use(morgan("dev") as any);
 app.use(helmet());
 app.use("/api", limiter);
 app.use(hpp() as any);
+
+
+
 
 //express middlewares
 app.use(express.json({ limit: "50mb" }));
@@ -74,10 +79,12 @@ app.get("/health", async (req, res) => {
 declare global {
   namespace Express {
     interface Request {
-      user?: { id: string };
+      user?: JwtPayload;
     }
   }
 }
+// routes
+app.use("/api/v1", router)
 app.use("/api/v1/problems", problemsRouter);
 
 const errorHandler = (

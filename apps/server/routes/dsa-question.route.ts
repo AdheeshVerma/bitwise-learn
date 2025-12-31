@@ -1,6 +1,6 @@
 import { Router } from "express";
 import dsaQuestionController from "../controller/dsa-question.controller";
-import { adminMiddleware } from "../middleware/auth.middleware";
+import { authMiddleware as adminMiddleware } from "../middleware/auth.middleware";
 const problemsRouter = Router();
 /** 
 

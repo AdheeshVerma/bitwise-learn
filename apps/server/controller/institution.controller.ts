@@ -22,6 +22,10 @@ class InstitutionController {
             if (dbAdmin.ROLE !== "ADMIN" && dbAdmin.ROLE !== "SUPERADMIN") {
                 throw new Error("only admin/superadmin can view institutions");
             }
+            const existingInstitute = await prismaClient.institution.findFirst({
+                where: { email: data.email }
+            })
+            if (existingInstitute) throw new Error("Institute with this email already exists");
             const hashedPassword = await hashPassword(data.loginPassword);
 
             const createdInstitution = await prismaClient.institution.create({
@@ -144,7 +148,7 @@ class InstitutionController {
                 },
             });
             if (!institution) throw new Error("institution not found");
-            const deletedInstitution = await prismaClient.user.delete({
+            const deletedInstitution = await prismaClient.institution.delete({
                 where: { id: institutionId },
             });
             if (!deletedInstitution) throw new Error("Error deleting institution");

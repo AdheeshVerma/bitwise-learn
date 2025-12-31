@@ -94,10 +94,10 @@ model Vendor {
   id                   String      @id @default(auto()) @map("_id") @db.ObjectId
   name                 String
   email                String
-  secondaryEmail       String
+  secondaryEmail       String?
   tagline              String
   phoneNumber          String
-  secondaryPhoneNumber String
+  secondaryPhoneNumber String?
   websiteLink          String
   loginPassword        String
   institutionId        String      @db.ObjectId

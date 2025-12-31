@@ -1,3 +1,7 @@
+export interface JwtPayload {
+  id: string;
+  type: "SUPERADMIN" | "ADMIN" | "INSTITUTION" | "VENDOR" | "TEACHER";
+}
 export interface CourseBody {
   name: string;
   description: string;
@@ -165,4 +169,51 @@ export interface ProblemSubmission {
   code: string;
   runtime: string;
   memory: string;
+}
+export interface CreateTeacherBody {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  loginPassword: string;
+  instituteId: string;
+  batchId: string;
+  vendorId?: string;
+}
+export interface UpdateTeacherBody {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  loginPassword?: string;
+  batchId?: string;
+  vendorId?: string;
+}
+export interface CreateBatchBody {
+  batchname: string;
+  branch: string;
+  batchEndYear: string;
+}
+export interface UpdateBatchBody {
+  batchname?: string;
+  branch?: string;
+  batchEndYear?: string;
+}
+export interface CreateVendorBody {
+  name: string;
+  email: string;
+  secondaryEmail?: string;
+  tagline: string;
+  phoneNumber: string;
+  secondaryPhoneNumber?: string;
+  websiteLink: string;
+  loginPassword: string;
+}
+export interface UpdateVendorBody {
+  name?: string;
+  email?: string;
+  secondaryEmail?: string;
+  tagline?: string;
+  phoneNumber?: string;
+  secondaryPhoneNumber?: string;
+  websiteLink?: string;
+  loginPassword?: string;
 }
