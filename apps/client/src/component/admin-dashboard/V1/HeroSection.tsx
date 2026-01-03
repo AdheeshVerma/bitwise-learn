@@ -13,12 +13,15 @@ import {
     Search,
     SlidersHorizontal,
     MoreHorizontal,
+    X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllAdmins } from "@/api/admins/get-all-admins";
 import { getAllInstitutions } from "@/api/institutions/get-all-institutions";
 import { getAllVendors } from "@/api/vendors/get-all-vendors";
 import { getAllBatches } from "@/api/batches/get-all-batches";
+import EntityDetailsModal from "./EntityDetailModal";
+
 type FieldType = "Admins" | "Vendors" | "Institutions" | "Batches";
 
 type Item = {
@@ -27,35 +30,18 @@ type Item = {
     batchname?: string;
 };
 
-
 export default function HeroSection() {
-    /* ---------------- API (UNCHANGED) ---------------- */
-
-
     /* ---------------- ENTITY STATES ---------------- */
-    const [admins, setAdmins] = useState([]);
+    const [admins, setAdmins] = useState<Item[]>([]);
+    const [institutions, setInstitutions] = useState<Item[]>([]);
+    const [vendors, setVendors] = useState<Item[]>([]);
+    const [batches, setBatches] = useState<Item[]>([]);
+
     useEffect(() => {
         getAllAdmins(setAdmins);
-        console.log(admins);
-
-    }, []);
-    const [institutions, setInstitutions] = useState([]);
-    useEffect(() => {
         getAllInstitutions(setInstitutions);
-        console.log(institutions);
-
-    }, []);
-    const [vendors, setVendors] = useState([]);
-    useEffect(() => {
         getAllVendors(setVendors);
-        console.log(vendors);
-
-    }, []);
-    const [batches, setBatches] = useState([]);
-    useEffect(() => {
         getAllBatches(setBatches);
-        console.log(batches);
-
     }, []);
 
     /* ---------------- UI STATES ---------------- */
@@ -65,6 +51,12 @@ export default function HeroSection() {
     const [editingValue, setEditingValue] = useState("");
     const [isAdding, setIsAdding] = useState(false);
     const [newValue, setNewValue] = useState("");
+
+    /* ---------------- MODAL STATE ---------------- */
+    const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+    const [currentUserRole] = useState<
+        "SUPER_ADMIN" | "ADMIN" | "INSTITUTION" | "TEACHER"
+    >("ADMIN");
 
     const admin_name = "Britto Anand";
     const admin_email = "brittoanand@example.com";
@@ -102,14 +94,10 @@ export default function HeroSection() {
 
     const currentData = getCurrentData();
 
-    const safeSearch = searchTerm.toLowerCase();
-
     const filteredData = currentData.filter((item) => {
-        const valueToSearch = item.batchname ?? item.name ?? "";
-        return valueToSearch.toLowerCase().includes(safeSearch);
+        const value = item.batchname ?? item.name ?? "";
+        return value.toLowerCase().includes(searchTerm.toLowerCase());
     });
-
-
 
     /* ---------------- CRUD HANDLERS ---------------- */
     function handleEditSave(id: number) {
@@ -126,9 +114,9 @@ export default function HeroSection() {
         setEditingValue("");
     }
 
-
     function handleDelete(id: number) {
         setCurrentData((prev) => prev.filter((item) => item.id !== id));
+        setSelectedItem(null);
     }
 
     function handleAdd() {
@@ -145,7 +133,6 @@ export default function HeroSection() {
         setIsAdding(false);
     }
 
-
     /* ---------------- ICONS ---------------- */
     const fieldIcons = {
         Admins: KeyRound,
@@ -156,7 +143,6 @@ export default function HeroSection() {
 
     const ActiveIcon = fieldIcons[field];
 
-    /* ---------------- JSX ---------------- */
     return (
         <>
             {/* Top Section */}
@@ -184,143 +170,85 @@ export default function HeroSection() {
 
             {/* Selector */}
             <div className="bg-divBg mr-40 ml-20 mt-4 flex rounded-2xl">
-                {(["Admins", "Vendors", "Institutions", "Batches"] as FieldType[]).map(
-                    (type, i) => {
-                        const Icon = fieldIcons[type];
-                        return (
-                            <div
-                                key={type}
-                                className="relative flex flex-1 items-center justify-center py-4"
+                {(Object.keys(fieldIcons) as FieldType[]).map((type, i) => {
+                    const Icon = fieldIcons[type];
+                    return (
+                        <div key={type} className="relative flex flex-1 justify-center py-4">
+                            <button
+                                onClick={() => {
+                                    setField(type);
+                                    setSearchTerm("");
+                                }}
+                                className="flex flex-col items-center"
                             >
-                                <button
-                                    onClick={() => {
-                                        setField(type);
-                                        setSearchTerm("");
-                                    }}
-                                    className="flex flex-col items-center hover:scale-105 transition"
-                                >
-                                    <Icon size={30} color="white" />
-                                    <h1 className="text-white text-lg">{type}</h1>
-                                </button>
-                                {i !== 3 && (
-                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 h-12 w-[2px] bg-white" />
-                                )}
-                            </div>
-                        );
-                    }
-                )}
-            </div>
-
-            {/* Search & Actions */}
-            <div className="flex items-center justify-between mt-6 ml-20 mr-40">
-                <div className="flex items-center bg-divBg rounded-xl px-4 py-3 w-[55%]">
-                    <Search size={20} className="text-primaryBlue mr-3" />
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="bg-transparent outline-none text-white w-full"
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <button className="flex items-center gap-2 bg-primaryBlue px-5 py-3 rounded-xl text-black">
-                        <SlidersHorizontal size={20} />
-                        Filter
-                    </button>
-                    <button className="flex items-center gap-2 bg-primaryBlue px-5 py-3 rounded-xl text-black">
-                        <MoreHorizontal size={20} />
-                        Options
-                    </button>
-                </div>
+                                <Icon size={30} color="white" />
+                                <h1 className="text-white">{type}</h1>
+                            </button>
+                            {i !== 3 && (
+                                <div className="absolute right-0 top-1/2 h-12 w-[2px] bg-white -translate-y-1/2" />
+                            )}
+                        </div>
+                    );
+                })}
             </div>
 
             {/* List */}
-            <div className="bg-divBg ml-5 mr-15 mt-6 rounded-2xl p-4">
-                <div className="flex items-center justify-between mb-3">
+            <div className="bg-divBg ml-5 mr-15 mt-6 rounded-2xl p-4 flex flex-col flex-1">
+                <div className="flex justify-between mb-3">
                     <div className="flex items-center gap-2">
-                        <ActiveIcon size={20} className="text-white" />
-                        <h1 className="text-white text-lg font-semibold">{field}</h1>
+                        <ActiveIcon className="text-white" />
+                        <h1 className="text-white">{field}</h1>
                     </div>
-                    <button
-                        onClick={() => setIsAdding(true)}
-                        className="text-primaryBlue"
-                    >
+                    <button onClick={() => setIsAdding(true)} className="text-primaryBlue">
                         <Plus />
                     </button>
                 </div>
 
-                <div className="max-h-[320px] overflow-y-auto space-y-3 pr-2">
-                    {isAdding && (
-                        <div className="flex items-center gap-3 bg-black/30 px-4 py-3 rounded-xl">
-                            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                                <User size={16} color="black" />
-                            </div>
-                            <input
-                                value={newValue}
-                                onChange={(e) => setNewValue(e.target.value)}
-                                className="bg-transparent border-b border-primaryBlue outline-none text-white flex-1"
-                                autoFocus
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") handleAdd();
-                                    if (e.key === "Escape") setIsAdding(false);
-                                }}
-                            />
-                            <button onClick={handleAdd} className="text-primaryBlue">
-                                <Check />
-                            </button>
-                        </div>
-                    )}
-
+                <div className="flex-1 overflow-y-auto space-y-3 pr-2">
                     {filteredData.map((item) => {
                         const displayName = item.batchname ?? item.name;
 
                         return (
                             <div
                                 key={item.id}
-                                className="flex items-center justify-between bg-black/30 px-4 py-3 rounded-xl"
+                                onClick={() => setSelectedItem(item)}
+                                className="flex items-center justify-between bg-black/30 px-4 py-3 rounded-xl cursor-pointer hover:bg-black/40 transition"
                             >
+                                {/* Left section */}
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
                                         <User size={16} color="black" />
                                     </div>
-
-                                    {editingId === item.id ? (
-                                        <input
-                                            value={editingValue}
-                                            onChange={(e) => setEditingValue(e.target.value)}
-                                            className="bg-transparent border-b border-primaryBlue outline-none text-white"
-                                            autoFocus
-                                            onBlur={() => handleEditSave(item.id)}
-                                        />
-                                    ) : (
-                                        <span className="text-white">{displayName}</span>
-                                    )}
+                                    <span className="text-white">{displayName}</span>
                                 </div>
 
-                                <div className="flex gap-4">
-                                    <button
-                                        onClick={() => {
-                                            setEditingId(item.id);
-                                            setEditingValue(displayName);
-                                        }}
-                                        className="text-primaryBlue"
-                                    >
-                                        <PenLine />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(item.id)}
-                                        className="text-red-500"
-                                    >
-                                        <Trash />
-                                    </button>
-                                </div>
+                                {/* Right actions */}
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // ⛔ prevents modal opening
+                                        handleDelete(item.id);
+                                    }}
+                                    className="text-red-500 hover:scale-110 transition"
+                                >
+                                    <Trash size={18} />
+                                </button>
                             </div>
                         );
                     })}
 
                 </div>
             </div>
+
+            {/* MODAL */}
+            {selectedItem && (
+                <EntityDetailsModal
+                    entityType={field}
+                    data={selectedItem}
+                    role={currentUserRole}
+                    onClose={() => setSelectedItem(null)}
+                    onDelete={handleDelete}
+                />
+            )}
         </>
     );
 }
