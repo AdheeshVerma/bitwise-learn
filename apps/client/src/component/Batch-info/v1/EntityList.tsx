@@ -1,53 +1,40 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
+import { getAllStudents } from "@/api/students/get-all-students";
 import { getAllTeachers } from "@/api/teachers/get-all-teachers";
-import { getAllBatches } from "@/api/batches/get-all-batches";
-import { getAllVendors } from "@/api/vendors/get-all-vendors";
+// import { getAllAssessments } from "@/api/vendors/get-all-vendors";
 
 type EntityListProps = {
     type: string;
-    institutionId?: string;
+    batchId?: string;
 };
 
-export const EntityList = ({ type, institutionId }: EntityListProps) => {
-    const router = useRouter();
+export const EntityList = ({ type, batchId }: EntityListProps) => {
     const [entities, setEntities] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [loading, setLoading] = useState(true);
     const [selectedEntity, setSelectedEntity] = useState<any | null>(null);
-
-    const handleSeeDetails = (entity: any) => {
-        if (type === "Batches") {
-            // Navigate to batch detail page
-            router.push(`/admin-dashboard/batches/${entity.id || entity._id}`);
-        } else {
-            // Open modal for other entity types
-            setSelectedEntity(entity);
-        }
-    };
 
     useEffect(() => {
         setLoading(true);
         const fetchData = async () => {
             try {
                 switch (type) {
+                    case "Students":
+                        await getAllStudents((data: any) => {
+                            setEntities(Array.isArray(data) ? data : []);
+                        });
+                        break;
                     case "Teachers":
                         await getAllTeachers((data: any) => {
                             setEntities(Array.isArray(data) ? data : []);
                         });
                         break;
-                    case "Batches":
-                        await getAllBatches((data: any) => {
-                            setEntities(Array.isArray(data) ? data : []);
-                        });
+                    case "Assessments":
+                        setEntities([]);
                         break;
-                    case "Vendors":
-                        await getAllVendors((data: any) => {
-                            setEntities(Array.isArray(data) ? data : []);
-                        });
                         break;
                     case "Courses":
                         // TODO: Add courses API when available
@@ -74,18 +61,18 @@ export const EntityList = ({ type, institutionId }: EntityListProps) => {
 
         return safeEntities.filter((entity) => {
             switch (type) {
-                case "Teachers":
+                case "Students":
                     return (
                         entity.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         entity.email?.toLowerCase().includes(searchQuery.toLowerCase())
                     );
-                case "Batches":
+                case "Teachers":
                     return (
-                        entity.batchname?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        entity.branch?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        entity.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        entity.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         entity.batchEndYear?.toLowerCase().includes(searchQuery.toLowerCase())
                     );
-                case "Vendors":
+                case "Assessments":
                     return (
                         entity.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         entity.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -102,14 +89,22 @@ export const EntityList = ({ type, institutionId }: EntityListProps) => {
         });
     }, [entities, searchQuery, type]);
 
+    // const getInitials = (name: string) => {
+    //     if (!name) return "??";
+    //     const parts = name.trim().split(" ");
+    //     if (parts.length >= 2) {
+    //         return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    //     }
+    //     return name.substring(0, 2).toUpperCase();
+    // };
 
     const getDisplayName = (entity: any) => {
         switch (type) {
-            case "Teachers":
+            case "Students":
                 return entity.name || "Unknown";
-            case "Batches":
-                return entity.batchname || "Unknown Batch";
-            case "Vendors":
+            case "Teachers":
+                return entity.name || "Unknown Batch";
+            case "Assessments":
                 return entity.name || "Unknown Vendor";
             case "Courses":
                 return entity.name || "Unknown Course";
@@ -117,6 +112,21 @@ export const EntityList = ({ type, institutionId }: EntityListProps) => {
                 return "Unknown";
         }
     };
+
+    // const getSubtitle = (entity: any) => {
+    //     switch (type) {
+    //         case "Students":
+    //             return entity.email;
+    //         case "Teachers":
+    //             return `${entity.branch || ""} • ${entity.batchEndYear || ""}`.trim();
+    //         case "Assessments":
+    //             return entity.tagline || entity.email;
+    //         case "Courses":
+    //             return entity.instructorName || entity.description;
+    //         default:
+    //             return "";
+    //     }
+    // };
 
     const getEntityKey = (entity: any) => {
         return entity.id || entity._id || Math.random().toString();
@@ -138,12 +148,12 @@ export const EntityList = ({ type, institutionId }: EntityListProps) => {
 
     const getTableHeaders = () => {
         switch (type) {
+            case "Students":
+                return ["Roll No.", "Name", "Email", "Created"];
             case "Teachers":
                 return ["Name", "Email", "Phone", "Created"];
-            case "Batches":
-                return ["Batch Name", "Branch", "End Year", "Created"];
-            case "Vendors":
-                return ["Name", "Email", "Tagline", "Created"];
+            case "Assessments":
+                return ["Name", "Email", "Phone", "Created"];
             case "Courses":
                 return ["Name", "Instructor", "Level", "Created"];
             default:
@@ -153,25 +163,25 @@ export const EntityList = ({ type, institutionId }: EntityListProps) => {
 
     const getTableCells = (entity: any) => {
         switch (type) {
+            case "Students":
+                return [
+                    entity.rollNumber || "Unknown",
+                    entity.name || "—",
+                    entity.email || "—",
+                    formatDate(entity.createdAt),
+                ];
             case "Teachers":
                 return [
-                    entity.name || "Unknown",
+                    entity.name || "Unknown Teacher",
                     entity.email || "—",
                     entity.phoneNumber || "—",
                     formatDate(entity.createdAt),
                 ];
-            case "Batches":
-                return [
-                    entity.batchname || "Unknown Batch",
-                    entity.branch || "—",
-                    entity.batchEndYear || "—",
-                    formatDate(entity.createdAt),
-                ];
-            case "Vendors":
+            case "Assessments":
                 return [
                     entity.name || "Unknown Vendor",
                     entity.email || "—",
-                    entity.tagline || "—",
+                    entity.phoneNumber || "—",
                     formatDate(entity.createdAt),
                 ];
             case "Courses":
@@ -228,7 +238,7 @@ export const EntityList = ({ type, institutionId }: EntityListProps) => {
                                     return (
                                         <tr
                                             key={getEntityKey(entity)}
-                                            className="text-sm text-white transition-colors"
+                                            className="text-sm text-white transition-colors hover:bg-primaryBlue/10"
                                         >
                                             {cells.map((cell, index) => (
                                                 <td
@@ -246,7 +256,7 @@ export const EntityList = ({ type, institutionId }: EntityListProps) => {
                                             ))}
                                             <td className="px-6 py-4 text-right">
                                                 <button
-                                                    onClick={() => handleSeeDetails(entity)}
+                                                    onClick={() => setSelectedEntity(entity)}
                                                     className="rounded-md border border-primaryBlue/40 px-3 py-1.5 text-xs font-medium text-primaryBlue transition hover:bg-primaryBlue/20"
                                                 >
                                                     See details

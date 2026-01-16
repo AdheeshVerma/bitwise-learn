@@ -1,6 +1,7 @@
 import AddSection from "@/component/(admin-course-pages)/add-section/AddSection"
 import SideBar from "@/component/general/SideBar"
 import CourseForm from "@/component/(admin-course-pages)/course-form/CourseForm"
+import AddAssignment from "@/component/(admin-course-pages)/add-assignment/AddAssignment"
 
 export default function AdminCourse() {
     return (
@@ -10,7 +11,9 @@ export default function AdminCourse() {
 
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto px-10 py-10">
-                <CourseForm />
+                {/* <CourseForm />
+                <AddSection /> */}
+                <AddAssignment />
             </main>
         </div>
     )

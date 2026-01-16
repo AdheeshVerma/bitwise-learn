@@ -11,13 +11,13 @@ export async function GET(req:NextRequest){
         );
        }
 
-       const token = req.headers.get("authorization");
+       const cookie = req.headers.get("cookie");
        
        const res = await fetch(`${backendUrl}/api/v1/courses/get-all-courses-by-admin`,{
         method:"GET",
         headers:{
             "Content-Type":"application/json",
-            Authorization:token || "",
+            cookie: cookie || "",
         },
         cache:"no-store",
        });
