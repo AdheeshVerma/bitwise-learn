@@ -48,7 +48,7 @@ export default function AddAssignmentV1() {
   };
 
   return (
-    <div className="flex items-center justify-center my-6">
+    <div className="my-6">
       <div
         className={`${Colors.background.secondary} ${Colors.border} rounded-xl w-[90%] max-w-6xl min-h-[60%] p-6`}
       >

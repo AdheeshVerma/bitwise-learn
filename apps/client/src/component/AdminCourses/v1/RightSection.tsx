@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { getAllCourses } from "@/api/courses/get-all-courses";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useRef } from "react";
+import CourseForm from "@/component/(admin-course-pages)/course-form/CourseForm";
 
 const colors = {
   primary_Bg: "bg-[#121313]",
@@ -88,6 +89,9 @@ const RightSection = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const [courseForm, setShowCourseForm] = useState(false);
+
 
   const CourseSkeleton = () => {
     return (
@@ -188,7 +192,8 @@ const RightSection = () => {
         <div className="flex gap-3">
           {/* Add Course */}
           <button
-            onClick={() => router.push("/admin-dashboard/courses/create")}
+            // onClick={() => router.push("/admin-dashboard/courses/create")}
+            onClick={() => setShowCourseForm(true)}
             className={`rounded-md ${colors.special_Bg} px-4 py-2 text-sm font-medium ${colors.primary_Font} hover:opacity-90`}
           >
             + Add Course
@@ -308,6 +313,27 @@ const RightSection = () => {
           ))}
         </div>
       )}
+
+
+      {courseForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* BACKDROP */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowCourseForm(false)}
+          />
+
+          {/* MODAL CONTENT */}
+          <div
+            className="relative z-50 w-full max-w-2xl rounded-2xl bg-[#121313] shadow-2xl p-1"
+            onClick={(e) => e.stopPropagation()} // ⭐ IMPORTANT
+          >
+            <CourseForm onClose={() => setShowCourseForm(false)} />
+          </div>
+        </div>
+      )}
+
+
     </section>
   );
 };
