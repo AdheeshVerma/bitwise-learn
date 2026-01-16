@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useState } from "react";
 import { createCourse } from "@/api/courses/create-course";
 import { useRouter } from "next/navigation";
@@ -13,7 +14,12 @@ type CourseFormData = {
   instructorName: string;
 };
 
-const CourseForm = () => {
+type CourseFormProps = {
+  onClose: () => void;
+};
+
+
+const CourseForm: React.FC<CourseFormProps> = ({ onClose }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +41,7 @@ const CourseForm = () => {
     try {
       setLoading(true);
 
-      await createCourse({
+      const res = await createCourse({
         name: formData.name,
         description: formData.description,
         level: formData.level,
@@ -43,7 +49,10 @@ const CourseForm = () => {
         instructorName: formData.instructorName,
       });
 
-      router.push("/admin-dashboard/courses");
+      console.log(res)
+
+      // router.push("/admin-dashboard/courses");
+      onClose();
     } catch (error) {
       console.error("Course creation failed", error);
     } finally {
@@ -52,11 +61,15 @@ const CourseForm = () => {
   };
 
   return (
-    <div className="mx-auto mt-16 max-w-2xl rounded-2xl bg-[#1E1E1E] p-8 text-white shadow-2xl relative">
+    <div className="w-full rounded-2xl bg-[#1E1E1E] p-8 text-white shadow-2xl relative">
       {/* Close Button */}
       <button
-        onClick={() => router.back()}
-        className="absolute right-4 top-4 rounded-full p-2 hover:bg-neutral-800"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="absolute right-4 top-4 z-10 rounded-full p-2 hover:bg-neutral-800 transition-colors"
+        aria-label="Close"
       >
         <X size={18} />
       </button>
