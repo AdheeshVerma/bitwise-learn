@@ -18,7 +18,7 @@ export async function POST(
     }
 
     const response = await axiosInstance.patch(
-      `${backendUrl}/api/v1/problems/update-template-to-problem/${id}`,
+      `${backendUrl}/api/v1/problems/update-testcase-to-problem/${id}`,
       data,
     );
 
