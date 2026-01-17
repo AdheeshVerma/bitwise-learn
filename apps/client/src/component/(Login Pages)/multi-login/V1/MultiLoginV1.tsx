@@ -2,7 +2,7 @@
 
 type LoginRole = "Instructor" | "Institution" | "Partner";
 
-import MutliLoginIMG from "../v1/MultiLoginIMG.png";
+import MutliLoginIMG from "../V1/MultiLoginIMG.png";
 import Image from "next/image";
 import {
   Mail,
@@ -168,11 +168,10 @@ export default function AdminLoginV1() {
                 type="button"
                 onClick={() => setRole("Instructor")}
                 className={`px-2 py-2 rounded-lg transition flex items-center gap-2
-                ${
-                  role === "Instructor"
+                ${role === "Instructor"
                     ? "bg-primaryBlue text-slate"
                     : "bg-[#3B82F6]"
-                }`}
+                  }`}
               >
                 <GraduationCap size={20} color="white" />
                 Instructor
@@ -182,11 +181,10 @@ export default function AdminLoginV1() {
                 type="button"
                 onClick={() => setRole("Institution")}
                 className={`px-2 py-2 rounded-lg transition flex items-center gap-2
-                ${
-                  role === "Institution"
+                ${role === "Institution"
                     ? "bg-primaryBlue text-white"
                     : "bg-[#3B82F6]"
-                }`}
+                  }`}
               >
                 <School size={20} color="white" />
                 Institution
@@ -196,11 +194,10 @@ export default function AdminLoginV1() {
                 type="button"
                 onClick={() => setRole("Partner")}
                 className={`px-2 py-2 rounded-lg transition flex items-center gap-2
-                ${
-                  role === "Partner"
+                ${role === "Partner"
                     ? "bg-primaryBlue text-white"
                     : "bg-[#3B82F6]"
-                }`}
+                  }`}
               >
                 <Handshake size={20} color="white" />
                 Partner

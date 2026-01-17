@@ -2,8 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import LeftSection from "@/component/courses/course/v1/LeftSection";
-import RightSection from "@/component/courses/course/v1/RightSection";
+import LeftSection from "@/component/courses/Course/v1/LeftSection";
+import RightSection from "@/component/courses/Course/v1/RightSection";
 import CourseStudyModeV1 from "../../CourseStudyMode/v1/CourseStudyModeV1";
 import { useState, useEffect, useRef } from "react";
 
