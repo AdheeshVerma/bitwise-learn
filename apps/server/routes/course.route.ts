@@ -66,7 +66,7 @@ router.put(
   upload.none(),
   courseController.updateCourseSection,
 );
-router.put(
+router.delete(
   "/delete-course-section/:id",
   authMiddleware,
   courseController.removeCourseSection,

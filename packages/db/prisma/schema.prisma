@@ -200,7 +200,7 @@ model CourseLearningContent {
   creatorId        String           @db.ObjectId
   creator          User             @relation(references: [id], fields: [creatorId])
   sectionId        String           @db.ObjectId
-  section          CourseSections   @relation(references: [id], fields: [sectionId])
+  section          CourseSections   @relation(references: [id], fields: [sectionId], onDelete: Cascade)
   videoUrl         String           @default("")
   transcript       String?          @default("")
   file             String?          @default("")

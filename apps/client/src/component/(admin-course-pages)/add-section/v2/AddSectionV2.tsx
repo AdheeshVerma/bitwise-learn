@@ -4,6 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { addContentToSection } from "@/api/courses/section/add-content-to-section";
 import toast from "react-hot-toast";
+import { deleteSectionById } from "@/api/courses/section/delete-section";
 import { updateContentToSection } from "@/api/courses/section/update-content-to-section";
 
 
@@ -14,11 +15,13 @@ type Props = {
     id: string;
     name: string;
     courseLearningContents: {
-      id: string,
-      name: string,
-      description: string,
+      id: string;
+      name: string;
+      description: string;
     }[];
   };
+  onAddAssignment: (sectionId:string) => void;
+  onSectionDeleted: ()=> void;
 };
 
 type UpdateContentPayload={
@@ -36,11 +39,7 @@ interface AddTopicModalProps {
   onSubmit: (data: { name: string; description: string }) => void;
 }
 
-const AddTopicModal = ({
-  open,
-  onClose,
-  onSubmit,
-}: AddTopicModalProps) => {
+const AddTopicModal = ({ open, onClose, onSubmit }: AddTopicModalProps) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
@@ -50,15 +49,11 @@ const AddTopicModal = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-800 p-6">
         {/* Header */}
-        <h2 className="text-lg font-semibold text-white">
-          Add new topic
-        </h2>
+        <h2 className="text-lg font-semibold text-white">Add new topic</h2>
 
         {/* Topic Name */}
         <div className="mt-4">
-          <label className="text-sm text-slate-400">
-            Topic name
-          </label>
+          <label className="text-sm text-slate-400">Topic name</label>
           <input
             type="text"
             value={name}
@@ -77,9 +72,7 @@ const AddTopicModal = ({
 
         {/* Description */}
         <div className="mt-4">
-          <label className="text-sm text-slate-400">
-            Description
-          </label>
+          <label className="text-sm text-slate-400">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -127,6 +120,52 @@ const AddTopicModal = ({
     </div>
   );
 };
+
+const ConfirmDeleteSectionModal = ({
+  open,
+  onClose,
+  onConfirm,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) => {
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-800 p-6"
+      >
+        <h2 className="text-lg font-semibold text-white">
+          Delete this section?
+        </h2>
+
+        <p className="mt-2 text-sm text-slate-400">
+          All topics & assignments inside this section will be removed.
+        </p>
+
+        <div className="mt-6 flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition"
+          >
+            Cancel
+          </button>
+
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 
 // -------------------------------- Update Topic Modal --------------------
@@ -291,10 +330,30 @@ const UpdateTopicModal = ({
 
 // ------------------------------ Main Content ------------------------
 
-const AddSectionV2 = ({ sectionNumber, sectionData, sectionId }: Props) => {
-
+const AddSectionV2 = ({ 
+  sectionNumber, 
+  sectionData, 
+  sectionId, 
+  onAddAssignment,
+  onSectionDeleted,
+}: Props) => {
   const [isAddTopicOpen, setIsAddTopicOpen] = useState(false);
   const topics = sectionData.courseLearningContents || [];
+  const [showDeleteConfirm,setShowDeleteConfirm] = useState(false);
+
+  const handleDeleteSection = async () => {
+  try {
+    await deleteSectionById(sectionId);
+    toast.success("Section deleted");
+    onSectionDeleted();
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to delete section");
+  }
+  finally{
+    setShowDeleteConfirm(false);
+  }
+};
   const [isUpdateTopicOpen, setIsUpdateTopicOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<{
     id: string;
@@ -306,6 +365,7 @@ const AddSectionV2 = ({ sectionNumber, sectionData, sectionId }: Props) => {
     <div className="relative text-white bg-divBg rounded-2xl px-6 py-4 border border-white/10">
       {/* Delete Section Button */}
       <button
+      onClick={()=>setShowDeleteConfirm(true)}
         className="
           absolute top-4 right-4
           p-2 rounded-full
@@ -388,10 +448,8 @@ const AddSectionV2 = ({ sectionNumber, sectionData, sectionId }: Props) => {
         )}
       </div>
 
-
-
       {/* Action Button */}
-      <div className="mt-4 ml-1">
+      <div className="mt-4 ml-1 flex gap-3">
         <button
           className="
             px-4 py-1.5
@@ -402,13 +460,19 @@ const AddSectionV2 = ({ sectionNumber, sectionData, sectionId }: Props) => {
             hover:bg-slate-700
             transition
           "
-          onClick={() => { setIsAddTopicOpen(true) }}
+          onClick={() => {
+            setIsAddTopicOpen(true);
+          }}
         >
           + Add Topic
         </button>
+        <button
+        onClick={() => onAddAssignment(sectionId)}
+        className="px-3 py-1.5 text-sm rounded-md bg-slate-800 text-sky-300 hover:bg-slate-700 transition"
+      >
+        + Add Assignment
+      </button>
       </div>
-
-
 
       {/* --------------- Add Topic Modal ---------------- */}
       <AddTopicModal
@@ -425,6 +489,11 @@ const AddSectionV2 = ({ sectionNumber, sectionData, sectionId }: Props) => {
             toast.error("Unable to create topic");
           }
         }}
+      />
+      <ConfirmDeleteSectionModal 
+        open={showDeleteConfirm}
+        onClose={()=>setShowDeleteConfirm(false)}
+        onConfirm={handleDeleteSection}
       />
 
 

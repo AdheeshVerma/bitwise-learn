@@ -425,11 +425,9 @@ class CoursesController {
       if (!req.user) throw new Error("user not authenticated");
       const userId = req.user.id;
       const courseSectionId = req.params.id;
-      const { name } = req.body;
 
       if (!userId) throw new Error("userId is required");
-      if (!name || name.trim().length === 0)
-        throw new Error(" updated course section must have a name");
+      if(!courseSectionId) throw new Error("Section ID is Required");
 
       const dbAdmin = await prismaClient.user.findFirst({
         where: { id: userId },
@@ -447,7 +445,7 @@ class CoursesController {
         where: { id: dbCourseSection.id },
       });
 
-      if (!removedCourseSection) throw new Error("error in creating courses");
+      if (!removedCourseSection) throw new Error("error in deleting section");
 
       return res
         .status(200)

@@ -24,7 +24,7 @@ class CouseContentController {
 
       if (!dbSection) throw new Error("invalid section id");
 
-      if (!data.videoUrl) throw new Error("videoUrl is required");
+      // if (!data.videoUrl) throw new Error("videoUrl is required");
 
       console.log({
         name: data.name,

@@ -36,14 +36,14 @@ export interface CourseAssignmentBody {
   name: string;
   description: string;
   instruction: string;
-  marksPerQuestion: string;
+  marksPerQuestion: number;
   sectionId: string;
 }
 
 export interface CourseAssignmentUpdate {
   description?: string;
   instruction?: string;
-  marksPerQuestion?: string;
+  marksPerQuestion?: number;
 }
 
 export interface AssignmentQuestionBody {

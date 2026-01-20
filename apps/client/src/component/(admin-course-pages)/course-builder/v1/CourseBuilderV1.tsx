@@ -167,48 +167,33 @@ const CreateSectionModal = ({
   );
 };
 
-/* ADD ASSIGNMENT MODAL */
+/*--------------Add Assignment Modal --------------- */
 
-const AddAssignmentModal = ({
+const AddAssignmentPopup = ({
   open,
   onClose,
-  sectionId,
   children,
 }: {
   open: boolean;
   onClose: () => void;
-  sectionId: string;
   children: React.ReactNode;
 }) => {
-  useEffect(() => {
-    if (!open) return;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [open]);
-
   if (!open) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="absolute inset-0 z-999 flex justify-center mt-5 backdrop-blur-sm"
       onClick={onClose}
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="
-          w-full max-w-2xl
-          rounded-2xl
-          bg-slate-900
-          border border-slate-800
-          p-6
-          shadow-xl
-          animate-in
-          fade-in
-          zoom-in-95
-        "
-      >
+      <div className="relative w-205" onClick={(e) => e.stopPropagation()}>
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute -top-3 -right-3 text-white text-xl cursor-pointer"
+        >
+          ✕
+        </button>
+
         {children}
       </div>
     </div>
@@ -483,6 +468,14 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
             sectionId={section.id}
             sectionNumber={index + 1}
             sectionData={section}
+            onAddAssignment={(sectionId) => {
+              setActiveSectionId(sectionId);
+              setShowAddAssignment(true);
+            }}
+            onSectionDeleted={async()=>{
+              const res = await getSections(courseId);
+              setSections(res.data);
+            }}
           />
         ))}
       </div>
@@ -494,20 +487,6 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
           className="px-3 py-1.5 text-sm rounded-md bg-slate-800 text-sky-300 hover:bg-slate-700 transition"
         >
           + Add Section
-        </button>
-
-        <button
-          onClick={() => {
-            if (!sections.length) {
-              toast.error("Create a Section First !");
-              return;
-            }
-            setActiveSectionId(sections[0].id);
-            setShowAddAssignment(true);
-          }}
-          className="px-3 py-1.5 text-sm rounded-md bg-slate-800 text-sky-300 hover:bg-slate-700 transition"
-        >
-          + Add Assignment
         </button>
       </div>
 
@@ -579,16 +558,15 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
 
       {/*Add Assignment Modal */}
       {showAddAssignment && activeSectionId && (
-        <AddAssignmentModal
-          open={showAddAssignment && !!activeSectionId}
-          sectionId={activeSectionId!}
+        <AddAssignmentPopup
+          open={showAddAssignment}
           onClose={() => {
             setShowAddAssignment(false);
             setActiveSectionId(null);
           }}
         >
           <AddAssignment
-            sectionId={activeSectionId!}
+            sectionId={activeSectionId}
             onClose={async () => {
               setShowAddAssignment(false);
               setActiveSectionId(null);
@@ -596,7 +574,7 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
               setSections(res.data);
             }}
           />
-        </AddAssignmentModal>
+        </AddAssignmentPopup>
       )}
     </div>
   );
