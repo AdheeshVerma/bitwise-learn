@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { CreateAssessmentSection, UpdateAssessmentSection } from "../utils/type";
+import type { CreateAssessmentQuestionBody, UpdateAssessmentQuestionBody } from "../utils/type";
 import prismaClient from "../utils/prisma";
 import apiResponse from "../utils/apiResponse";
 
@@ -7,20 +7,20 @@ class AssessmentSectionController {
     async createAssessmentSection(req: Request, res: Response) {
         try {
             if (!req.user) throw new Error("User not authenticated");
-            const data: CreateAssessmentSection = req.body;
+            const data: CreateAssessmentQuestionBody = req.body;
             if (!data) throw new Error("Please provide all fields");
             if (req.user.type !== "SUPERADMIN" && req.user.type !== "ADMIN" && req.user.type !== "INSTITUTION" && req.user.type !== "VENDOR") throw new Error("User Not Authorized to create Assessments");
 
 
-            const createdAssessmentSection = await prismaClient.assessmentSection.create({
+            const createdAssessmentQuestion = await prismaClient.assessmentQuestion.create({
                 data: {
-                    name: data.name,
-                    marksPerQuestion: data.marksPerQuestion,
-                    assessmentType: data.assessmentType,
-                    assessmentId: data.assessmentId,
+                    question: data.question,
+        options: data.options,
+        ...(data.problem ? { problem: { connect: { id: data.problem } } } : {}),
+        maxMarks: data.maxMarks,
                 }
             });
-            if (!createdAssessmentSection) throw new Error("Error Creating Assessment Section");
+            if (!createdAssessmentQuestion) throw new Error("Error Creating Assessment Section");
             return res.status(200)
                 .json(apiResponse(200, "Assessment Section Created Successfully.", createdAssessmentSection))
         } catch (error: any) {
@@ -80,11 +80,9 @@ class AssessmentSectionController {
     }
     async getAllAssessmentSection(req: Request, res: Response) {
         try {
-            const assessmentId = req.params.id;
             if (!req.user) throw new Error("user is not authenticated");
             if (req.user.type !== "SUPERADMIN" && req.user.type !== "ADMIN" && req.user.type !== "INSTITUTION" && req.user.type !== "VENDOR") throw new Error("User Not Authorized to delete Assessments");
             const sections = await prismaClient.assessmentSection.findMany({
-                where: { assessmentId: assessmentId },
                 select: {
                     id: true,
                     name: true,
