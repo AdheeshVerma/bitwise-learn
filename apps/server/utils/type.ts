@@ -263,3 +263,16 @@ export interface UpdateAssessmentSection {
   name?: string;
   marksPerQuestion?: number;
 }
+
+export interface CreateAssessmentQuestionBody {
+  question: string,
+  options: string[],
+  problem?: string,
+  maxMarks: number,
+}
+export interface UpdateAssessmentQuestionBody {
+  question?: string,
+  options: string[],
+  problem?: string,
+  maxMarks?: number,
+}

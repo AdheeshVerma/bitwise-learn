@@ -24,7 +24,8 @@ import {
   studentRouter,
   courseRouter,
   codeRouter,
-  assessmentRouter
+  assessmentRouter,
+  reportRouter,
 } from "./routes";
 dotenv.config({ path: "../.env" });
 
@@ -64,7 +65,7 @@ app.use(
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Welcome to the Backend of the devhire application API ",
+    message: "Welcome to the Backend of the Bitwise Learn application API ",
     version: "1.0.0",
     timestamp: new Date(),
     environment: process.env.NODE_ENV,
@@ -102,6 +103,7 @@ app.use("/api/v1/vendors", vendorRouter);
 app.use("/api/v1/problems", problemsRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/code", codeRouter);
+app.use("/api/v1/report", reportRouter);
 
 // For dev only
 app.use("/api/v1/assessments", assessmentRouter);
