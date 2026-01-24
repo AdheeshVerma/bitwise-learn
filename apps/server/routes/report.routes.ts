@@ -9,12 +9,12 @@ router.get(
   ReportController.getCountByInstitution,
 );
 router.get(
-  "/assessment-report/:instituteId/:assessmentId/",
+  "/assessment-report/:assessmentId/",
   authMiddleware,
   ReportController.getAllAssesmentReports,
 );
 router.get(
-  "/assessment-report/:instituteId/:courseId/",
+  "/course-report/:batchId/:courseId/",
   authMiddleware,
   ReportController.getCourseReport,
 );

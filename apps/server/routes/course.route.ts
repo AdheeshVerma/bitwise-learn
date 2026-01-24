@@ -6,6 +6,7 @@ import upload from "../middleware/multer.middleware";
 import courseAssignmentController from "../controller/course-assignment.controller";
 import courseGradeController from "../controller/course-grade.controller";
 import courseProgressController from "../controller/course-progress.controller";
+import courseEnrollmentController from "../controller/course-enrollment.controller";
 const router = Router();
 
 // course related api calls
@@ -183,5 +184,22 @@ router.get(
   "/get-individual-course-progress/:id",
   authMiddleware,
   courseProgressController.getCourseProgressById,
+);
+
+// course-enrollments
+router.get(
+  "/get-course-enrollments/:id",
+  authMiddleware,
+  courseEnrollmentController.getAllEnrollmentsById,
+);
+router.post(
+  "/add-course-enrollment/:id",
+  authMiddleware,
+  courseEnrollmentController.addEnrollment,
+);
+router.delete(
+  "/remove-course-enrollment/:id",
+  authMiddleware,
+  courseEnrollmentController.removeEnrollment,
 );
 export default router;

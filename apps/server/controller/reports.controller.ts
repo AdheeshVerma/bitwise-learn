@@ -27,7 +27,7 @@ class ReportController {
       if (!dbInstitution) throw new Error("no such id found");
 
       const courseCount = await prismaClient.courseEnrollment.count({
-        where: { instituteId: dbInstitution.id },
+        where: { institutionId: dbInstitution.id },
       });
       const assessmentCount = await prismaClient.assessment.count({
         where: {
@@ -59,13 +59,13 @@ class ReportController {
        */
 
       const courseId = req.params.courseId;
-      const instituteId = req.params.instituteId;
+      const batchId = req.params.batchId;
       const rawPage = Number(req.query.page);
       const pageNumber =
         Number.isInteger(rawPage) && rawPage >= 0 ? rawPage : 0;
 
       if (!courseId) throw new Error("courseId is required");
-      if (!instituteId) throw new Error("instituteID is required");
+      if (!batchId) throw new Error("batchId is required");
 
       const dbCourse = await prismaClient.course.findUnique({
         where: {
@@ -74,18 +74,18 @@ class ReportController {
       });
 
       if (!dbCourse) throw new Error("course not found");
-      const dbInstitution = await prismaClient.institution.findUnique({
+      const dbBatch = await prismaClient.batch.findUnique({
         where: {
-          id: instituteId as string,
+          id: batchId as string,
         },
       });
 
-      if (!dbInstitution) throw new Error("course not found");
+      if (!dbBatch) throw new Error("course not found");
 
       const isAllocated = await prismaClient.courseEnrollment.findFirst({
         where: {
           courseId: dbCourse.id,
-          instituteId: dbInstitution.id,
+          batchId: dbBatch.id,
         },
       });
 
@@ -115,7 +115,7 @@ class ReportController {
 
       const studentData = await prismaClient.student.findMany({
         where: {
-          instituteId: dbInstitution.id,
+          batchId: dbBatch.id,
         },
         select: {
           id: true,
@@ -185,14 +185,12 @@ class ReportController {
        */
 
       const assessmentId = req.params.assessmentId;
-      const instituteId = req.params.instituteId;
       const rawPage = Number(req.query.page);
 
       const pageNumber =
         Number.isInteger(rawPage) && rawPage >= 0 ? rawPage : 0;
 
       if (!assessmentId) throw new Error("courseId is required");
-      if (!instituteId) throw new Error("instituteID is required");
 
       const dbAssessment = await prismaClient.assessment.findUnique({
         where: {
@@ -201,13 +199,6 @@ class ReportController {
       });
 
       if (!dbAssessment) throw new Error("Assessment not found");
-      const dbInstitution = await prismaClient.institution.findUnique({
-        where: {
-          id: instituteId as string,
-        },
-      });
-
-      if (!dbInstitution) throw new Error("course not found");
 
       const studentAssessments =
         await prismaClient.assessmentSubmission.findMany({

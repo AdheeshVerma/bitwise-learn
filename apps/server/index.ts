@@ -103,7 +103,7 @@ app.use("/api/v1/vendors", vendorRouter);
 app.use("/api/v1/problems", problemsRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/code", codeRouter);
-app.use("/api/v1/report", reportRouter);
+app.use("/api/v1/reports", reportRouter);
 
 // For dev only
 app.use("/api/v1/assessments", assessmentRouter);

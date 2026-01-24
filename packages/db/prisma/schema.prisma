@@ -118,17 +118,18 @@ model Vendor {
 }
 
 model Batch {
-  id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  batchname     String
-  branch        String
-  batchEndYear  String
-  institutionId String       @db.ObjectId
-  institution   Institution  @relation(references: [id], fields: [institutionId])
-  teachers      Teacher[]
-  students      Student[]
-  assessments   Assessment[]
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  id                String             @id @default(auto()) @map("_id") @db.ObjectId
+  batchname         String
+  branch            String
+  batchEndYear      String
+  institutionId     String             @db.ObjectId
+  institution       Institution        @relation(references: [id], fields: [institutionId])
+  teachers          Teacher[]
+  students          Student[]
+  assessments       Assessment[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  courseEnrollments CourseEnrollment[]
 }
 
 model Teacher {
@@ -267,16 +268,18 @@ model CourseAssignemntSubmission {
 }
 
 model CourseEnrollment {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  courseId    String      @db.ObjectId
-  course      Course      @relation(fields: [courseId], references: [id])
-  instituteId String      @db.ObjectId
-  institute   Institution @relation(fields: [instituteId], references: [id])
-  enrolledAt  DateTime    @default(now())
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  courseId      String       @db.ObjectId
+  course        Course       @relation(fields: [courseId], references: [id])
+  batchId       String       @db.ObjectId
+  batch         Batch        @relation(fields: [batchId], references: [id])
+  enrolledAt    DateTime     @default(now())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  institution   Institution? @relation(fields: [institutionId], references: [id])
+  institutionId String?      @db.ObjectId
 
-  @@unique([courseId, instituteId])
+  @@unique([courseId, batchId])
 }
 
 model Problem {

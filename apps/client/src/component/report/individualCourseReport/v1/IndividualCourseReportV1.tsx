@@ -1,0 +1,288 @@
+"use client";
+
+import { getStudentData } from "@/api/reports/get-student-data";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  CartesianGrid,
+  Legend,
+} from "recharts";
+import {
+  ArrowLeft,
+  Users,
+  TrendingUp,
+  FileCheck2,
+  BarChart3,
+  ClipboardList,
+} from "lucide-react";
+
+type Student = {
+  id: string;
+  name: string;
+  rollNumber: string;
+  courseProgresses: any[];
+  courseAssignemntSubmissions: any[];
+};
+
+const COLORS = ["#10b981", "#ef4444"];
+
+function IndividualCourseReportV1({
+  courseId,
+  batchId,
+}: {
+  courseId: string;
+  batchId: string;
+}) {
+  const [students, setStudents] = useState<Student[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function loadData() {
+      await getStudentData(0, courseId, batchId, setStudents);
+    }
+    loadData();
+  }, [courseId, batchId]);
+
+  /* ------------------ Derived Metrics ------------------ */
+
+  const totalStudents = students.length;
+
+  const progressChartData = students.map((s) => ({
+    name: s.name.split(" ")[0],
+    progress: s.courseProgresses.length,
+  }));
+
+  const submittedCount = students.filter(
+    (s) => s.courseAssignemntSubmissions.length > 0,
+  ).length;
+
+  const notSubmittedCount = totalStudents - submittedCount;
+
+  const assignmentStats = [
+    { name: "Submitted", value: submittedCount },
+    { name: "Pending", value: notSubmittedCount },
+  ];
+
+  const submissionRate =
+    totalStudents > 0
+      ? ((submittedCount / totalStudents) * 100).toFixed(1)
+      : "0";
+
+  const avgProgress =
+    totalStudents > 0
+      ? (
+          students.reduce((sum, s) => sum + s.courseProgresses.length, 0) /
+          totalStudents
+        ).toFixed(1)
+      : "0";
+
+  /* ------------------ Tooltips ------------------ */
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload?.length) {
+      return (
+        <div className="rounded-md bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm">
+          <p className="font-medium text-zinc-100">{payload[0].payload.name}</p>
+          <p className="text-emerald-400">Progress: {payload[0].value}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  /* ------------------ UI ------------------ */
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Back + Header */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() =>
+              router.push(`/admin-dashboard/reports/courses/${courseId}`)
+            }
+            className="flex items-center gap-2 text-sm text-zinc-300 hover:text-white transition"
+          >
+            <ArrowLeft size={18} />
+            Back to Courses
+          </button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-1 bg-emerald-500 rounded-full" />
+          <h1 className="text-2xl font-semibold">Individual Course Report</h1>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <StatCard
+            title="Total Students"
+            value={totalStudents}
+            icon={<Users />}
+          />
+          <StatCard
+            title="Submission Rate"
+            value={`${submissionRate}%`}
+            icon={<FileCheck2 />}
+          />
+          <StatCard
+            title="Average Progress"
+            value={avgProgress}
+            icon={<TrendingUp />}
+          />
+        </div>
+
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Bar Chart */}
+          <Card
+            title="Student Progress"
+            subtitle="Completed modules per student"
+            icon={<BarChart3 />}
+          >
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={progressChartData}>
+                <CartesianGrid stroke="#27272a" strokeDasharray="3 3" />
+                <XAxis dataKey="name" stroke="#a1a1aa" />
+                <YAxis stroke="#a1a1aa" />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar
+                  dataKey="progress"
+                  fill="#10b981"
+                  radius={[6, 6, 0, 0]}
+                  maxBarSize={50}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+
+          {/* Pie Chart */}
+          <Card
+            title="Assignment Status"
+            subtitle="Submission overview"
+            icon={<ClipboardList />}
+          >
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={assignmentStats}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={4}
+                >
+                  {assignmentStats.map((_, i) => (
+                    <Cell key={i} fill={COLORS[i]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </Card>
+        </div>
+
+        {/* Table */}
+        <div className="rounded-lg border border-zinc-800 bg-zinc-900">
+          <div className="flex items-center gap-2 p-5 border-b border-zinc-800">
+            <ClipboardList size={18} />
+            <h2 className="font-medium">Student Summary</h2>
+          </div>
+
+          <table className="w-full text-sm">
+            <thead className="bg-zinc-800/60 text-zinc-300">
+              <tr>
+                <th className="text-left p-4">Name</th>
+                <th className="text-left p-4">Roll No</th>
+                <th className="text-left p-4">Progress</th>
+                <th className="text-left p-4">Assignments</th>
+                <th className="text-left p-4">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((s) => (
+                <tr
+                  key={s.id}
+                  className="border-t border-zinc-800 hover:bg-zinc-800/40"
+                >
+                  <td className="p-4">{s.name}</td>
+                  <td className="p-4 text-zinc-400">{s.rollNumber}</td>
+                  <td className="p-4 text-emerald-400">
+                    {s.courseProgresses.length}
+                  </td>
+                  <td className="p-4">
+                    {s.courseAssignemntSubmissions.length}
+                  </td>
+                  <td className="p-4">
+                    {s.courseAssignemntSubmissions.length > 0 ? (
+                      <span className="text-emerald-400">Submitted</span>
+                    ) : (
+                      <span className="text-red-400">Pending</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------ Reusable Components ------------------ */
+
+function StatCard({
+  title,
+  value,
+  icon,
+}: {
+  title: string;
+  value: any;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900 p-5">
+      <div>
+        <p className="text-sm text-zinc-400">{title}</p>
+        <p className="text-3xl font-semibold mt-1">{value}</p>
+      </div>
+      <div className="text-emerald-500">{icon}</div>
+    </div>
+  );
+}
+
+function Card({
+  title,
+  subtitle,
+  icon,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-5">
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-emerald-500">{icon}</span>
+        <h3 className="font-medium">{title}</h3>
+      </div>
+      <p className="text-sm text-zinc-400 mb-4">{subtitle}</p>
+      {children}
+    </div>
+  );
+}
+
+export default IndividualCourseReportV1;
