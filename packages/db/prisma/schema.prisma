@@ -396,7 +396,7 @@ model AssessmentSection {
   assessmentType   ASSESSMENT_TYPE
 
   assessmentId String     @db.ObjectId
-  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 
   questions AssessmentQuestion[]
   createdAt DateTime             @default(now())
@@ -409,10 +409,10 @@ model AssessmentQuestion {
   options  String[]
 
   sectionId String            @db.ObjectId
-  section   AssessmentSection @relation(fields: [sectionId], references: [id])
+  section   AssessmentSection @relation(fields: [sectionId], references: [id] , onDelete: Cascade)
 
   problemId String?  @db.ObjectId
-  problem   Problem? @relation(fields: [problemId], references: [id])
+  problem   Problem? @relation(fields: [problemId], references: [id] )
 
   maxMarks                      Int
   assessmentQuestionSubmissions AssessmentQuestionSubmission[]
@@ -424,7 +424,7 @@ model AssessmentSubmission {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   assessmentId String     @db.ObjectId
-  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 
   studentId                     String                         @db.ObjectId
   student                       Student                        @relation(fields: [studentId], references: [id])
@@ -445,7 +445,7 @@ model AssessmentQuestionSubmission {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   questionId String             @db.ObjectId
-  question   AssessmentQuestion @relation(fields: [questionId], references: [id])
+  question   AssessmentQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   answer                 String?
   marksObtained          Int?

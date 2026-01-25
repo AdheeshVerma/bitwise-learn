@@ -121,7 +121,7 @@ class AssessmentQuestionController {
       return res.status(200).json(apiResponse(200, error.message, null));
     }
   }
-  async deleteAssessmentSection(req: Request, res: Response) {
+  async deleteAssessmentQuestion(req: Request, res: Response) {
     try {
       const questionId = req.params.id;
       if (!req.user) throw new Error("User not authenticated");

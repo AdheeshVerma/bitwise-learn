@@ -81,7 +81,7 @@ router.put(
 router.delete(
   "/delete-assessment-question/:id",
   authMiddleware,
-  assessmentController.deleteAssessment,
+  assessmentQuestionController.deleteAssessmentQuestion,
 );
 router.get(
   "/get-questions-by-sectionId/:id",
