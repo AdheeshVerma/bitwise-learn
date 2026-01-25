@@ -10,30 +10,22 @@ type TabsProps = {
   institutionId: string;
 };
 
-<<<<<<< Updated upstream
 type RenderComponentProps = {
   value: string;
   institutionId: string;
   onClose: () => void;
 };
 
-const RenderComponent = ({ value, institutionId, onClose }: RenderComponentProps) => {
-=======
-const RenderComponent = ({ value }: { value: string }) => {
-  const params = useParams();
->>>>>>> Stashed changes
+const RenderComponent = ({
+  value,
+  institutionId,
+  onClose,
+}: RenderComponentProps) => {
   switch (value) {
     case "Teachers":
       return <TeacherForm openForm={onClose} institutionId={institutionId} />;
     case "Batches":
       return <BatchesForm />;
-<<<<<<< Updated upstream
-    case "Courses":
-      return <CourseForm />;
-=======
-    case "Vendors":
-      return <VendorForm />;
->>>>>>> Stashed changes
     default:
       return null;
   }
@@ -41,11 +33,7 @@ const RenderComponent = ({ value }: { value: string }) => {
 
 export const Tabs = ({ value, onValueChange, institutionId }: TabsProps) => {
   const [addNew, setAddNew] = useState(false);
-<<<<<<< Updated upstream
-  const tabs = ["Teachers", "Batches", "Courses"];
-=======
-  const tabs = ["Teachers", "Batches", "Vendors"];
->>>>>>> Stashed changes
+  const tabs = ["Teachers", "Batches"];
 
   return (
     <>
@@ -59,7 +47,11 @@ export const Tabs = ({ value, onValueChange, institutionId }: TabsProps) => {
               <X />
             </button>
 
-            <RenderComponent value={value} institutionId={institutionId} onClose={() => setAddNew(false)} />
+            <RenderComponent
+              value={value}
+              institutionId={institutionId}
+              onClose={() => setAddNew(false)}
+            />
           </div>
         </div>
       )}
@@ -70,10 +62,11 @@ export const Tabs = ({ value, onValueChange, institutionId }: TabsProps) => {
             <button
               key={tab}
               onClick={() => onValueChange(tab)}
-              className={`px-4 py-1.5 rounded-md text-md transition ${value === tab
-                ? "bg-blue-500 text-white"
-                : "text-gray-400 hover:text-white"
-                }`}
+              className={`px-4 py-1.5 rounded-md text-md transition ${
+                value === tab
+                  ? "bg-blue-500 text-white"
+                  : "text-gray-400 hover:text-white"
+              }`}
             >
               {tab}
             </button>
