@@ -22,24 +22,28 @@ const InstitutionInfo = ({ institution }: InstitutionInfoProps) => {
   return (
     <div className={`min-h-screen ${Colors.background.primary} p-6`}>
       <div className="flex gap-6 max-w-screen mx-auto">
-        <InstitutionSidebar
+        {institution && <InstitutionSidebar
           institution={institution}
           onUpdate={() => { }}
           onDelete={() => { }}
-        />
+        />}
 
         <main className="flex-1">
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            institutionId={institution.id}
-            onBatchCreated={handleRefresh}
-          />
-          <EntityList
-            key={refreshKey}
-            type={activeTab}
-            institutionId={institution.id}
-          />
+          {institution &&
+            <>
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                institutionId={institution.id}
+                onBatchCreated={handleRefresh}
+              />
+              <EntityList
+                key={refreshKey}
+                type={activeTab}
+                institutionId={institution.id}
+              />
+            </>
+          }
         </main>
       </div>
     </div>

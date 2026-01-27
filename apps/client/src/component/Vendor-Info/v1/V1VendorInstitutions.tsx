@@ -1,5 +1,5 @@
 "use client";
-import { getAllInstitutions } from "@/api/institutions/get-all-institutions";
+import { getVendorInstitutions } from "@/api/institutions/get-institutions-by-vendor";
 import Filter from "@/component/general/Filter";
 import { useEffect, useState } from "react";
 import DashboardInfo from "./DashboardInfo";
@@ -16,17 +16,17 @@ function V1VendorInstitutions({ vendorId }: V1VendorInstitutionsProps) {
   const [data, setData] = useState<any>([]);
   const [addNew, setAddNew] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
-  
+
   useEffect(() => {
-    getAllInstitutions(setData);
-  }, []);
+    getVendorInstitutions(setData, vendorId);
+  }, [vendorId]);
 
   const handleCreateInstitution = async (data: any) => {
     try {
       await createInstitution(data);
       setAddNew(false);
       toast.success("Institute Created Successfully");
-      getAllInstitutions(setData);
+      getVendorInstitutions(setData, vendorId);
     } catch (err) {
       toast.error("Error creating Institute");
       console.error(err);

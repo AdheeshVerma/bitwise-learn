@@ -20,6 +20,7 @@ function Filter({
   const Colors = useColors();
 
   const filteredData = useMemo(() => {
+    if (!data) return [];
     return data.filter((item: Item) => {
       const value = item.name ?? item.batchname ?? "";
       return value.toLowerCase().includes(search.toLowerCase());
