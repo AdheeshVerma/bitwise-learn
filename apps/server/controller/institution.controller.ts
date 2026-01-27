@@ -236,9 +236,52 @@ class InstitutionController {
         throw new Error("only admin/superadmin can view institutions");
       }
 
-      const institute = await prismaClient.institution.findFirst({
+      const institutions = await prismaClient.institution.findFirst({
         where: {
           id: institutionId,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          tagline: true,
+          address: true,
+          websiteLink: true,
+          phoneNumber: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+      if (!institutions) throw new Error("institute not found");
+      return res
+        .status(200)
+        .json(apiResponse(200, "institution fetched successfully", institutions));
+    } catch (error: any) {
+      console.log(error);
+      return res.status(200).json(apiResponse(200, error.message, null));
+    }
+  }
+  async getInstitutionByVendor(req: Request, res: Response) {
+    try {
+      if (!req.user) throw new Error("user is not authenticated");
+      const userId = req.user.id;
+      const vendorId = req.params.id;
+
+      if (!vendorId) throw new Error("institution id is required");
+
+      const dbAdmin = await prismaClient.user.findFirst({
+        where: { id: userId },
+      });
+
+      if (!dbAdmin) throw new Error("no such user found!");
+
+      if (dbAdmin.ROLE !== "ADMIN" && dbAdmin.ROLE !== "SUPERADMIN") {
+        throw new Error("only admin/superadmin can view institutions");
+      }
+
+      const institute = await prismaClient.institution.findMany({
+        where: {
+          createdBy: vendorId,
         },
         select: {
           id: true,

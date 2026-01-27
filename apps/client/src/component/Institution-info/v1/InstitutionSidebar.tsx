@@ -64,7 +64,8 @@ const InstitutionSidebar = ({
 }: InstitutionSidebarProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(institution);
-
+  console.log("institution in institution sidebar" + JSON.stringify(institution));
+  
   useEffect(() => {
     setFormData(institution);
   }, [institution]);

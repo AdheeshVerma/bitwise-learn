@@ -80,7 +80,7 @@ export default function HeroSection() {
 }
 
 /* ---------------- ENTITY TABS ---------------- */
-import { School, Handshake, Users, ShieldCheck } from "lucide-react";
+import { School, Handshake, ShieldCheck } from "lucide-react";
 
 const ENTITY_META: Record<
   string,
@@ -103,12 +103,6 @@ const ENTITY_META: Record<
     tagline: "Industry trainers who got involved",
     accent: "from-emerald-500/20 to-emerald-500/5",
   },
-  batches: {
-    icon: Users,
-    label: "Batches",
-    tagline: "Generations our platform benefits",
-    accent: "from-purple-500/20 to-purple-500/5",
-  },
   admins: {
     icon: ShieldCheck,
     label: "Admins",
@@ -123,7 +117,7 @@ function EntityTabs({ fields, data }: EntityTabsProps) {
   }
 
   return (
-    <div className="mx-20 mt-8 grid grid-cols-2 gap-3">
+    <div className="mx-20 mt-8 grid grid-cols-1 gap-3">
       {fields.map((field) => {
         const meta = ENTITY_META[field];
         const href = URL_MAP[field];
