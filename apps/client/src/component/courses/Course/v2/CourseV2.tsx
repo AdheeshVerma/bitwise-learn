@@ -340,6 +340,7 @@ const { theme } = useTheme();
         // <PdfViewer url={topic.file} />
         <iframe src={topic.file} className="w-[40%] h-screen" />
       )}
+      
     </div>
   );
 }
