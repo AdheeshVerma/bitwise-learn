@@ -143,16 +143,8 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
                 </td>
                 <td className="px-6 py-4 text-right">
                   <button
-<<<<<<< Updated upstream
                     onClick={() => handleSeeDetails(company.id)}
-                    className="rounded-md border border-primaryBlue/40 px-3 py-1.5 text-xs font-medium text-primaryBlue transition hover:bg-primaryBlue/20"
-=======
-                    onClick={() => {
-                      setSelected(company);
-                      setIsEditing(false);
-                    }}
                     className={`rounded-md border ${Colors.border.defaultThin} px-3 py-1.5 text-xs font-medium ${Colors.text.special} transition ${Colors.hover.special} cursor-pointer`}
->>>>>>> Stashed changes
                   >
                     See details
                   </button>

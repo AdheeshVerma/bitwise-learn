@@ -5,10 +5,7 @@ import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AddAssessmentCode from "./AddCODEAssessmentQuestion";
 import AddAssessmentMCQ from "./AddMCQAssessmentQuestion";
-<<<<<<< Updated upstream
-=======
 import { useColors } from "@/component/general/(Color Manager)/useColors";
->>>>>>> Stashed changes
 
 // all the api's for this component
 import { createAssessmentSection } from "@/api/assessments/create-assessment-section";
@@ -88,15 +85,8 @@ const AddSectionModal = ({ open, onClose, onSubmit }: AddSectionModalProps) => {
           <input
             value={form.name}
             placeholder="XYZ Section..."
-<<<<<<< Updated upstream
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="mt-1 w-full rounded-lg bg-slate-800 px-3 py-2 text-sm text-white border border-slate-700 outline-none"
-=======
-            onChange={(e) =>
-              setForm({ ...form, name: e.target.value })
-            }
             className={`mt-1 w-full rounded-lg ${Colors.background.primary} px-3 py-2 text-sm ${Colors.text.primary} border ${Colors.border.defaultThin} outline-none`}
->>>>>>> Stashed changes
           />
         </div>
 
@@ -210,13 +200,9 @@ const DeleteSectionModal = ({
       >
         {/* Header */}
         <div className="mb-5">
-<<<<<<< Updated upstream
-          <h2 className="text-lg font-semibold text-white">Delete section?</h2>
-=======
           <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
             Delete section?
           </h2>
->>>>>>> Stashed changes
         </div>
 
         {/* Message */}
@@ -405,26 +391,20 @@ const DeleteQuestionModal = ({
       >
         {/* Header */}
         <div className="mb-5">
-<<<<<<< Updated upstream
-          <h2 className="text-lg font-semibold text-white">Delete question?</h2>
-=======
+
           <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
             Delete question?
           </h2>
->>>>>>> Stashed changes
         </div>
 
         {/* Message */}
         <div className={`text-sm ${Colors.text.secondary} leading-relaxed`}>
           Are you sure you want to delete this question?
           <br />
-<<<<<<< Updated upstream
-          <span className="text-white/40">This action cannot be undone.</span>
-=======
+
           <span className={Colors.text.secondary}>
             This action cannot be undone.
           </span>
->>>>>>> Stashed changes
         </div>
 
         {/* Divider */}
@@ -512,15 +492,11 @@ const UpdateSectionModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-<<<<<<< Updated upstream
-      <div className="w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-800 p-6">
-        <h2 className="text-lg font-semibold text-white">Edit section</h2>
-=======
+
       <div className={`w-full max-w-sm rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThin} p-6`}>
         <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
           Edit section
         </h2>
->>>>>>> Stashed changes
 
         <div className="mt-4">
           <label className={`text-sm ${Colors.text.secondary}`}>Section name</label>
@@ -533,13 +509,10 @@ const UpdateSectionModal = ({
         </div>
 
         <div className="mt-4">
-<<<<<<< Updated upstream
-          <label className="text-sm text-slate-400">Marks per question</label>
-=======
+
           <label className={`text-sm ${Colors.text.secondary}`}>
             Marks per question
           </label>
->>>>>>> Stashed changes
           <input
             type="number"
             min={1}
@@ -634,21 +607,7 @@ const UpdateQuestionModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-<<<<<<< Updated upstream
-      <div className="w-full max-w-lg rounded-xl border border-white/10 bg-[#121313] p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Edit question</h2>
 
-        {/* Question */}
-        {text && (
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Question text"
-            className="w-full rounded-lg bg-[#181A1A] border border-white/10
-                     px-3 py-2 text-sm text-white outline-none mb-4"
-          />
-        )}
-=======
       <div className={`w-full max-w-lg rounded-xl border border-white/10 ${Colors.background.secondary} p-6`}>
         <h2 className={`text-lg font-semibold ${Colors.text.primary} mb-4`}>
           Edit question
@@ -661,7 +620,6 @@ const UpdateQuestionModal = ({
           placeholder="Question text"
           className={`w-full rounded-lg ${Colors.background.primary} ${Colors.border.defaultThin} px-3 py-2 text-sm ${Colors.text.primary} outline-none mb-4`}
         />
->>>>>>> Stashed changes
 
         {/* Options */}
         <div className="space-y-2">
@@ -1025,18 +983,11 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                       setSelectedSection(section);
                       setShowUpdateSection(true);
                     }}
-<<<<<<< Updated upstream
-                    className="rounded-md border border-white/10 bg-[#181A1A]
-                            px-3 py-2 text-sm text-white/80
-                            hover:border-[#1DA1F2] hover:text-white
-                            transition"
-                  >
-=======
+
                     className={`rounded-md border ${Colors.border.defaultThin} ${Colors.background.secondary}
                             px-3 py-2 text-sm ${Colors.text.secondary}
                             ${Colors.hover.special} hover:text-white
                             transition cursor-pointer`}>
->>>>>>> Stashed changes
                     Edit
                   </button>
 
@@ -1052,12 +1003,8 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                     className="rounded-full border border-red-500/20 bg-red-500/10
                               px-2 py-2 text-sm text-red-400
                               hover:bg-red-500/20 hover:text-red-300
-<<<<<<< Updated upstream
-                              transition"
-                  >
-=======
+
                               transition cursor-pointer">
->>>>>>> Stashed changes
                     <Trash className="h-4 w-4" />
                   </button>
                 </div>
@@ -1075,14 +1022,11 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                         className={`rounded-xl ${Colors.background.primary} ${Colors.border.defaultThin} p-4 space-y-3`}
                       >
                         <div className="flex justify-between items-start">
-<<<<<<< Updated upstream
-                          <p className="text-sm font-medium text-white">
+
+                          <p className={`text-sm font-medium ${Colors.text.primary}`}>
                             {i + 1}.{" "}
                             {q.question || q.problem?.name || "Code Question"}
-=======
-                          <p className={`text-sm font-medium ${Colors.text.primary}`}>
-                            {i + 1}. {q.question || "Code Question"}
->>>>>>> Stashed changes
+
                           </p>
                           <div className="flex gap-2">
                             <button
@@ -1091,14 +1035,10 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                                 setSelectedQuestion(q);
                                 setShowUpdateQuestion(true);
                               }}
-<<<<<<< Updated upstream
-                              className="px-3 py-1 text-xs rounded bg-slate-700 text-white"
-                            >
-=======
+
                               className={`px-3 py-1 text-xs rounded ${Colors.text.secondary} ${Colors.border.defaultThin} ${Colors.background.secondary}
                             ${Colors.hover.special} hover:text-white
                             transition cursor-pointer`}>
->>>>>>> Stashed changes
                               Edit
                             </button>
 
@@ -1108,12 +1048,7 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                                 setDeleteQuestionId(q.id);
                                 setShowDeleteQuestion(true);
                               }}
-<<<<<<< Updated upstream
-                              className="px-3 py-1 text-xs rounded bg-red-500/20 text-red-400"
-                            >
-=======
                               className="px-3 py-1 text-xs rounded bg-red-500/20 text-red-400 cursor-pointer">
->>>>>>> Stashed changes
                               Delete
                             </button>
                           </div>
@@ -1128,16 +1063,10 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                               <div
                                 key={idx}
                                 className={`rounded-lg border px-3 py-2 text-xs flex items-center justify-between
-<<<<<<< Updated upstream
-                                  ${
-                                    isCorrect
-                                      ? "border-green-500 bg-green-500/10 text-green-400"
-                                      : "border-white/10 bg-[#121313] text-white/70"
-=======
+
                                   ${isCorrect
                                     ? "border-green-500 bg-green-500/10 text-green-400"
                                     : `${Colors.border.defaultThin} ${Colors.text.primary} ${Colors.background.secondary}`
->>>>>>> Stashed changes
                                   }`}
                               >
                                 <span>{opt}</span>

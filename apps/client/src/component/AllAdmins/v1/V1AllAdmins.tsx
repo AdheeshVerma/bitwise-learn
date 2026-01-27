@@ -5,14 +5,11 @@ import SideBar from "@/component/general/SideBar";
 import React, { useEffect, useState } from "react";
 import DashboardInfo from "./DashboardInfo";
 import { Plus } from "lucide-react";
-<<<<<<< Updated upstream
 import AdminForm from "./AdminForm";
 import { createAdmin } from "@/api/admins/create-admin";
 import toast from "react-hot-toast";
-=======
 import VendorForm from "./VendorForm";
 import { useColors } from "@/component/general/(Color Manager)/useColors";
->>>>>>> Stashed changes
 
 function V1AllAdmins() {
   const [data, setData] = useState([]);
@@ -34,13 +31,9 @@ function V1AllAdmins() {
     }
   };
   return (
-<<<<<<< Updated upstream
-    <div className="flex">
-      {addNew && <AdminForm openForm={setAddNew} onSubmit={handleCreateAdmin} />}
-=======
     <div className={`flex ${Colors.background.primary}`}>
-      {addNew && <VendorForm openForm={setAddNew} />}
->>>>>>> Stashed changes
+      {addNew && <AdminForm openForm={setAddNew} onSubmit={handleCreateAdmin} />}
+
       <div className="h-screen">
         <SideBar />
       </div>
@@ -57,7 +50,7 @@ function V1AllAdmins() {
           </button>
         </div>
         <Filter data={data} setFilteredData={setFilteredData} />
-        <DashboardInfo data={filteredData} />
+        <DashboardInfo data={filteredData as any} />
       </div>
     </div>
   );
