@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAllStats } from "@/api/admins/get-admin-stats";
 import { User } from "lucide-react";
-import Link from "next/link";
 import { useColors } from "@/component/general/(Color Manager)/useColors";
 import { getVendorData } from "@/api/vendors/get-vendor-by-id";
 import useVendor from "@/store/vendorStore";
+import { getAllInstitutions } from "@/api/institutions/get-all-institutions";
+import DashboardInfo from "@/component/AllInstitutions/v1/DashboardInfo";
+import Filter from "@/component/general/Filter";
+
 
 /* ---------------- TYPES ---------------- */
 
@@ -30,11 +32,6 @@ type HeaderProps = {
   name: string;
   email: string;
   tagline?: string;
-};
-
-type EntityTabsProps = {
-  fields: string[];
-  data: StatsMap;
 };
 
 const Colors = useColors();
@@ -64,7 +61,7 @@ function Header({ name, email, tagline }: HeaderProps) {
           </h1>
           <p className={`${Colors.text.secondary}`}>{email}</p>
           {tagline && (
-            <span className="text-sm text-white/50 mt-1">{tagline}</span>
+            <span className={`text-sm ${Colors.text.secondary} mt-1`}>{tagline}</span>
           )}
         </div>
       </div>
@@ -72,30 +69,14 @@ function Header({ name, email, tagline }: HeaderProps) {
   );
 }
 
-/* ---------------- URL MAP ---------------- */
-const URL_MAP: Record<string, string> = {
-  admins: "/admin-dashboard/admins",
-  institutions: "/admin-dashboard/institutions",
-  batches: "/admin-dashboard/batches",
-  vendors: "/admin-dashboard/vendors",
-};
-
 /* ---------------- HERO SECTION ---------------- */
 
 export default function HeroSection() {
-  const [tabs, setTabs] = useState<StatsMap>({});
-  const [fields, setFields] = useState<string[]>([]);
+  const [institutionData, setInstitutionData] = useState<any>([]);
+  const [filteredData, setFilteredData] = useState([]);
 
   const vendor = useVendor((state) => state.info);
   const setVendor = useVendor((state) => state.setData);
-
-  useEffect(() => {
-    getAllStats(setTabs);
-  }, []);
-
-  useEffect(() => {
-    setFields(Object.keys(tabs));
-  }, [tabs]);
 
   // FORCE UI TO WORK
   useEffect(() => {
@@ -110,6 +91,19 @@ export default function HeroSection() {
     getVendorData(null,vendor.id);
   }, [vendor?.id]);
 
+  useEffect(() => {
+    const fetchInstitutions = async () => {
+      try {
+        await getAllInstitutions(setInstitutionData);
+      } catch (err) {
+        console.error("Error fetching institutions:", err);
+      }
+    };
+
+    fetchInstitutions();
+  }, []);
+
+
   if (!vendor) return null;
 
   return (
@@ -120,100 +114,14 @@ export default function HeroSection() {
         tagline={vendor.tagline}
       />
 
-      <EntityTabs fields={fields} data={tabs} />
+      <div className="p-10 mx-auto w-full h-fit flex flex-col">
+        <h2 className={`text-2xl font-semibold mb-4 ${Colors.text.special}`}>Institutions</h2>
+        <div className="flex flex-col gap-10">
+        <Filter data={institutionData} setFilteredData={setFilteredData} />
+        <DashboardInfo data={filteredData} />
+        </div>
+      </div>
+
     </>
-  );
-}
-
-/* ---------------- ENTITY TABS ---------------- */
-import { School, Handshake, ShieldCheck } from "lucide-react";
-
-const ENTITY_META: Record<
-  string,
-  {
-    icon: any;
-    label: string;
-    tagline: string;
-    accent: string;
-  }
-> = {
-  institutions: {
-    icon: School,
-    label: "Institutions",
-    tagline: "Education centers associated with us",
-    accent: "from-blue-500/20 to-blue-500/5",
-  },
-  vendors: {
-    icon: Handshake,
-    label: "Vendors",
-    tagline: "Industry trainers who got involved",
-    accent: "from-emerald-500/20 to-emerald-500/5",
-  },
-  admins: {
-    icon: ShieldCheck,
-    label: "Admins",
-    tagline: "People maintaining our platform",
-    accent: "from-orange-500/20 to-orange-500/5",
-  },
-};
-
-function EntityTabs({ fields, data }: EntityTabsProps) {
-  if (!fields.length) {
-    return <p className="text-white/60 text-center mt-6">Loading dashboard…</p>;
-  }
-
-  return (
-    <div className="mx-20 mt-8 grid grid-cols-1 gap-3">
-      {fields.map((field) => {
-        const meta = ENTITY_META[field];
-        const href = URL_MAP[field];
-        if (!meta || !href) return null;
-
-        const Icon = meta.icon;
-
-        return (
-          <Link
-            key={field}
-            href={href}
-            className={`
-                            group relative rounded-2xl p-6
-              ${Colors.background.secondary} overflow-hidden
-              hover:shadow-2xl hover:-translate-y-1
-              transition-all duration-300
-              `}
-          >
-            {/* Gradient depth layer */}
-            <div
-              className={`absolute inset-0 bg-gradient-to-br ${meta.accent} opacity-0 group-hover:opacity-100 transition`}
-            />
-
-            {/* Content */}
-            <div className="relative z-10 flex flex-col gap-4">
-              {/* Icon + Count */}
-              <div className="flex items-center justify-between">
-                <div className={`p-3 rounded-xl ${Colors.background.primary}`}>
-                  <Icon className={`text-primaryBlue`} size={28} />
-                </div>
-                <span className={`text-3xl font-bold ${Colors.text.primary}`}>
-                  {data[field] ?? 0}
-                </span>
-              </div>
-
-              {/* Text */}
-              <div>
-                <h3 className={`text-lg font-semibold ${Colors.text.primary}`}>
-                  {meta.label}
-                </h3>
-                <p
-                  className={`text-sm mt-1 leading-snug ${Colors.text.secondary}`}
-                >
-                  {meta.tagline}
-                </p>
-              </div>
-            </div>
-          </Link>
-        );
-      })}
-    </div>
   );
 }
