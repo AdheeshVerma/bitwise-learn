@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { X, Pencil, Trash2 } from "lucide-react";
 import { deleteEntity, updateEntity } from "@/api/institutions/entity";
 import { useColors } from "@/component/general/(Color Manager)/useColors";
+import toast from "react-hot-toast";
 
 type UserData = {
   id: string;
@@ -63,33 +64,49 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
   };
 
   const handleSubmit = async () => {
-    if (!formData) return;
+    const toasdId = toast.loading("Saving Changes...");
+    try {
+      if (!formData) return;
 
-    await updateEntity(
-      formData.id,
-      {
-        data: formData,
-        entity: "admin",
-      },
-      null,
-    );
-    setSelected(formData);
-    setIsEditing(false);
+      await updateEntity(
+        formData.id,
+        {
+          data: formData,
+          entity: "admin",
+        },
+        null,
+      );
+      toast.success("Changes Saved!", {id:toasdId});
+      setSelected(formData);
+      setIsEditing(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Unable to update", {id:toasdId});
+    }
   };
 
   const handleDelete = async () => {
-    if (!selected) return;
-    await deleteEntity(
-      selected.id,
-      {
-        entity: "admin",
-        data: "",
-      },
-      null,
-    );
+    const toastId = toast.loading("Deleting Admin...");
+    try {
+      if (!selected) return;
+      await deleteEntity(
+        selected.id,
+        {
+          entity: "admin",
+          data: "",
+        },
+        null,
+      );
 
-    setSelected(null);
-    setIsEditing(false);
+      toast.success("Delete Admin Success", { id: toastId });
+
+      setSelected(null);
+      setIsEditing(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Ubale to delete Admin", { id: toastId });
+    }
+
   };
 
   const handleChange = (key: keyof UserData, value: string) => {
@@ -230,7 +247,7 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
 
                   return (
                     <div key={key}>
-                        <p className={`mb-1 mt-2 text-[11px] uppercase tracking-wide ${Colors.text.special}`}>
+                      <p className={`mb-1 mt-2 text-[11px] uppercase tracking-wide ${Colors.text.special}`}>
                         {key.replace(/_/g, " ")}
                       </p>
 

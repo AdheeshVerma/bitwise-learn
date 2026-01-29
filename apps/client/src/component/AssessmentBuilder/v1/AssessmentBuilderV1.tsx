@@ -17,7 +17,7 @@ import { deleteAssessment } from "@/api/assessments/delete-assessment";
 import { deleteAssessmentQuestion } from "@/api/assessments/delete-assessment-question";
 import { updateAssessmentSection } from "@/api/assessments/update-assessment-section";
 import { updateAssessmentQuestion } from "@/api/assessments/update-assessment-question";
-import { publishAssessment } from "@/api/assessments/publish-assessment";
+import { updateAssessmentStatus } from "@/api/assessments/publish-assessment";
 
 interface BuilderProps {
   assessmentId: string;
@@ -287,55 +287,55 @@ const DeleteAssessmentModal = ({
 
   return (
     <div
-  className="fixed inset-0 z-50 flex items-center justify-center
+      className="fixed inset-0 z-50 flex items-center justify-center
              bg-black/70 backdrop-blur-sm"
-  onClick={onClose}
->
-  <div
-    onClick={(e) => e.stopPropagation()}
-    className={`w-full max-w-md rounded-xl p-6
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className={`w-full max-w-md rounded-xl p-6
                 ${Colors.background.secondary}
                 ${Colors.border.defaultThin}`}
-  >
-    <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
-      Delete assessment?
-    </h2>
+      >
+        <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
+          Delete assessment?
+        </h2>
 
-    <div className={`mt-3 text-sm ${Colors.text.secondary}`}>
-      Are you sure you want to delete this assessment?
-      <br />
-      <span className={Colors.text.secondary}>
-        All sections and questions will be permanently removed.
-      </span>
-    </div>
+        <div className={`mt-3 text-sm ${Colors.text.secondary}`}>
+          Are you sure you want to delete this assessment?
+          <br />
+          <span className={Colors.text.secondary}>
+            All sections and questions will be permanently removed.
+          </span>
+        </div>
 
-    <div className={`my-6 h-px ${Colors.border.defaultThin}`} />
+        <div className={`my-6 h-px ${Colors.border.defaultThin}`} />
 
-    <div className="flex justify-end gap-3">
-      <button
-        onClick={onClose}
-        disabled={loading}
-        className={`rounded-md px-4 py-2 text-sm cursor-pointer
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className={`rounded-md px-4 py-2 text-sm cursor-pointer
                     ${Colors.border.specialThick}
                     ${Colors.text.special}
                     ${Colors.hover.special}`}
-      >
-        Cancel
-      </button>
+          >
+            Cancel
+          </button>
 
-      <button
-        onClick={handleDelete}
-        disabled={loading}
-        className="rounded-md border border-red-500/30
+          <button
+            onClick={handleDelete}
+            disabled={loading}
+            className="rounded-md border border-red-500/30
                    px-4 py-2 text-sm font-medium
                    text-red-400
                    hover:border-red-500 hover:text-red-300 cursor-pointer"
-      >
-        {loading ? "Deleting..." : "Delete assessment"}
-      </button>
+          >
+            {loading ? "Deleting..." : "Delete assessment"}
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
   );
 };
@@ -415,7 +415,7 @@ const DeleteQuestionModal = ({
           <button
             onClick={onClose}
             disabled={loading}
-        className={`rounded-md px-4 py-2 text-sm
+            className={`rounded-md px-4 py-2 text-sm
                     ${Colors.border.specialThick}
                     ${Colors.text.special}
                     ${Colors.hover.special} cursor-pointer`}
@@ -527,7 +527,7 @@ const UpdateSectionModal = ({
           <button
             onClick={onClose}
             disabled={loading}
-        className={`rounded-md px-4 py-2 text-sm
+            className={`rounded-md px-4 py-2 text-sm
                     ${Colors.border.specialThick}
                     ${Colors.text.special}
                     ${Colors.hover.special} cursor-pointer`}
@@ -632,7 +632,7 @@ const UpdateQuestionModal = ({
                   updated[idx] = e.target.value;
                   setOptions(updated);
                 }}
-          className={`flex-1 rounded-lg ${Colors.background.primary} ${Colors.border.defaultThin} px-3 py-2 text-sm ${Colors.text.primary} outline-none`}
+                className={`flex-1 rounded-lg ${Colors.background.primary} ${Colors.border.defaultThin} px-3 py-2 text-sm ${Colors.text.primary} outline-none`}
               />
 
               <input
@@ -661,7 +661,7 @@ const UpdateQuestionModal = ({
           <button
             onClick={onClose}
             disabled={loading}
-        className={`rounded-md px-4 py-2 text-sm
+            className={`rounded-md px-4 py-2 text-sm
                     ${Colors.border.specialThick}
                     ${Colors.text.special}
                     ${Colors.hover.special}`}
@@ -691,29 +691,40 @@ interface PublishAssessmentModalProps {
   open: boolean;
   assessmentId: string;
   assessmentName?: string;
+  currentStatus: "UPCOMING" | "LIVE" | "ENDED";
   onClose: () => void;
-  onPublished: () => void;
+  onStatusChange: (status: "LIVE" | "ENDED") => void;
 }
+
 
 const PublishAssessmentModal = ({
   open,
   assessmentId,
   assessmentName,
+  currentStatus,
   onClose,
-  onPublished,
+  onStatusChange
 }: PublishAssessmentModalProps) => {
   const [loading, setLoading] = useState(false);
 
   if (!open) return null;
 
+  const nextStatus =
+    currentStatus === "LIVE" ? "ENDED" : "LIVE";
+
   const handlePublish = async () => {
     try {
       setLoading(true);
 
-      await publishAssessment(assessmentId);
+      await updateAssessmentStatus(assessmentId, nextStatus);
 
-      toast.success("Assessment published successfully");
-      onPublished();
+      toast.success(
+        nextStatus === "LIVE"
+          ? "Assessment is now live"
+          : "Assessment has ended"
+      );
+
+      onStatusChange(nextStatus);
       onClose();
     } catch (err) {
       console.error(err);
@@ -737,21 +748,28 @@ const PublishAssessmentModal = ({
         {/* Header */}
         <div className="mb-5">
           <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
-            Publish assessment?
+            {currentStatus === "LIVE"
+              ? "End assessment?"
+              : "Make assessment live?"}
           </h2>
-        </div>
 
-        {/* Message */}
-        <div className={`text-sm ${Colors.text.secondary} leading-relaxed`}>
-          You are about to publish{" "}
-          <span className={`${Colors.text.primary} font-medium`}>
-            {assessmentName || "this assessment"}
-          </span>
-          .
-          <br />
-          <span className={`${Colors.text.secondary}`}>
-            Once published, editing sections or questions will be restricted.
-          </span>
+          {currentStatus === "LIVE" ? (
+            <div className="text-white/50">
+              You are about to end{" "}
+              <span className="font-medium ">{assessmentName}</span>.
+              <br />
+              Students will no longer be able to attempt it.
+            </div>
+          ) : (
+            <div className="text-white/50">
+              You are about to make{" "}
+              <span className="font-medium">{assessmentName}</span> live again.
+              <br />
+              Students will be able to attempt it.
+            </div>
+          )}
+
+
         </div>
 
         {/* Divider */}
@@ -762,7 +780,7 @@ const PublishAssessmentModal = ({
           <button
             onClick={onClose}
             disabled={loading}
-        className={`rounded-md px-4 py-2 text-sm
+            className={`rounded-md px-4 py-2 text-sm
                     ${Colors.border.specialThick}
                     ${Colors.text.special}
                     ${Colors.hover.special}`}
@@ -776,7 +794,15 @@ const PublishAssessmentModal = ({
             className={`px-4 py-2 rounded-lg ${Colors.background.special}
                        ${Colors.text.primary} font-medium cursor-pointer hover:opacity-80`}
           >
-            {loading ? "Publishing..." : "Publish"}
+            {loading
+              ? currentStatus === "LIVE"
+                ? "Ending..."
+                : "Publishing..."
+              : currentStatus === "LIVE"
+                ? "End Assessment"
+                : "Make Live"}
+
+
           </button>
         </div>
       </div>
@@ -846,9 +872,6 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
     });
   };
 
-  const markAssessmentLive = () => {
-    setAssessmentData((prev) => (prev ? { ...prev, status: "LIVE" } : prev));
-  };
 
   const addQuestionToState = (sectionId: string, question: Question) => {
     setQuestionsBySection((prev) => ({
@@ -904,25 +927,35 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
         </h1>
 
         <div className="flex gap-3">
-          <button
-            onClick={() => setOpenCreateSection(true)}
-            className={`rounded-md border border-dashed ${Colors.border.defaultThin} px-6 py-3 text-sm ${Colors.text.primary} hover:border-[#1DA1F2] cursor-pointer`}
-          >
-            + Add Section
-          </button>
+          {assessmentData && (
+            <>
 
-          <button
-            disabled={assessmentData?.status === "LIVE"}
-            onClick={() => setShowPublishModal(true)}
-            className={`rounded-md px-4 py-2 text-sm font-medium ${
-              assessmentData?.status === "LIVE"
-                ? "bg-slate-700 text-white/50 cursor-not-allowed"
-                : "bg-[#1DA1F2] text-black hover:bg-[#1DA1F2]/90"
-            }`}
-          >
-            {assessmentData?.status === "LIVE" ? "Live" : "Publish"}
-          </button>
+              <button
+                onClick={() => setOpenCreateSection(true)}
+                className={`rounded-md border border-dashed ${Colors.border.defaultThin} px-6 py-3 text-sm ${Colors.text.primary} hover:border-[#1DA1F2] cursor-pointer`}
+              >
+                + Add Section
+              </button>
+
+              {assessmentData && (
+                <button
+                  onClick={() => setShowPublishModal(true)}
+                  className={`rounded-md px-4 py-2 text-sm font-medium ${assessmentData.status === "LIVE"
+                      ? "bg-red-500 text-white hover:bg-red-600"
+                      : "bg-[#1DA1F2] text-black hover:bg-[#1DA1F2]/90"
+                    }`}
+                >
+                  {assessmentData.status === "LIVE"
+                    ? "End Assessment"
+                    : "Make Live"}
+                </button>
+              )}
+
+
+            </>
+          )}
         </div>
+
       </div>
 
       <div className="h-px w-full bg-[#1DA1F2]/60 mb-8" />
@@ -1190,12 +1223,16 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
         open={showPublishModal}
         assessmentId={assessmentId}
         assessmentName={assessmentData?.name}
-        onClose={() => {
-          setShowPublishModal(false);
+        currentStatus={assessmentData?.status!}
+        onClose={() => setShowPublishModal(false)}
+        onStatusChange={(status) => {
+          setAssessmentData((prev) =>
+            prev ? { ...prev, status } : prev
+          );
           router.push("/admin-dashboard/assessments");
         }}
-        onPublished={markAssessmentLive}
       />
+
     </div>
   );
 };

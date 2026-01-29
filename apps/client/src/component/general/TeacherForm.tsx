@@ -116,20 +116,20 @@ export default function TeacherForm({ openForm, institutionId, onSubmit }: Props
       (msg) => msg && msg.length > 0,
     );
     if (hasError) return;
-
+    const toastId = toast.loading("Creating Teacher...");
     try {
       await createTeacher({
         ...formData,
         instituteId: institutionId,
       });
 
-      toast.success("Teacher created successfully");
+      toast.success("Teacher created successfully",{id:toastId});
       onSubmit?.(formData);
       openForm(false);
 
     } catch (error) {
       console.error("Failed to create teacher", error);
-      toast.error("Failed to create teacher");
+      toast.error("Failed to create teacher", {id:toastId});
     }
   };
 

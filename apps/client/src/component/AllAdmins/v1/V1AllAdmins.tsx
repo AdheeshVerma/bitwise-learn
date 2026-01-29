@@ -20,13 +20,14 @@ function V1AllAdmins() {
     getAllAdmins(setData);
   }, []);
   const handleCreateAdmin = async (data: any) => {
+    const toastId = toast.loading("Creating Admin...");
     try {
       await createAdmin(data);
       setAddNew(false);
-      toast.success("Admin Created Successfully");
+      toast.success("Admin Created Successfully",{id:toastId});
       getAllAdmins(setData);
     } catch (err) {
-      toast.error("Error creating Admin");
+      toast.error("Error creating Admin", {id:toastId});
       console.error(err);
     }
   };

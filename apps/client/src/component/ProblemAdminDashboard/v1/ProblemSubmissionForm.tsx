@@ -4,6 +4,7 @@ import MarkdownEditor from "@/component/ui/MarkDownEditor";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useColors } from "@/component/general/(Color Manager)/useColors";
+import toast from "react-hot-toast";
 
 function ProblemSubmissionForm({ setOpen }: any) {
   const Colors = useColors();
@@ -37,13 +38,21 @@ Output:
       hints: hints.filter((h) => h.trim()),
     });
 
-    await createProblem({
-      name,
-      description,
-      hints: hints.filter((h) => h.trim()),
-    });
-
-    setOpen(false);
+    const toastId = toast.loading("Creating Problem...");
+    try {
+      await createProblem({
+        name,
+        description,
+        hints: hints.filter((h) => h.trim()),
+      });
+  
+      toast.success("Create Success!", {id:toastId});
+      setOpen(false);
+      
+    } catch (error) {
+      console.log(error);
+      toast.error("Unable to create problem", {id:toastId});
+    }
   };
 
   return (

@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axios";
+import toast from "react-hot-toast";
 
 const getUrl = (id: string, entity: string, operation: string) => {
   let url = "";
@@ -28,25 +29,30 @@ const getUrl = (id: string, entity: string, operation: string) => {
   return url;
 };
 export const updateEntity = async (id: string, data: any, stateFn: any) => {
+  const toastId = toast.loading("Saving Changes...");
   try {
     const updatedData = await axiosInstance.post(
       getUrl(id, data.entity, "update"),
       data,
     );
     console.log(updatedData.data);
+    toast.success("Saved Changes...", {id:toastId});
     if (stateFn) {
       stateFn(updatedData.data);
     }
   } catch (error) {
     console.log(error);
+    toast.error("Unable to update", {id:toastId});
   }
 };
 export const deleteEntity = async (id: string, data: any, stateFn: any) => {
+  const toastId = toast.loading("Deleting...");
   try {
     const deleteData = await axiosInstance.post(
       getUrl(id, data.entity, "delete"),
       data,
     );
+    toast.success("Deleted Entity...", {id:toastId});
     console.log(deleteData.data);
     stateFn(deleteData.data);
   } catch (error) {

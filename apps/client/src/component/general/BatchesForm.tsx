@@ -101,15 +101,16 @@ function BatchesForm({ openForm, institutionId, onSubmit }: Props) {
     }
 
     setSubmitting(true);
+    const toastId = toast.loading("Creating Batch...");
     try {
       await createBatch({ ...formData, institutionId });
-      toast.success("Batch created successfully");
+      toast.success("Batch created successfully", {id: toastId});
       setFormData({ batchname: "", branch: "", batchEndYear: "" });
       onSubmit?.(formData);
       openForm(false);
     } catch (error) {
       console.error("Failed to create batch", error);
-      toast.error("Failed to create batch");
+      toast.error("Failed to create batch", {id: toastId});
     } finally {
       setSubmitting(false);
     }
