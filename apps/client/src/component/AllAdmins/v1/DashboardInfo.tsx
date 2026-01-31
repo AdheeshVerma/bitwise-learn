@@ -76,12 +76,11 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
         },
         null,
       );
-      toast.success("Changes Saved!", {id:toasdId});
+      toast.success("Changes Saved!", { id: toasdId });
       setSelected(formData);
       setIsEditing(false);
     } catch (error) {
-      console.log(error);
-      toast.error("Unable to update", {id:toasdId});
+      toast.error("Unable to update", { id: toasdId });
     }
   };
 
@@ -103,10 +102,8 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
       setSelected(null);
       setIsEditing(false);
     } catch (error) {
-      console.log(error);
       toast.error("Ubale to delete Admin", { id: toastId });
     }
-
   };
 
   const handleChange = (key: keyof UserData, value: string) => {
@@ -127,10 +124,14 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
   return (
     <>
       {/* Table */}
-      <div className={`mx-auto max-w-3/4 overflow-y-auto ${Colors.border.defaultThick} rounded-lg ${Colors.background.secondary} shadow-lg`}>
+      <div
+        className={`mx-auto max-w-3/4 overflow-y-auto ${Colors.border.defaultThick} rounded-lg ${Colors.background.secondary} shadow-lg`}
+      >
         <table className="w-full">
           <thead className={`${Colors.background.primary}`}>
-            <tr className={`text-left text-[11px] font-semibold uppercase tracking-wide ${Colors.text.primary}`}>
+            <tr
+              className={`text-left text-[11px] font-semibold uppercase tracking-wide ${Colors.text.primary}`}
+            >
               <th className="px-6 py-4">Name</th>
               <th className="px-6 py-4">Email</th>
               <th className="px-6 py-4">Role</th>
@@ -145,12 +146,18 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
                 key={user.id}
                 className={`text-sm ${Colors.text.primary} transition hover:bg-primaryBlue/10`}
               >
-                <td className={`px-6 py-4 font-medium ${Colors.text.primary}`}>{user.name}</td>
+                <td className={`px-6 py-4 font-medium ${Colors.text.primary}`}>
+                  {user.name}
+                </td>
 
-                <td className={`px-6 py-4 ${Colors.text.secondary}`}>{user.email}</td>
+                <td className={`px-6 py-4 ${Colors.text.secondary}`}>
+                  {user.email}
+                </td>
 
                 <td className="px-6 py-4">
-                  <span className={`rounded-md bg-primaryBlue/20 px-2 py-1 text-xs font-semibold ${Colors.text.special}`}>
+                  <span
+                    className={`rounded-md bg-primaryBlue/20 px-2 py-1 text-xs font-semibold ${Colors.text.special}`}
+                  >
                     {user.ROLE}
                   </span>
                 </td>
@@ -179,7 +186,9 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
       {/* Modal */}
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className={`relative w-full max-w-xl rounded-2xl border border-white/10 ${Colors.background.secondary} p-6 shadow-2xl`}>
+          <div
+            className={`relative w-full max-w-xl rounded-2xl border border-white/10 ${Colors.background.secondary} p-6 shadow-2xl`}
+          >
             {/* Close */}
             <button
               onClick={() => setSelected(null)}
@@ -194,7 +203,9 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
                 <h2 className={`text-xl font-semibold ${Colors.text.primary}`}>
                   User Details
                 </h2>
-                <p className={`mt-1 text-sm ${Colors.text.secondary}`}>ID: {selected.id}</p>
+                <p className={`mt-1 text-sm ${Colors.text.secondary}`}>
+                  ID: {selected.id}
+                </p>
               </div>
               {/* Actions */}
               <div className="flex gap-2">
@@ -247,7 +258,9 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
 
                   return (
                     <div key={key}>
-                      <p className={`mb-1 mt-2 text-[11px] uppercase tracking-wide ${Colors.text.special}`}>
+                      <p
+                        className={`mb-1 mt-2 text-[11px] uppercase tracking-wide ${Colors.text.special}`}
+                      >
                         {key.replace(/_/g, " ")}
                       </p>
 
@@ -260,7 +273,9 @@ export default function DashboardInfo({ data, onUpdate, onDelete }: Props) {
                           className={`w-full rounded-md border border-white/10 ${Colors.background.primary} px-3 py-2 text-sm ${Colors.text.primary} focus:outline-none focus:ring-1 focus:ring-primaryBlue`}
                         />
                       ) : (
-                        <p className={`break-words text-sm ${Colors.text.primary}`}>
+                        <p
+                          className={`break-words text-sm ${Colors.text.primary}`}
+                        >
                           {formatValue(value)}
                         </p>
                       )}

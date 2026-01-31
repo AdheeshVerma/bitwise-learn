@@ -22,6 +22,8 @@ import { useTheme } from "@/component/general/(Color Manager)/ThemeController";
 import AssignmentV2 from "@/component/assignment/v2/AssignmentV2";
 import Assignment from "@/component/assignment/Assignment";
 import { getCourseProgressById } from "@/api/courses/course/course-progress-by-id";
+import createCertificate from "@/lib/certificate";
+import { useStudent } from "@/store/studentStore";
 
 /* ================= TYPES ================= */
 
@@ -58,13 +60,14 @@ const Colors = useColors();
 
 export default function CourseV2() {
   const params = useParams();
-
+  const htmlRef = useRef(null);
   const [sections, setSections] = useState<Section[]>([]);
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
   const [activeAssignment, setActiveAssignment] = useState<Assignment | null>(
     null,
   );
-
+  const [courseName, setCourseName] = useState("");
+  const { info } = useStudent();
   const [mode, setMode] = useState<"LEARNING" | "ASSIGNEMENT">("LEARNING");
   const [sidebarWidth, setSidebarWidth] = useState(320);
   const [studyMode, setStudyMode] = useState(false);
@@ -93,7 +96,6 @@ export default function CourseV2() {
   useEffect(() => {
     async function fetchData() {
       const res = await getCourseById(params.id as string);
-
       const mappedSections = res.data.courseSections.map((sec: any) => ({
         ...sec,
         isOpen: false,
@@ -101,6 +103,7 @@ export default function CourseV2() {
 
       setSections(mappedSections);
 
+      setCourseName(res.data.name);
       // map each section and mark the content as done
       const firstTopic =
         res.data.courseSections?.[0]?.courseLearningContents?.[0];
@@ -118,7 +121,6 @@ export default function CourseV2() {
 
       const res = await getCourseProgressById(params.id as string);
       const progress = res.data;
-
       if (!progress || !progress.completedContentIds) {
         setCompletedSection([]);
         return;
@@ -184,32 +186,26 @@ export default function CourseV2() {
   }, []);
 
   const isActiveTopicCompleted = activeTopic
-  ? completedSection.some((s) => s.id === activeTopic.id)
-  : false;
+    ? completedSection.some((s) => s.id === activeTopic.id)
+    : false;
 
+  const handleMarkAsDone = async () => {
+    if (!activeTopic) return;
 
-const handleMarkAsDone = async () => {
-  if (!activeTopic) return;
+    const isCompleted = completedSection.some((s) => s.id === activeTopic.id);
 
-  const isCompleted = completedSection.some(
-    (s) => s.id === activeTopic.id
-  );
+    if (isCompleted) {
+      await markAsUnDone(activeTopic.id);
 
-  if (isCompleted) {
-    await markAsUnDone(activeTopic.id);
+      setCompletedSection((prev) =>
+        prev.filter((s) => s.id !== activeTopic.id),
+      );
+    } else {
+      await markAsDone(activeTopic.id);
 
-    setCompletedSection((prev) =>
-      prev.filter((s) => s.id !== activeTopic.id)
-    );
-  } else {
-    await markAsDone(activeTopic.id);
-
-    setCompletedSection((prev) => [
-      ...prev,
-      { id: activeTopic.id },
-    ]);
-  }
-};
+      setCompletedSection((prev) => [...prev, { id: activeTopic.id }]);
+    }
+  };
 
   /* ================= RENDER ================= */
 
@@ -219,6 +215,11 @@ const handleMarkAsDone = async () => {
 
   return (
     <div className={`min-h-screen ${Colors.background.primary} p-4`}>
+      <div
+        ref={htmlRef}
+        data-report-root
+        className="hidden bg-neutral-900 text-white p-6 rounded-lg w-[210mm]"
+      ></div>
       <motion.div className="flex gap-4 h-[calc(100vh-2rem)]">
         {/* ================= LEFT SIDEBAR ================= */}
         {!studyMode && showSidebar && (
@@ -229,6 +230,13 @@ const handleMarkAsDone = async () => {
             <SectionNav
               sections={sections}
               mode={mode}
+              onCertificate={() =>
+                createCertificate(
+                  courseName,
+                  info?.data.name as string,
+                  htmlRef,
+                )
+              }
               setMode={setMode}
               completedSection={completedSection}
               totalTopics={totalTopics}
@@ -504,10 +512,12 @@ function SectionNav({
   onToggleSection,
   completedSection,
   totalTopics,
+  onCertificate,
 }: {
   sections: Section[];
   mode: "LEARNING" | "ASSIGNEMENT";
   setMode: (m: "LEARNING" | "ASSIGNEMENT") => void;
+  onCertificate: () => void;
   onSelectTopic: (t: Topic) => void;
   onSelectAssignment: (a: Assignment) => void;
   onToggleSection: (id: string) => void;
@@ -626,10 +636,7 @@ function SectionNav({
             className={`px-4 py-2 rounded-lg shadow-md font-medium
           ${Colors.background.special} ${Colors.text.primary}
           hover:scale-105 transition cursor-pointer`}
-            onClick={() => {
-              // later: navigate to certificate download
-              console.log("Download certificate");
-            }}
+            onClick={onCertificate}
           >
             Get Certificate
           </button>

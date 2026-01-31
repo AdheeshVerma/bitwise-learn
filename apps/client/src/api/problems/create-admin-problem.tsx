@@ -5,5 +5,4 @@ export const createProblem = async (data: any) => {
     "/api/admin/create-problem/",
     data,
   );
-  console.log(createProblem);
 };

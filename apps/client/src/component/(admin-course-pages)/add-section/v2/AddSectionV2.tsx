@@ -57,13 +57,19 @@ const AddTopicModal = ({ open, onClose, onSubmit }: AddTopicModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className={`w-full max-w-sm rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThick} p-6`}>
+      <div
+        className={`w-full max-w-sm rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThick} p-6`}
+      >
         {/* Header */}
-        <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>Add new topic</h2>
+        <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
+          Add new topic
+        </h2>
 
         {/* Topic Name */}
         <div className="mt-4">
-          <label className={`text-sm ${Colors.text.secondary}`}>Topic name</label>
+          <label className={`text-sm ${Colors.text.secondary}`}>
+            Topic name
+          </label>
           <input
             type="text"
             value={name}
@@ -82,7 +88,9 @@ const AddTopicModal = ({ open, onClose, onSubmit }: AddTopicModalProps) => {
 
         {/* Description */}
         <div className="mt-4">
-          <label className={`text-sm ${Colors.text.secondary}`}>Description</label>
+          <label className={`text-sm ${Colors.text.secondary}`}>
+            Description
+          </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -221,20 +229,26 @@ const UpdateTopicModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm overflow-y-auto">
-      <div className={`mt-2 w-full max-w-2xl rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThick} p-8`}>
+      <div
+        className={`mt-2 w-full max-w-2xl rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThick} p-8`}
+      >
         {/* Header */}
-        <h2 className={`text-xl font-semibold ${Colors.text.primary}`}>Update Topic</h2>
+        <h2 className={`text-xl font-semibold ${Colors.text.primary}`}>
+          Update Topic
+        </h2>
 
         {/* Grid Layout */}
         <div className="mt-6 grid grid-cols-2 gap-5">
           {/* Topic Name */}
           <div className="col-span-2">
-            <label className={`text-sm ${Colors.text.secondary}`}>Topic name</label>
+            <label className={`text-sm ${Colors.text.secondary}`}>
+              Topic name
+            </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-            className={`
+              className={`
               mt-2 w-full rounded-lg
               ${Colors.background.primary} ${Colors.border.defaultThin}
               px-3 py-2 text-sm ${Colors.text.secondary}
@@ -246,12 +260,14 @@ const UpdateTopicModal = ({
 
           {/* Description */}
           <div className="col-span-2">
-            <label className={`text-sm ${Colors.text.secondary}`}>Description</label>
+            <label className={`text-sm ${Colors.text.secondary}`}>
+              Description
+            </label>
             <textarea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-            className={`
+              className={`
               mt-2 w-full rounded-lg
               ${Colors.background.primary} ${Colors.border.defaultThin}
               px-3 py-2 text-sm ${Colors.text.secondary}
@@ -271,7 +287,7 @@ const UpdateTopicModal = ({
               value={transcriptText}
               onChange={(e) => setTranscriptText(e.target.value)}
               placeholder="Paste transcript text here (optional)"
-            className={`
+              className={`
               mt-2 w-full rounded-lg
               ${Colors.background.primary} ${Colors.border.defaultThin}
               px-3 py-2 text-sm ${Colors.text.secondary}
@@ -285,7 +301,9 @@ const UpdateTopicModal = ({
 
           <div className="col-span-2 flex justify-between items-center">
             <div>
-              <label className={`text-sm ${Colors.text.secondary}`}>Upload File</label>
+              <label className={`text-sm ${Colors.text.secondary}`}>
+                Upload File
+              </label>
               <input
                 type="file"
                 accept=".txt,.pdf,.doc,.docx"
@@ -316,7 +334,7 @@ const UpdateTopicModal = ({
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
               placeholder="https://youtube.com/..."
-            className={`
+              className={`
               mt-2 w-full rounded-lg
               ${Colors.background.primary} ${Colors.border.defaultThin}
               px-3 py-2 text-sm ${Colors.text.secondary}
@@ -348,7 +366,7 @@ const UpdateTopicModal = ({
                 videoUrl: videoUrl.trim(),
               });
             }}
-            className={`text-sm ${Colors.background.special} ${Colors.hover.special} p-3 rounded-md text-wrapped text-white font-semibold transition`}  
+            className={`text-sm ${Colors.background.special} ${Colors.hover.special} p-3 rounded-md text-wrapped text-white font-semibold transition`}
           >
             Update Topic
           </button>
@@ -397,17 +415,23 @@ const EditAssignmentModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className={`w-full max-w-lg rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThick} p-6`}>
-        <h2 className={`text-xl font-semibold ${Colors.text.primary}`}>Edit Assignment</h2>
+      <div
+        className={`w-full max-w-lg rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThick} p-6`}
+      >
+        <h2 className={`text-xl font-semibold ${Colors.text.primary}`}>
+          Edit Assignment
+        </h2>
 
         <div className="mt-5 space-y-4">
           <div>
-            <label className={`text-sm ${Colors.text.secondary}`}>Description</label>
+            <label className={`text-sm ${Colors.text.secondary}`}>
+              Description
+            </label>
             <textarea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-            className={`
+              className={`
               mt-2 w-full rounded-lg
               ${Colors.background.primary} ${Colors.border.defaultThin}
               px-3 py-2 text-sm ${Colors.text.secondary}
@@ -417,7 +441,9 @@ const EditAssignmentModal = ({
             />
           </div>
           <div>
-            <label className={`text-sm ${Colors.text.secondary}`}>Marks Per Question</label>
+            <label className={`text-sm ${Colors.text.secondary}`}>
+              Marks Per Question
+            </label>
             <input
               type="number"
               value={marks}
@@ -425,7 +451,7 @@ const EditAssignmentModal = ({
                 const value = e.target.value;
                 setMarks(value === "" ? "" : Number(value));
               }}
-            className={`
+              className={`
               mt-2 w-full rounded-lg
               ${Colors.background.primary} ${Colors.border.defaultThin}
               px-3 py-2 text-sm ${Colors.text.secondary}
@@ -435,7 +461,9 @@ const EditAssignmentModal = ({
             />
           </div>
           <div>
-            <label className={`text-sm ${Colors.text.secondary}`}>Instructions</label>
+            <label className={`text-sm ${Colors.text.secondary}`}>
+              Instructions
+            </label>
             <textarea
               rows={3}
               value={instruction}
@@ -473,7 +501,7 @@ const EditAssignmentModal = ({
                 setSaving(false);
               }
             }}
-            className={`text-sm ${Colors.background.special} ${Colors.hover.special} p-3 rounded-md text-wrapped text-white font-semibold transition cursor-pointer`}  
+            className={`text-sm ${Colors.background.special} ${Colors.hover.special} p-3 rounded-md text-wrapped text-white font-semibold transition cursor-pointer`}
           >
             {saving ? "Saving Changes..." : "Save Changes"}
           </button>
@@ -568,7 +596,6 @@ const AddSectionV2 = ({
       toast.success("Section deleted");
       onSectionDeleted();
     } catch (error) {
-      console.log(error);
       toast.error("Failed to delete section");
     } finally {
       setShowDeleteConfirm(false);
@@ -657,7 +684,9 @@ const AddSectionV2 = ({
   };
 
   return (
-    <div className={`relative ${Colors.text.primary} ${Colors.background.secondary} rounded-2xl px-6 py-4 ${Colors.border.defaultThin}`}>
+    <div
+      className={`relative ${Colors.text.primary} ${Colors.background.secondary} rounded-2xl px-6 py-4 ${Colors.border.defaultThin}`}
+    >
       {/* Delete Section Button */}
       <button
         onClick={() => setShowDeleteConfirm(true)}
@@ -717,7 +746,9 @@ const AddSectionV2 = ({
       {activeTab === "TOPIC" && (
         <div className="mt-4 space-y-3">
           {topics.length === 0 ? (
-            <p className={`text-sm ${Colors.text.secondary}`}>No topics added yet</p>
+            <p className={`text-sm ${Colors.text.secondary}`}>
+              No topics added yet
+            </p>
           ) : (
             topics.map((topic) => (
               <div
@@ -736,12 +767,16 @@ const AddSectionV2 = ({
               >
                 {/* Content */}
                 <div className="flex-1">
-                  <p className={`text-[15px] font-semibold ${Colors.text.primary}`}>
+                  <p
+                    className={`text-[15px] font-semibold ${Colors.text.primary}`}
+                  >
                     {topic.name}
                   </p>
 
                   {topic.description && (
-                    <p className={`mt-1 text-sm ${Colors.text.secondary} leading-relaxed`}>
+                    <p
+                      className={`mt-1 text-sm ${Colors.text.secondary} leading-relaxed`}
+                    >
                       {topic.description}
                     </p>
                   )}
@@ -795,9 +830,13 @@ const AddSectionV2 = ({
       {activeTab === "ASSIGNMENT" && (
         <div className="mt-4 space-y-3">
           {asssignmentLoading ? (
-            <p className={`text-sm ${Colors.text.secondary}`}>Loading Assignments...</p>
+            <p className={`text-sm ${Colors.text.secondary}`}>
+              Loading Assignments...
+            </p>
           ) : assignments.length === 0 ? (
-            <p className={`text-sm ${Colors.text.secondary}`}>No Assignments Added yet</p>
+            <p className={`text-sm ${Colors.text.secondary}`}>
+              No Assignments Added yet
+            </p>
           ) : (
             assignments.map((assignment) => (
               <div
@@ -822,17 +861,23 @@ const AddSectionV2 = ({
               >
                 {/* Content */}
                 <div className="flex-1">
-                  <p className={`text-[15px] font-semibold ${Colors.text.primary}`}>
+                  <p
+                    className={`text-[15px] font-semibold ${Colors.text.primary}`}
+                  >
                     {assignment.name}
                   </p>
 
                   {assignment.description && (
-                    <p className={`mt-1 text-sm ${Colors.text.secondary} leading-relaxed`}>
+                    <p
+                      className={`mt-1 text-sm ${Colors.text.secondary} leading-relaxed`}
+                    >
                       {assignment.description}
                     </p>
                   )}
 
-                  <p className={`mt-2 text-xs ${Colors.text.secondary} opacity-0 group-hover:opacity-100 transition`}>
+                  <p
+                    className={`mt-2 text-xs ${Colors.text.secondary} opacity-0 group-hover:opacity-100 transition`}
+                  >
                     Click to view questions →
                   </p>
                 </div>
@@ -939,13 +984,11 @@ const AddSectionV2 = ({
         onSubmit={async (data) => {
           const toastId = toast.loading("Creating Topic...");
           try {
-            console.log(data);
             await addContentToSection(sectionId, data.name, data.description);
             toast.success("Created Topic!", { id: toastId });
             setIsAddTopicOpen(false);
             onSectionDeleted();
           } catch (error) {
-            console.log(error);
             toast.error("Unable to create topic");
           }
         }}
@@ -1000,13 +1043,13 @@ const AddSectionV2 = ({
       />
       {selectedAssignment && isAssignmentModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <QuestionEditorWrapper
-                assignmentId={selectedAssignment.id}
-                onClose={() => {
-                  setIsAssignmentModalOpen(false);
-                  setSelectedAssignment(null);
-                }}
-              />
+          <QuestionEditorWrapper
+            assignmentId={selectedAssignment.id}
+            onClose={() => {
+              setIsAssignmentModalOpen(false);
+              setSelectedAssignment(null);
+            }}
+          />
         </div>
       )}
       {selectedAssignment && (

@@ -158,7 +158,6 @@ export const EntityList = ({ type, batchId }: EntityListProps) => {
   // };
 
   const getDisplayName = (entity: any) => {
-    console.log(entity.course.name);
     switch (type) {
       case "Students":
         return entity.name || "Unknown";
@@ -300,13 +299,15 @@ export const EntityList = ({ type, batchId }: EntityListProps) => {
                       {cells.map((cell, index) => (
                         <td
                           key={index}
-                          className={`px-6 py-4 ${index === 0 ? "font-medium" : ""
-                            } ${index === cells.length - 1
+                          className={`px-6 py-4 ${
+                            index === 0 ? "font-medium" : ""
+                          } ${
+                            index === cells.length - 1
                               ? "text-white/60"
                               : index === 0
                                 ? ""
                                 : "text-white/70 truncate"
-                            }`}
+                          }`}
                         >
                           {cell}
                         </td>

@@ -5,5 +5,4 @@ export const createAdmin = async (data: any) => {
     "/api/admin/admins/create-admin/",
     data,
   );
-  console.log(createAdmin);
 };

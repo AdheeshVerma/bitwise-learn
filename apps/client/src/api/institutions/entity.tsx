@@ -35,14 +35,12 @@ export const updateEntity = async (id: string, data: any, stateFn: any) => {
       getUrl(id, data.entity, "update"),
       data,
     );
-    console.log(updatedData.data);
-    toast.success("Saved Changes...", {id:toastId});
+    toast.success("Saved Changes...", { id: toastId });
     if (stateFn) {
       stateFn(updatedData.data);
     }
   } catch (error) {
-    console.log(error);
-    toast.error("Unable to update", {id:toastId});
+    toast.error("Unable to update", { id: toastId });
   }
 };
 export const deleteEntity = async (id: string, data: any, stateFn: any) => {
@@ -52,10 +50,7 @@ export const deleteEntity = async (id: string, data: any, stateFn: any) => {
       getUrl(id, data.entity, "delete"),
       data,
     );
-    toast.success("Deleted Entity...", {id:toastId});
-    console.log(deleteData.data);
+    toast.success("Deleted Entity...", { id: toastId });
     stateFn(deleteData.data);
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };

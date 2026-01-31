@@ -10,6 +10,5 @@ export async function getStudentData(
     assessmentId,
     pageNumber,
   });
-  console.log(data);
   setStudentData(data.data.data);
 }

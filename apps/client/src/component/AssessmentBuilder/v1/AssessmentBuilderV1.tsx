@@ -77,11 +77,17 @@ const AddSectionModal = ({ open, onClose, onSubmit }: AddSectionModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className={`w-full max-w-sm rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThin} p-6`}>
-        <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>Create new section</h2>
+      <div
+        className={`w-full max-w-sm rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThin} p-6`}
+      >
+        <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
+          Create new section
+        </h2>
 
         <div className="mt-4">
-          <label className={`text-sm ${Colors.text.secondary}`}>Section name</label>
+          <label className={`text-sm ${Colors.text.secondary}`}>
+            Section name
+          </label>
           <input
             value={form.name}
             placeholder="XYZ Section..."
@@ -91,7 +97,9 @@ const AddSectionModal = ({ open, onClose, onSubmit }: AddSectionModalProps) => {
         </div>
 
         <div className="mt-4">
-          <label className={`text-sm ${Colors.text.secondary}`}>Marks per question</label>
+          <label className={`text-sm ${Colors.text.secondary}`}>
+            Marks per question
+          </label>
           <input
             type="number"
             min={1}
@@ -107,7 +115,9 @@ const AddSectionModal = ({ open, onClose, onSubmit }: AddSectionModalProps) => {
         </div>
 
         <div className="mt-4">
-          <label className={`text-sm ${Colors.text.secondary}`}>Assessment type</label>
+          <label className={`text-sm ${Colors.text.secondary}`}>
+            Assessment type
+          </label>
           <select
             value={form.assessmentType}
             onChange={(e) =>
@@ -272,13 +282,11 @@ const DeleteAssessmentModal = ({
       setLoading(true);
 
       await deleteAssessment(assessmentId);
-      console.log(assessmentId);
 
       toast.success("Assessment deleted successfully");
       onDeleted();
       onClose();
     } catch (err) {
-      console.error(err);
       toast.error("Failed to delete assessment");
     } finally {
       setLoading(false);
@@ -336,7 +344,6 @@ const DeleteAssessmentModal = ({
         </div>
       </div>
     </div>
-
   );
 };
 
@@ -391,7 +398,6 @@ const DeleteQuestionModal = ({
       >
         {/* Header */}
         <div className="mb-5">
-
           <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
             Delete question?
           </h2>
@@ -401,7 +407,6 @@ const DeleteQuestionModal = ({
         <div className={`text-sm ${Colors.text.secondary} leading-relaxed`}>
           Are you sure you want to delete this question?
           <br />
-
           <span className={Colors.text.secondary}>
             This action cannot be undone.
           </span>
@@ -492,14 +497,17 @@ const UpdateSectionModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-
-      <div className={`w-full max-w-sm rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThin} p-6`}>
+      <div
+        className={`w-full max-w-sm rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThin} p-6`}
+      >
         <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
           Edit section
         </h2>
 
         <div className="mt-4">
-          <label className={`text-sm ${Colors.text.secondary}`}>Section name</label>
+          <label className={`text-sm ${Colors.text.secondary}`}>
+            Section name
+          </label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -509,7 +517,6 @@ const UpdateSectionModal = ({
         </div>
 
         <div className="mt-4">
-
           <label className={`text-sm ${Colors.text.secondary}`}>
             Marks per question
           </label>
@@ -571,7 +578,6 @@ const UpdateQuestionModal = ({
   const [correct, setCorrect] = useState(0);
   const [marks, setMarks] = useState(1);
   const [loading, setLoading] = useState(false);
-  console.log(question);
   useEffect(() => {
     if (question) {
       setText(question.question ?? question.problem?.name ?? "");
@@ -607,8 +613,9 @@ const UpdateQuestionModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-
-      <div className={`w-full max-w-lg rounded-xl border border-white/10 ${Colors.background.secondary} p-6`}>
+      <div
+        className={`w-full max-w-lg rounded-xl border border-white/10 ${Colors.background.secondary} p-6`}
+      >
         <h2 className={`text-lg font-semibold ${Colors.text.primary} mb-4`}>
           Edit question
         </h2>
@@ -696,21 +703,19 @@ interface PublishAssessmentModalProps {
   onStatusChange: (status: "LIVE" | "ENDED") => void;
 }
 
-
 const PublishAssessmentModal = ({
   open,
   assessmentId,
   assessmentName,
   currentStatus,
   onClose,
-  onStatusChange
+  onStatusChange,
 }: PublishAssessmentModalProps) => {
   const [loading, setLoading] = useState(false);
 
   if (!open) return null;
 
-  const nextStatus =
-    currentStatus === "LIVE" ? "ENDED" : "LIVE";
+  const nextStatus = currentStatus === "LIVE" ? "ENDED" : "LIVE";
 
   const handlePublish = async () => {
     try {
@@ -721,7 +726,7 @@ const PublishAssessmentModal = ({
       toast.success(
         nextStatus === "LIVE"
           ? "Assessment is now live"
-          : "Assessment has ended"
+          : "Assessment has ended",
       );
 
       onStatusChange(nextStatus);
@@ -768,8 +773,6 @@ const PublishAssessmentModal = ({
               Students will be able to attempt it.
             </div>
           )}
-
-
         </div>
 
         {/* Divider */}
@@ -801,8 +804,6 @@ const PublishAssessmentModal = ({
               : currentStatus === "LIVE"
                 ? "End Assessment"
                 : "Make Live"}
-
-
           </button>
         </div>
       </div>
@@ -872,7 +873,6 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
     });
   };
 
-
   const addQuestionToState = (sectionId: string, question: Question) => {
     setQuestionsBySection((prev) => ({
       ...prev,
@@ -901,7 +901,6 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
 
     try {
       const data = await getSectionQuestions(sectionId);
-      console.log(data);
       setQuestionsBySection((prev) => ({
         ...prev,
         [sectionId]: data || [],
@@ -929,7 +928,6 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
         <div className="flex gap-3">
           {assessmentData && (
             <>
-
               <button
                 onClick={() => setOpenCreateSection(true)}
                 className={`rounded-md border border-dashed ${Colors.border.defaultThin} px-6 py-3 text-sm ${Colors.text.primary} hover:border-[#1DA1F2] cursor-pointer`}
@@ -940,22 +938,20 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
               {assessmentData && (
                 <button
                   onClick={() => setShowPublishModal(true)}
-                  className={`rounded-md px-4 py-2 text-sm font-medium ${assessmentData.status === "LIVE"
+                  className={`rounded-md px-4 py-2 text-sm font-medium ${
+                    assessmentData.status === "LIVE"
                       ? "bg-red-500 text-white hover:bg-red-600"
                       : "bg-[#1DA1F2] text-black hover:bg-[#1DA1F2]/90"
-                    }`}
+                  }`}
                 >
                   {assessmentData.status === "LIVE"
                     ? "End Assessment"
                     : "Make Live"}
                 </button>
               )}
-
-
             </>
           )}
         </div>
-
       </div>
 
       <div className="h-px w-full bg-[#1DA1F2]/60 mb-8" />
@@ -981,7 +977,9 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                 }}
               >
                 <div>
-                  <h3 className={`text-lg font-semibold ${Colors.text.primary}`}>
+                  <h3
+                    className={`text-lg font-semibold ${Colors.text.primary}`}
+                  >
                     {section.name}
                   </h3>
                   <p className={`text-sm ${Colors.text.secondary}`}>
@@ -1016,11 +1014,11 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                       setSelectedSection(section);
                       setShowUpdateSection(true);
                     }}
-
                     className={`rounded-md border ${Colors.border.defaultThin} ${Colors.background.secondary}
                             px-3 py-2 text-sm ${Colors.text.secondary}
                             ${Colors.hover.special} hover:text-white
-                            transition cursor-pointer`}>
+                            transition cursor-pointer`}
+                  >
                     Edit
                   </button>
 
@@ -1037,7 +1035,8 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                               px-2 py-2 text-sm text-red-400
                               hover:bg-red-500/20 hover:text-red-300
 
-                              transition cursor-pointer">
+                              transition cursor-pointer"
+                  >
                     <Trash className="h-4 w-4" />
                   </button>
                 </div>
@@ -1047,7 +1046,9 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
               {isOpen && (
                 <div className="border-t border-white/10 px-5 py-4 space-y-4">
                   {loadingSections[section.id!] ? (
-                    <p className={`text-sm ${Colors.text.secondary}`}>Loading questions…</p>
+                    <p className={`text-sm ${Colors.text.secondary}`}>
+                      Loading questions…
+                    </p>
                   ) : questionsBySection[section.id!]?.length ? (
                     questionsBySection[section.id!].map((q, i) => (
                       <div
@@ -1055,11 +1056,11 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                         className={`rounded-xl ${Colors.background.primary} ${Colors.border.defaultThin} p-4 space-y-3`}
                       >
                         <div className="flex justify-between items-start">
-
-                          <p className={`text-sm font-medium ${Colors.text.primary}`}>
+                          <p
+                            className={`text-sm font-medium ${Colors.text.primary}`}
+                          >
                             {i + 1}.{" "}
                             {q.question || q.problem?.name || "Code Question"}
-
                           </p>
                           <div className="flex gap-2">
                             <button
@@ -1068,10 +1069,10 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                                 setSelectedQuestion(q);
                                 setShowUpdateQuestion(true);
                               }}
-
                               className={`px-3 py-1 text-xs rounded ${Colors.text.secondary} ${Colors.border.defaultThin} ${Colors.background.secondary}
                             ${Colors.hover.special} hover:text-white
-                            transition cursor-pointer`}>
+                            transition cursor-pointer`}
+                            >
                               Edit
                             </button>
 
@@ -1081,7 +1082,8 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                                 setDeleteQuestionId(q.id);
                                 setShowDeleteQuestion(true);
                               }}
-                              className="px-3 py-1 text-xs rounded bg-red-500/20 text-red-400 cursor-pointer">
+                              className="px-3 py-1 text-xs rounded bg-red-500/20 text-red-400 cursor-pointer"
+                            >
                               Delete
                             </button>
                           </div>
@@ -1097,9 +1099,10 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                                 key={idx}
                                 className={`rounded-lg border px-3 py-2 text-xs flex items-center justify-between
 
-                                  ${isCorrect
-                                    ? "border-green-500 bg-green-500/10 text-green-400"
-                                    : `${Colors.border.defaultThin} ${Colors.text.primary} ${Colors.background.secondary}`
+                                  ${
+                                    isCorrect
+                                      ? "border-green-500 bg-green-500/10 text-green-400"
+                                      : `${Colors.border.defaultThin} ${Colors.text.primary} ${Colors.background.secondary}`
                                   }`}
                               >
                                 <span>{opt}</span>
@@ -1152,7 +1155,6 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
         onClose={() => setShowDeleteAssessment(false)}
         onDeleted={() => {
           router.push("/admin-dashboard/assessments");
-          console.log("Assessment deleted");
         }}
       />
 
@@ -1226,13 +1228,10 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
         currentStatus={assessmentData?.status!}
         onClose={() => setShowPublishModal(false)}
         onStatusChange={(status) => {
-          setAssessmentData((prev) =>
-            prev ? { ...prev, status } : prev
-          );
+          setAssessmentData((prev) => (prev ? { ...prev, status } : prev));
           router.push("/admin-dashboard/assessments");
         }}
       />
-
     </div>
   );
 };

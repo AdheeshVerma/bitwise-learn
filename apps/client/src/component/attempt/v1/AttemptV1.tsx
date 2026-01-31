@@ -292,12 +292,9 @@ export default function AttemptV1({
   };
 
   const handleSubmitQuestion = async (id: string, data: any) => {
-    console.log(id);
-    console.log({ option: data });
     await submitIndividualQuestion(id, { option: data }, "NO_CODE");
   };
   const handleCodeQuestion = async (id: string, data: any) => {
-    // console.log(first);
     await submitIndividualQuestion(id, { code: data }, "CODE");
   };
   const handleSubmitTest = async () => {
@@ -410,7 +407,7 @@ export default function AttemptV1({
                 handleCodeQuestion(question.id, code);
                 setCodeAnswers((p) => ({ ...p, [question.id]: code }));
               }}
-              onRun={() => console.log("Run code")}
+              onRun={() => {}}
               onSubmit={() => toast("Code submit placeholder", { icon: "🧪" })}
             />
           )}

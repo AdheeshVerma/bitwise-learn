@@ -108,9 +108,7 @@ const AddSectionV1 = ({ sectionNumber, sectionData }: AddSectionProps) => {
 
   /* ---------- SECTION DELETE ---------- */
 
-  const deleteSection = () => {
-    console.log("DELETE SECTION:", sectionNumber);
-  };
+  const deleteSection = () => {};
 
   /* ---------- DELETE TOPIC ---------- */
 
@@ -205,8 +203,6 @@ const AddSectionV1 = ({ sectionNumber, sectionData }: AddSectionProps) => {
       isCompleted: true,
       topics,
     };
-
-    console.log("SEND TO BACKEND:", sectionName);
   };
 
   const editSection = () => {

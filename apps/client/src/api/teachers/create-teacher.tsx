@@ -20,12 +20,9 @@ export const createTeacher = async (
       data,
     );
 
-    console.log("teacher created:", response.data);
-
     onSuccess?.();
     return response.data;
   } catch (error: any) {
-    console.error("create teacher failed:", error);
     onError?.(error);
     throw error;
   }

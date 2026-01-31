@@ -32,12 +32,6 @@ Output:
     setHints(hints.filter((_, idx) => idx !== i));
 
   const handleSubmit = async () => {
-    console.log({
-      name,
-      description,
-      hints: hints.filter((h) => h.trim()),
-    });
-
     const toastId = toast.loading("Creating Problem...");
     try {
       await createProblem({
@@ -45,21 +39,25 @@ Output:
         description,
         hints: hints.filter((h) => h.trim()),
       });
-  
-      toast.success("Create Success!", {id:toastId});
+
+      toast.success("Create Success!", { id: toastId });
       setOpen(false);
-      
     } catch (error) {
-      console.log(error);
-      toast.error("Unable to create problem", {id:toastId});
+      toast.error("Unable to create problem", { id: toastId });
     }
   };
 
   return (
-    <div className={`fixed inset-0 z-50 bg-black/60 flex items-center justify-center`}>
-      <div className={`flex h-[80svh] w-full max-w-6xl flex-col rounded-lg ${Colors.background.secondary} shadow-xl`}>
+    <div
+      className={`fixed inset-0 z-50 bg-black/60 flex items-center justify-center`}
+    >
+      <div
+        className={`flex h-[80svh] w-full max-w-6xl flex-col rounded-lg ${Colors.background.secondary} shadow-xl`}
+      >
         {/* Sticky Header */}
-        <div className={`sticky top-0 z-10 flex items-center justify-between border-b border-white/10 ${Colors.background.secondary} px-6 py-4 rounded-lg`}>
+        <div
+          className={`sticky top-0 z-10 flex items-center justify-between border-b border-white/10 ${Colors.background.secondary} px-6 py-4 rounded-lg`}
+        >
           <div>
             <h2 className={`text-xl font-semibold ${Colors.text.primary}`}>
               Add New Problem
@@ -83,10 +81,14 @@ Output:
         </div>
 
         {/* Scrollable Content */}
-        <div className={`flex-1 overflow-y-auto px-6 py-6 space-y-6 ${Colors.text.primary} no-scrollbar`}>
+        <div
+          className={`flex-1 overflow-y-auto px-6 py-6 space-y-6 ${Colors.text.primary} no-scrollbar`}
+        >
           {/* Problem Name */}
           <div className="space-y-1">
-            <label className={`text-sm ${Colors.text.secondary}`}>Problem Name</label>
+            <label className={`text-sm ${Colors.text.secondary}`}>
+              Problem Name
+            </label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -97,8 +99,12 @@ Output:
 
           {/* Description */}
           <div className="space-y-2">
-            <label className={`text-sm ${Colors.text.secondary}`}>Problem Description</label>
-            <div className={`rounded-md border border-white/10 ${Colors.background.secondary}`}>
+            <label className={`text-sm ${Colors.text.secondary}`}>
+              Problem Description
+            </label>
+            <div
+              className={`rounded-md border border-white/10 ${Colors.background.secondary}`}
+            >
               <MarkdownEditor
                 value={description}
                 setValue={setDescription}

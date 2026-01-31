@@ -116,7 +116,9 @@ function WelcomeTypewriter() {
 /* ================= MAIN COMPONENT ================= */
 
 export default function AdminLoginV1() {
-  const [step, setStep] = useState<"LOGIN" | "EMAIL" | "OTP" | "RESET">("LOGIN");
+  const [step, setStep] = useState<"LOGIN" | "EMAIL" | "OTP" | "RESET">(
+    "LOGIN",
+  );
   const [role, setRole] = useState<LoginRole>("TEACHER");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -190,10 +192,11 @@ export default function AdminLoginV1() {
                     type="button"
                     onClick={() => setRole(label as LoginRole)}
                     className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition
-                  ${role === label
-                        ? "bg-primaryBlue text-white"
-                        : "bg-[#3B82F6]/60 text-white hover:bg-[#3B82F6]"
-                      }`}
+                  ${
+                    role === label
+                      ? "bg-primaryBlue text-white"
+                      : "bg-[#3B82F6]/60 text-white hover:bg-[#3B82F6]"
+                  }`}
                   >
                     <Icon size={18} />
                     {label.toLowerCase()}
@@ -277,20 +280,33 @@ export default function AdminLoginV1() {
                   {loading ? "Signing in..." : "Log in"}
                 </button>
               </form>
-            </>)}
-          {step === "EMAIL" && <ForgotPasswordForm role={role}
-
-            email={email}
-            setEmail={setEmail}
-            onSuccess={() => { setStep("OTP"); console.log(role); }}
-            onBack={() => setStep("LOGIN")} />}
-          {step === "OTP" && <OtpForm role={role}
-            email={email}
-            onVerified={() => setStep("RESET")} />}
-          {step === "RESET" && <ResetPasswordForm role={role}
-            onSuccess={() => router.push("/multi-login")} />}
+            </>
+          )}
+          {step === "EMAIL" && (
+            <ForgotPasswordForm
+              role={role}
+              email={email}
+              setEmail={setEmail}
+              onSuccess={() => {
+                setStep("OTP");
+              }}
+              onBack={() => setStep("LOGIN")}
+            />
+          )}
+          {step === "OTP" && (
+            <OtpForm
+              role={role}
+              email={email}
+              onVerified={() => setStep("RESET")}
+            />
+          )}
+          {step === "RESET" && (
+            <ResetPasswordForm
+              role={role}
+              onSuccess={() => router.push("/multi-login")}
+            />
+          )}
         </motion.div>
-
       </div>
 
       {/* RIGHT IMAGE */}

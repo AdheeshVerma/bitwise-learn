@@ -68,7 +68,6 @@ export default function CreateVendorV1({
     }
 
     onSubmit?.(form);
-    console.log("Vendor Created:", form);
   };
 
   return (

@@ -9,7 +9,6 @@ export default function IndividualBatch() {
   const queryParams = useParams();
   const batchId = queryParams.batchId as string;
   const [batch, setBatch] = useState<any>(null);
-  console.log(batchId);
   useEffect(() => {
     if (!batchId) return;
     getBatchData(setBatch, batchId);

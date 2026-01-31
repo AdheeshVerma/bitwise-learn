@@ -7,6 +7,5 @@ export const getAllProblemData = async (
   const getProblem = await axiosInstance.get(
     "/api/get-problem" + (admin ? "?q=valid" : ""),
   );
-  console.log("question data is : " + JSON.stringify(getProblem.data));
   statefn(getProblem.data);
 };

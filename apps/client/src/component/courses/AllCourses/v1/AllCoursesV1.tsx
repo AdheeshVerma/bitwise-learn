@@ -65,7 +65,9 @@ function CourseCard({ course }: { course: Course }) {
       border border-transparent hover:border-[#64ACFF]/40
       transition-all duration-300`}
     >
-      <div className={`${Colors.background.primary} relative w-full aspect-video rounded-lg overflow-hidden`}>
+      <div
+        className={`${Colors.background.primary} relative w-full aspect-video rounded-lg overflow-hidden`}
+      >
         <Image
           src={course.thumbnail || "/images/jsCard.jpg"}
           alt={course.name}
@@ -75,7 +77,9 @@ function CourseCard({ course }: { course: Course }) {
         />
       </div>
 
-      <h3 className={`${Colors.text.primary} text-lg font-semibold`}>{course.name}</h3>
+      <h3 className={`${Colors.text.primary} text-lg font-semibold`}>
+        {course.name}
+      </h3>
 
       <div className="flex items-center justify-between text-xs">
         <span
@@ -111,7 +115,9 @@ function CourseCard({ course }: { course: Course }) {
 /* ---------- Skeleton ---------- */
 function CourseSkeleton() {
   return (
-    <div className={` rounded-xl p-4 flex flex-col gap-4 animate-pulse ${Colors.background.secondary}`}>
+    <div
+      className={` rounded-xl p-4 flex flex-col gap-4 animate-pulse ${Colors.background.secondary}`}
+    >
       <div className={`h-40 ${Colors.background.primary} rounded-lg`} />
       <div className={`h-5 w-3/4 ${Colors.background.primary} rounded`} />
       <div className="flex justify-between">
@@ -166,13 +172,11 @@ export default function AllCoursesV1() {
       try {
         setLoading(true);
         let res;
-        if(adminInfo?.id && adminInfo.id.length>0){
+        if (adminInfo?.id && adminInfo.id.length > 0) {
           res = await getAllCourses();
-        }
-        else{
+        } else {
           res = await getStudentCourses();
         }
-        console.log(res);
         const mappedCourses: Course[] = res.map((course: any) => ({
           id: course.id,
           name: course.name,
@@ -230,13 +234,17 @@ export default function AllCoursesV1() {
   }, [courses, search, level]);
 
   return (
-    <div className={`flex h-screen ${Colors.background.primary} ${Colors.text.primary}`}>
+    <div
+      className={`flex h-screen ${Colors.background.primary} ${Colors.text.primary}`}
+    >
       <StudentSideBar />
 
       <main className="flex-1 p-6 overflow-y-auto">
         <header className="flex items-center gap-10 mb-5">
           {/* Search */}
-          <div className={`w-1/2 ${Colors.background.secondary} rounded-lg px-4 py-2 flex items-center gap-2`}>
+          <div
+            className={`w-1/2 ${Colors.background.secondary} rounded-lg px-4 py-2 flex items-center gap-2`}
+          >
             <Search size={18} className={Colors.text.special} />
             <input
               value={search}
@@ -257,7 +265,9 @@ export default function AllCoursesV1() {
             </button>
 
             {open && (
-              <div className={`absolute right-0 mt-2 w-40 ${Colors.background.secondary} rounded-xl border border-white/10 shadow-lg overflow-hidden z-50`}>
+              <div
+                className={`absolute right-0 mt-2 w-40 ${Colors.background.secondary} rounded-xl border border-white/10 shadow-lg overflow-hidden z-50`}
+              >
                 {["ALL", "Basic", "Intermediate", "Advanced"].map((l) => (
                   <button
                     key={l}

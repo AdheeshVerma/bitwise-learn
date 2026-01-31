@@ -54,21 +54,14 @@ const InputField = ({
   </div>
 );
 
-const VendorSidebar = ({
-  vendor,
-  onUpdate,
-  onDelete,
-}: VendorSidebarProps) => {
+const VendorSidebar = ({ vendor, onUpdate, onDelete }: VendorSidebarProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(vendor);
-  console.log(vendor.name);
   useEffect(() => {
     setFormData(vendor);
   }, [vendor]);
 
-  const formattedDate = vendor.createdAt
-    ? formatDate(vendor.createdAt)
-    : "";
+  const formattedDate = vendor.createdAt ? formatDate(vendor.createdAt) : "";
 
   const handleChange = (key: string, value: string) => {
     setFormData((prev: any) => ({
@@ -157,7 +150,10 @@ const VendorSidebar = ({
           <>
             <InfoBlock label="Website Link" value={vendor.websiteLink || "—"} />
             <InfoBlock label="Email" value={vendor.email || "—"} />
-            <InfoBlock label="Contact number" value={vendor.phoneNumber || "—"} />
+            <InfoBlock
+              label="Contact number"
+              value={vendor.phoneNumber || "—"}
+            />
             <InfoBlock label="Member Since" value={formattedDate} />
           </>
         )}

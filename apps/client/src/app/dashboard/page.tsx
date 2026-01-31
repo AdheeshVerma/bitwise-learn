@@ -5,6 +5,5 @@ import React from "react";
 
 export default function page() {
   const studentInfo = useStudent().info;
-  console.log(studentInfo);
   return <StudentDashboard />;
 }

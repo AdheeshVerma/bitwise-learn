@@ -40,7 +40,6 @@ function ShowAddTemplateForm({ onClose, onSave }: Props) {
       functionBody,
     };
 
-    console.log("New Template:", payload);
     onSave?.(payload);
     onClose();
   };

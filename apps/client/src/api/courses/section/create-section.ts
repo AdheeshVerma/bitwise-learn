@@ -7,6 +7,5 @@ export const createSection = async (courseId: string, name: string) => {
       name,
     },
   );
-  // console.log(res);
   return res.data;
 };

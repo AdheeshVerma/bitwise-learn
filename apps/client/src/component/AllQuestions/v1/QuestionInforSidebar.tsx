@@ -27,7 +27,6 @@ function QuestionInfoSidebar() {
   useEffect(() => {
     async function handleLoad() {
       const res = await loadProfile();
-      console.log(res);
       setQuestion(res);
     }
     handleLoad();

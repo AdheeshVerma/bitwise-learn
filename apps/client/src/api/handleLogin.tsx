@@ -48,9 +48,6 @@ async function handleLogin({ data }: { data: Prop }) {
     case "VENDOR":
       setVendor(resData);
       break;
-
-    default:
-      console.warn("Unknown role");
   }
 
   return resData;

@@ -73,7 +73,6 @@ export const Tabs = ({
   const [addNew, setAddNew] = useState(false);
   const tabs = ["Students", "Teachers", "Assessments", "Courses"];
   const { loading: logsLoading, role: logRole } = useLogs();
-  console.log(logsLoading + " " + logRole);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleBulkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,34 +143,40 @@ export const Tabs = ({
           <button
             key={tab}
             onClick={() => onValueChange(tab)}
-            className={`px-4 py-1.5 rounded-md text-md ${value === tab
-              ? "bg-blue-500 text-white"
-              : "text-gray-400 hover:text-white"
-              }`}
+            className={`px-4 py-1.5 rounded-md text-md ${
+              value === tab
+                ? "bg-blue-500 text-white"
+                : "text-gray-400 hover:text-white"
+            }`}
           >
             {tab}
           </button>
         ))}
 
         {/* Add New */}
-        {!logsLoading && logRole != null && logRole != 5 && logRole != 4 && <button
-          onClick={() => setAddNew(true)}
-          className="flex items-center gap-2 border border-primaryBlue px-3 py-2 rounded text-white hover:bg-primaryBlue/10"
-        >
-
-          <Plus size={18} />
-          Add New {value}
-        </button>}
-
-        {/* Bulk Upload (Students only) */}
-        {value === "Students" && !logsLoading && logRole != null && logRole != 5 && logRole != 4 && (
+        {!logsLoading && logRole != null && logRole != 5 && logRole != 4 && (
           <button
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => setAddNew(true)}
             className="flex items-center gap-2 border border-primaryBlue px-3 py-2 rounded text-white hover:bg-primaryBlue/10"
           >
-            Upload Bulk
+            <Plus size={18} />
+            Add New {value}
           </button>
         )}
+
+        {/* Bulk Upload (Students only) */}
+        {value === "Students" &&
+          !logsLoading &&
+          logRole != null &&
+          logRole != 5 &&
+          logRole != 4 && (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-2 border border-primaryBlue px-3 py-2 rounded text-white hover:bg-primaryBlue/10"
+            >
+              Upload Bulk
+            </button>
+          )}
       </div>
     </>
   );

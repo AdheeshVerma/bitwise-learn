@@ -67,7 +67,6 @@ function Submissions({ content }: SubmissionsProps) {
       ],
     };
 
-    console.log("Saved Data:", updatedData);
     await updateDescription(content.id as string, updatedData);
     setTimeout(() => {
       setIsSaving(false);

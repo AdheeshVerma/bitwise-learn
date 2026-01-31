@@ -51,7 +51,6 @@ export default function CreateStudentV1({
     }
 
     onSubmit?.(form);
-    console.log("Student Created:", form);
   };
 
   return (

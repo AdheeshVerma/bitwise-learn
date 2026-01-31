@@ -64,7 +64,7 @@ export default function TestCaseForm({
       output,
     };
 
-    console.log("New Test Case:", payload);
+    ("New Test Case:", payload);
 
     onSave?.(payload);
 

@@ -10,7 +10,6 @@ export default function IndividualInstitution() {
   const queryParams = useParams();
   const institutionId = queryParams.institutionId as string;
   const [institution, setInstitution] = useState<any>(null);
-  console.log(institutionId);
   useEffect(() => {
     if (!institutionId) return;
     getInstituteData(setInstitution, institutionId);

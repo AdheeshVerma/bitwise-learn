@@ -7,6 +7,5 @@ export default async function StartAssignmentPgae({
   params: { assignmentId: string };
 }) {
   const { assignmentId } = await params;
-  console.log("this is assignment");
   return <AttemptAssignment assignmentId={assignmentId} />;
 }

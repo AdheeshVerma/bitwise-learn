@@ -17,7 +17,6 @@ const BatchInfo = ({ batch, institutionId }: BatchInfoProps) => {
     setRefreshKey((prev) => prev + 1);
   };
 
-  console.log("batches is" + JSON.stringify(batch));
   return (
     <div className="min-h-screen bg-[#0f0f0f] p-6">
       <div className="flex gap-6 max-w-screen mx-auto">

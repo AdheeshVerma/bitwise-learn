@@ -131,15 +131,14 @@ const AddAssessmentModal = ({
   const [endDate, setEndDate] = useState("");
   const [endClock, setEndClock] = useState("");
 
-  const [institutes, setInstitutes] = useState<
-    { id: string; name: string }[]
-  >([]);
+  const [institutes, setInstitutes] = useState<{ id: string; name: string }[]>(
+    [],
+  );
   const [selectedInstitute, setSelectedInstitute] = useState("");
 
   const [batches, setBatches] = useState<
     { id: string; batchname: string; branch: string; batchEndYear: string }[]
   >([]);
-
 
   useEffect(() => {
     const fetchInstitutes = async () => {
@@ -171,14 +170,9 @@ const AddAssessmentModal = ({
     fetchBatches();
   }, [selectedInstitute]);
 
-  useEffect(() => {
-    console.log("Updated batches:", batches);
-  }, [batches]);
-
   if (!open) return null;
 
-  const combineDateTime = (d: string, t: string) =>
-    d && t ? `${d}T${t}` : "";
+  const combineDateTime = (d: string, t: string) => (d && t ? `${d}T${t}` : "");
 
   const clearError = (field: string) => {
     if (errors[field]) {
@@ -193,7 +187,7 @@ const AddAssessmentModal = ({
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -227,8 +221,7 @@ const AddAssessmentModal = ({
     onClose();
   };
 
-  const inputBase =
-    `mt-1 w-full rounded-lg ${Colors.background.primary} px-3 py-2 text-sm ${Colors.text.primary} placeholder:text-slate-500 focus:outline-none transition`;
+  const inputBase = `mt-1 w-full rounded-lg ${Colors.background.primary} px-3 py-2 text-sm ${Colors.text.primary} placeholder:text-slate-500 focus:outline-none transition`;
 
   const errorText = (field: string) =>
     errors[field] ? (
@@ -253,7 +246,9 @@ const AddAssessmentModal = ({
 
         {/* Name */}
         <div className="mt-3">
-          <label className={`text-sm ${Colors.text.primary}`}>Assessment name</label>
+          <label className={`text-sm ${Colors.text.primary}`}>
+            Assessment name
+          </label>
           <input
             name="name"
             value={form.name}
@@ -266,7 +261,9 @@ const AddAssessmentModal = ({
 
         {/* Description */}
         <div className="mt-3">
-          <label className={`text-sm ${Colors.text.primary}`}>Description</label>
+          <label className={`text-sm ${Colors.text.primary}`}>
+            Description
+          </label>
           <textarea
             name="description"
             value={form.description}
@@ -280,7 +277,9 @@ const AddAssessmentModal = ({
 
         {/* Instructions */}
         <div className="mt-3">
-          <label className={`text-sm ${Colors.text.primary}`}>Instructions</label>
+          <label className={`text-sm ${Colors.text.primary}`}>
+            Instructions
+          </label>
           <textarea
             name="instructions"
             value={form.instructions}
@@ -295,7 +294,9 @@ const AddAssessmentModal = ({
         {/* Start / End Time */}
         <div className="mt-4 space-y-3">
           <div>
-            <label className={`text-sm ${Colors.text.primary}`}>Start time</label>
+            <label className={`text-sm ${Colors.text.primary}`}>
+              Start time
+            </label>
             <div className="grid grid-cols-3 gap-2 mt-1">
               <input
                 type="date"
@@ -386,8 +387,6 @@ const AddAssessmentModal = ({
           </div>
         )}
 
-
-
         {/* Actions */}
         <div className={`mt-5 flex justify-end gap-3 bottom-0 pt-3`}>
           <button
@@ -408,7 +407,6 @@ const AddAssessmentModal = ({
     </div>
   );
 };
-
 
 // -------------------------------------------------------------------------
 // Skeleton Card
@@ -491,7 +489,6 @@ const AssessmentsV1 = () => {
       const res = await getAllAssessments();
       setAssessments(res.data || []);
     } catch (error) {
-      console.log("Fetching Error: ", error);
       toast.error("Failed to load Assessments");
     } finally {
       setLoading(false);
@@ -582,7 +579,6 @@ const AssessmentsV1 = () => {
         open={openCreateAssessment}
         onClose={() => setOpenCreateAssessment(false)}
         onSubmit={async (data) => {
-          console.log("Assessment payload:", data);
           const toastId = toast.loading("Creating assessment...");
 
           try {

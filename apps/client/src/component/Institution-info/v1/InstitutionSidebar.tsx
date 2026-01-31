@@ -64,8 +64,6 @@ const InstitutionSidebar = ({
 }: InstitutionSidebarProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(institution);
-  console.log("institution in institution sidebar" + JSON.stringify(institution));
-  
   useEffect(() => {
     setFormData(institution);
   }, [institution]);
@@ -107,7 +105,9 @@ const InstitutionSidebar = ({
   };
 
   return (
-    <aside className={`w-[320px] ${Colors.background.secondary} ${Colors.text.primary} p-6 rounded-xl min-h-[93vh]`}>
+    <aside
+      className={`w-[320px] ${Colors.background.secondary} ${Colors.text.primary} p-6 rounded-xl min-h-[93vh]`}
+    >
       {/* Header */}
       <div className="mb-4">
         {isEditing ? (
@@ -132,7 +132,9 @@ const InstitutionSidebar = ({
           />
         </>
       ) : (
-        <p className={`text-sm ${Colors.text.secondary} mb-6`}>{institution.tagline}</p>
+        <p className={`text-sm ${Colors.text.secondary} mb-6`}>
+          {institution.tagline}
+        </p>
       )}
 
       {/* Content */}
@@ -140,7 +142,9 @@ const InstitutionSidebar = ({
         {isEditing ? (
           <>
             <div className="space-y-1">
-              <label className={`text-xs ${Colors.text.secondary}`}>Address</label>
+              <label className={`text-xs ${Colors.text.secondary}`}>
+                Address
+              </label>
               <textarea
                 value={formData.address}
                 onChange={(e) => handleChange("address", e.target.value)}

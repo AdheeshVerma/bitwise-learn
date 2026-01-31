@@ -45,8 +45,6 @@ export default function HeroSection() {
   const vendor = useVendor();
   const setVendor = useVendor((s) => s.setData);
 
-  console.log(vendor)
-
   if (!vendor) return null;
 
   const [institutionData, setInstitutionData] = useState([]);

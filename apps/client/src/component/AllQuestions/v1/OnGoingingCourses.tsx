@@ -1,64 +1,93 @@
 "use client";
 
-import axiosInstance from "@/lib/axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { useColors } from "@/component/general/(Color Manager)/useColors";
-
-const DEFAULT_COURSES = [
-  {
-    id: 1,
-    href: "/courses/1",
-    thumbnail:
-      "https://res.cloudinary.com/djy3ewpb8/image/upload/v1763095938/Screenshot_from_2025-11-14_10-20-55_pvvfnd.png",
-  },
-  {
-    id: 2,
-    href: "/courses/2",
-    thumbnail:
-      "https://res.cloudinary.com/djy3ewpb8/image/upload/v1745761645/Screenshot_2025-04-27_191353_fihjpq.png",
-  },
-];
+import { useStudent } from "@/store/studentStore";
 
 function OngoingCourses() {
-  const [courses] = useState(DEFAULT_COURSES);
-  const user = "User";
+  const { info } = useStudent();
   const Colors = useColors();
 
-  return (
-    <div className={`${Colors.background.secondary} ${Colors.border.fadedThick} p-6 my-3 ml-3 rounded-2xl`}>
-      {/* Header */}
-      <span className={`text-6xl ${Colors.text.primary} font-semibold`}>Welcome,</span>{" "}
-      <span className={`text-6xl ${Colors.text.special} font-semibold`}> {user}</span>
-      <p className={`mt-1 text-xl ${Colors.text.secondary}`}>
-        Continue where you left off or pick an ongoing course
-      </p>
-      {/* Courses */}
-      <div className="mt-12 flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-        {courses.map((course) => (
-          <Link
-            key={course.id}
-            href={course.href}
-            className="
-              relative min-w-90 h-40
-              rounded-xl overflow-hidden
-              transition-all duration-200
-              hover:scale-[1.02] hover:shadow-lg
-            "
-          >
-            <Image
-              src={course.thumbnail}
-              alt="Course banner"
-              fill
-              className="object-cover"
-              priority
-            />
+  const student = info?.data;
 
-            {/* subtle overlay like LeetCode */}
-            <div className="absolute inset-0 bg-black/10 hover:bg-black/0 transition" />
-          </Link>
-        ))}
+  return (
+    <div
+      className={`${Colors.background.secondary} ${Colors.border.fadedThick} p-6 my-3 ml-3 rounded-2xl`}
+    >
+      {/* Header */}
+      <span className={`text-6xl ${Colors.text.primary} font-semibold`}>
+        Welcome,
+      </span>{" "}
+      <span className={`text-6xl ${Colors.text.special} font-semibold`}>
+        {student?.name || "Student"}
+      </span>
+      <p className={`mt-1 text-xl ${Colors.text.secondary}`}>
+        Continue where you left off or review your details
+      </p>
+      {/* Student Info Panel */}
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Personal Info */}
+        <div className={`${Colors.background.primary} p-4 rounded-xl`}>
+          <h3 className={`text-lg font-semibold ${Colors.text.primary}`}>
+            Student Details
+          </h3>
+
+          <p className={`${Colors.text.secondary} mt-2`}>
+            <span className="font-medium">Email:</span> {student?.email}
+          </p>
+          <p className={`${Colors.text.secondary}`}>
+            <span className="font-medium">Roll Number:</span>{" "}
+            {student?.rollNumber}
+          </p>
+        </div>
+
+        {/* Batch Info */}
+        <div className={`${Colors.background.primary} p-4 rounded-xl`}>
+          <h3 className={`text-lg font-semibold ${Colors.text.primary}`}>
+            Batch Information
+          </h3>
+
+          <p className={`${Colors.text.secondary} mt-2`}>
+            <span className="font-medium">Batch:</span>{" "}
+            {student?.batch.batchname}
+          </p>
+          <p className={`${Colors.text.secondary}`}>
+            <span className="font-medium">Branch:</span> {student?.batch.branch}
+          </p>
+          <p className={`${Colors.text.secondary}`}>
+            <span className="font-medium">End Year:</span>{" "}
+            {student?.batch.batchEndYear}
+          </p>
+        </div>
+
+        {/* Institution Info */}
+        <div
+          className={`${Colors.background.primary} p-4 rounded-xl md:col-span-2`}
+        >
+          <h3 className={`text-lg font-semibold ${Colors.text.primary}`}>
+            Institution
+          </h3>
+
+          <p className={`${Colors.text.secondary} mt-2`}>
+            <span className="font-medium">Name:</span>{" "}
+            {student?.insitution.name}
+          </p>
+          <p className={`${Colors.text.secondary}`}>
+            <span className="font-medium">Tagline:</span>{" "}
+            {student?.insitution.tagline}
+          </p>
+
+          {student?.insitution.websiteLink && (
+            <Link
+              href={student.insitution.websiteLink}
+              target="_blank"
+              className={`inline-block mt-2 ${Colors.text.special} underline`}
+            >
+              Visit Website →
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

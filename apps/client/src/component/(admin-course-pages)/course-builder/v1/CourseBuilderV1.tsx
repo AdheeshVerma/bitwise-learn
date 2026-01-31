@@ -119,13 +119,19 @@ const CreateSectionModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className={`w-full max-w-sm rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThick} p-6`}>
+      <div
+        className={`w-full max-w-sm rounded-2xl ${Colors.background.secondary} ${Colors.border.defaultThick} p-6`}
+      >
         {/* Header */}
-        <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>Create new section</h2>
+        <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
+          Create new section
+        </h2>
 
         {/* Input */}
         <div className="mt-4">
-          <label className={`text-sm ${Colors.text.secondary}`}>Section name</label>
+          <label className={`text-sm ${Colors.text.secondary}`}>
+            Section name
+          </label>
           <input
             type="text"
             value={sectionName}
@@ -222,7 +228,9 @@ const CourseSidebar = ({
         {course.thumbnail ? (
           <img src={course.thumbnail} className="w-full h-full object-cover" />
         ) : (
-          <div className={`w-full h-full flex items-center justify-center ${Colors.text.secondary}`}>
+          <div
+            className={`w-full h-full flex items-center justify-center ${Colors.text.secondary}`}
+          >
             No Thumbnail
           </div>
         )}
@@ -230,11 +238,15 @@ const CourseSidebar = ({
 
       {/* Title */}
       <div className="space-y-1.5">
-        <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>{course.name}</h2>
+        <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
+          {course.name}
+        </h2>
         <p className={`text-xs ${Colors.text.secondary} leading-relaxed`}>
           {course.description}
         </p>
-        <p className={`text-sm ${Colors.text.secondary}`}>{course.instructorName}</p>
+        <p className={`text-sm ${Colors.text.secondary}`}>
+          {course.instructorName}
+        </p>
       </div>
 
       {/* Status */}
@@ -256,8 +268,12 @@ const CourseSidebar = ({
           <span className={`${Colors.text.secondary}`}>{course.level}</span>
         </div>
         <div className="flex justify-between">
-          <span className={`${Colors.text.primary} font-semibold`}>Duration</span>
-          <span className={`${Colors.text.secondary}`}>{course.duration || "-"}</span>
+          <span className={`${Colors.text.primary} font-semibold`}>
+            Duration
+          </span>
+          <span className={`${Colors.text.secondary}`}>
+            {course.duration || "-"}
+          </span>
         </div>
       </div>
       <button
@@ -353,7 +369,9 @@ const EditCourseModal = ({
 
         {/* Instructor */}
         <div className="mt-4">
-          <label className={`text-sm ${Colors.text.secondary}`}>Instructor name</label>
+          <label className={`text-sm ${Colors.text.secondary}`}>
+            Instructor name
+          </label>
           <input
             value={instructorName}
             onChange={(e) => setInstructorName(e.target.value)}
@@ -363,7 +381,9 @@ const EditCourseModal = ({
 
         {/* Description */}
         <div className="mt-4">
-          <label className={`text-sm ${Colors.text.secondary}`}>Description</label>
+          <label className={`text-sm ${Colors.text.secondary}`}>
+            Description
+          </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -446,7 +466,6 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
 
     const fetchCourse = async () => {
       const res = await getCourseById(courseId);
-      console.log("COURSE RESPONSE : ", res);
       setCourse(res.data);
     };
 
@@ -458,7 +477,6 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
 
     const fetchSections = async () => {
       const res = await getSections(courseId);
-      console.log("SECTIONS: ", res);
       setSections(res.data);
     };
 
@@ -473,29 +491,47 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
           <div className={`h-7 w-64 ${Colors.background.secondary} rounded`} />
 
           <div className="flex gap-3 mt-4">
-            <div className={`h-9 w-36 ${Colors.background.secondary} rounded-md`} />
-            <div className={`h-9 w-36 ${Colors.background.secondary} rounded-md`} />
-            <div className={`h-9 w-24 ${Colors.background.secondary} rounded-md`} />
+            <div
+              className={`h-9 w-36 ${Colors.background.secondary} rounded-md`}
+            />
+            <div
+              className={`h-9 w-36 ${Colors.background.secondary} rounded-md`}
+            />
+            <div
+              className={`h-9 w-24 ${Colors.background.secondary} rounded-md`}
+            />
           </div>
         </div>
 
         {/* Section */}
         <div className="mt-10 space-y-8">
           <div className="rounded-xl border border-slate-800 p-5 space-y-4">
-            <div className={`h-5 w-40 ${Colors.background.secondary} rounded`} />
-            <div className={`h-4 w-full ${Colors.background.secondary} rounded`} />
-            <div className={`h-4 w-5/6 ${Colors.background.secondary} rounded`} />
+            <div
+              className={`h-5 w-40 ${Colors.background.secondary} rounded`}
+            />
+            <div
+              className={`h-4 w-full ${Colors.background.secondary} rounded`}
+            />
+            <div
+              className={`h-4 w-5/6 ${Colors.background.secondary} rounded`}
+            />
           </div>
         </div>
 
         {/* Add buttons */}
         <div className="flex gap-3 mt-6">
-          <div className={`h-9 w-32 ${Colors.background.secondary} rounded-md`} />
-          <div className={`h-9 w-40 ${Colors.background.secondary} rounded-md`} />
+          <div
+            className={`h-9 w-32 ${Colors.background.secondary} rounded-md`}
+          />
+          <div
+            className={`h-9 w-40 ${Colors.background.secondary} rounded-md`}
+          />
         </div>
 
         {/* Floating delete button */}
-        <div className={`fixed bottom-6 right-6 h-12 w-28 ${Colors.background.secondary} rounded-full`} />
+        <div
+          className={`fixed bottom-6 right-6 h-12 w-28 ${Colors.background.secondary} rounded-full`}
+        />
       </div>
     );
   };
@@ -528,7 +564,6 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
         toast.error("Upload Failed", { id: "thumbnail" });
       }
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong", { id: "thumbnail" });
     } finally {
       setThumbnailFileName(null);
@@ -582,7 +617,6 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
       const refreshed = await getCourseById(courseId);
       setCourse(refreshed.data);
     } catch (error) {
-      console.log(error);
       toast.error("Failed to publish Course", { id: "publish" });
     } finally {
       setShowPublishModal(false);
@@ -671,7 +705,9 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
                 Upload Certificate
               </div>
               {certificateFileName && (
-                <p className={`mt-1 text-xs ${Colors.text.secondary} truncate max-w-45`}>
+                <p
+                  className={`mt-1 text-xs ${Colors.text.secondary} truncate max-w-45`}
+                >
                   {certificateFileName}
                 </p>
               )}
@@ -686,7 +722,9 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
                 Upload Thumbnail
               </div>
               {thumbnailFileName && (
-                <p className={`mt-1 text-xs ${Colors.text.secondary} truncate max-w-45`}>
+                <p
+                  className={`mt-1 text-xs ${Colors.text.secondary} truncate max-w-45`}
+                >
                   {thumbnailFileName}
                 </p>
               )}
@@ -794,7 +832,6 @@ const CourseBuilderV1 = ({ courseId }: Props) => {
               const res = await getSections(courseId);
               setSections(res.data);
             } catch (error) {
-              console.log(error);
               toast.error("Unable to create section");
             } finally {
               setShowCreateSection(false);

@@ -25,9 +25,7 @@ export default function AssignmentV2({
 }: {
   assignments?: BackendAssignment[];
 }) {
-  useEffect(() => {
-    console.log("Assignments from backend:", assignments);
-  }, [assignments]);
+  useEffect(() => {}, [assignments]);
 
   if (!assignments.length) {
     return (

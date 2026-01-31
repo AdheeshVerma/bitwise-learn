@@ -5,5 +5,4 @@ export const updateProblemTestcase = async (id: string, data: any) => {
     "/api/admin/update-testcase/" + id,
     data,
   );
-  console.log(data.data);
 };

@@ -21,13 +21,8 @@ export default function CodeRightSection({
 }: Props) {
   const [output, setOutput] = useState("");
 
-  useEffect(() => {
-    console.log(problem);
-  }, []);
-
   return (
     <div className="h-full w-full flex flex-col min-h-0 rounded-xl p-4 bg-[#0f172a] text-white font-mono">
-      
       {/* Header */}
       <div className="text-sm opacity-70 mb-2">
         {problem?.title || "Coding Question"}
@@ -43,7 +38,6 @@ export default function CodeRightSection({
           />
         )}
       </div>
-
     </div>
   );
 }

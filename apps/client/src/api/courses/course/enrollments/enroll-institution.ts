@@ -8,5 +8,4 @@ export async function enrollInstitutionCourses(data: {
     "/api/course/create-enrollment",
     data,
   );
-  console.log(result);
 }

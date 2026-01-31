@@ -9,6 +9,5 @@ export const updateProblemTemplate = async (
     "/api/admin/update-template/" + id,
     data,
   );
-  console.log(data.data);
   templateMap[data.currentLanguage] = res.data;
 };

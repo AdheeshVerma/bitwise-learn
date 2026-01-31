@@ -11,7 +11,6 @@ export async function getStudentData(
     batchId,
     pageNumber,
   });
-  console.log(data);
   setStudentData(data.data.data);
 
   return data.data.totalCourseTopics;
