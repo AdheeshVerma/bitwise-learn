@@ -20,4 +20,4 @@ async function run() {
 
 run();
 
-// */30 * * * * node /app/runAssessmentCron.js >> /var/log/assessment-cron.log 2>&1
+// */30 * * * * bun ./cron.ts 2>&1 | sudo tee -a /var/log/assessment-cron.log > /dev/null
