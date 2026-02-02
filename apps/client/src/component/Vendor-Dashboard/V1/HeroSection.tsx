@@ -69,15 +69,16 @@ export default function HeroSection() {
 
     try {
       const res = await createInstitution(data);
-      console.log(res)
+      console.log(res);
       setAddNew(false);
       toast.success("Institute Created Successfully", { id: toastId });
       await getAllInstitutions(setInstitutionData);
-
     } catch (err: any) {
       toast.error(
-        err?.response?.data?.message || err.message || "Error creating Institute",
-        { id: toastId }
+        err?.response?.data?.message ||
+          err.message ||
+          "Error creating Institute",
+        { id: toastId },
       );
       console.error(err);
     }

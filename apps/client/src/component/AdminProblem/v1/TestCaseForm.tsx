@@ -66,8 +66,6 @@ export default function TestCaseForm({
       output,
     };
 
-    ("New Test Case:", payload);
-
     onSave?.(payload);
 
     setTimeout(() => {

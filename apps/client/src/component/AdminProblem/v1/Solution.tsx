@@ -7,7 +7,7 @@ import { use, useEffect, useState } from "react";
 import AddSolution from "./AddSolution";
 import { updateSolution } from "@/api/problems/update-solution";
 import { THEME_MAP } from "@/component/ui/MarkDownEditor";
-import { useColors } from "@/component/general/(Color Manager)/useColors"; 
+import { useColors } from "@/component/general/(Color Manager)/useColors";
 import toast from "react-hot-toast";
 import { useTheme } from "@/component/general/(Color Manager)/ThemeController";
 type SolutionType = {
@@ -50,7 +50,6 @@ function Solution() {
       });
       toast.success("Solution saved successfully!");
     } catch (error) {
-      console.error(error);
       toast.error("Failed to save solution!");
     } finally {
       setLoading(false);
@@ -99,7 +98,10 @@ function Solution() {
         />
       </div>
 
-      <div className="mt-4" data-color-mode={useTheme().theme === "Dark" ? "dark" : "light"}>
+      <div
+        className="mt-4"
+        data-color-mode={useTheme().theme === "Dark" ? "dark" : "light"}
+      >
         <MDEditor
           height={600}
           value={solution.solution}

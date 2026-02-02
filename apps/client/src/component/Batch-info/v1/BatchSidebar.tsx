@@ -82,7 +82,7 @@ const BatchSidebar = ({ batch }: BatchSidebarProps) => {
         id: "bulk-upload",
       });
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       toast.error("Bulk upload failed", {
         id: "bulk-upload",
       });
@@ -200,7 +200,7 @@ const BatchSidebar = ({ batch }: BatchSidebarProps) => {
       </div>
 
       {/* Actions */}
-      {!logsLoading && logRole && logRole < 4 &&
+      {!logsLoading && logRole && logRole < 4 && (
         <>
           <div className="mt-8 flex gap-3">
             {isEditing ? (
@@ -248,8 +248,8 @@ const BatchSidebar = ({ batch }: BatchSidebarProps) => {
             <Upload size={16} />
             upload cloud credentials
           </button>
-        </>}
-
+        </>
+      )}
     </aside>
   );
 };

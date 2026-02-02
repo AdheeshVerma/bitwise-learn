@@ -55,7 +55,7 @@ export default function AllTestCases() {
         id: "bulk-upload",
       });
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       toast.error("Bulk upload failed", {
         id: "bulk-upload",
       });

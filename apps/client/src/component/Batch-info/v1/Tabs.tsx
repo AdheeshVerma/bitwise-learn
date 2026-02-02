@@ -95,7 +95,7 @@ export const Tabs = ({
         id: "bulk-upload",
       });
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       toast.error("Bulk upload failed", {
         id: "bulk-upload",
       });
@@ -120,7 +120,9 @@ export const Tabs = ({
       {/* Modal */}
       {addNew && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
-          <div className={`relative  p-6 rounded-lg w-full max-w-3xl ${Colors.background.secondary}`}>
+          <div
+            className={`relative  p-6 rounded-lg w-full max-w-3xl ${Colors.background.secondary}`}
+          >
             <button
               onClick={() => setAddNew(false)}
               className={`absolute top-4 right-4 ${Colors.text.secondary} hover:text-red-500 cursor-pointer active:scale-95`}
@@ -175,7 +177,7 @@ export const Tabs = ({
           logRole != 4 && (
             <button
               onClick={() => fileInputRef.current?.click()}
-            className={`flex items-center gap-2 border ${Colors.border.specialThick} ${Colors.text.special} ${Colors.hover.special} cursor-pointer active:scale-95 px-3 py-2 rounded`}
+              className={`flex items-center gap-2 border ${Colors.border.specialThick} ${Colors.text.special} ${Colors.hover.special} cursor-pointer active:scale-95 px-3 py-2 rounded`}
             >
               Upload Bulk
             </button>
