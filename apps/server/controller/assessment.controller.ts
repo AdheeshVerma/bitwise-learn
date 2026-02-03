@@ -295,7 +295,10 @@ class AssessmentController {
         },
       });
       if (!assessment) throw new Error("assessment not found");
-      if (assessment.status !== "LIVE") throw new Error("assessment not found");
+      if (req.user.type === "STUDENT") {
+        if (assessment.status !== "LIVE")
+          throw new Error("assessment not found");
+      }
       return res
         .status(200)
         .json(apiResponse(200, "Assessment Fetched Successfully", assessment));
