@@ -48,6 +48,32 @@ export function proxy(request: NextRequest) {
   if (!role) {
     return NextResponse.redirect(new URL("/student-login", request.url));
   }
+  if (role && role.includes("login")) {
+    switch (role) {
+      case "ADMIN":
+      case "SUPERADMIN":
+        return NextResponse.redirect(new URL("/admin-dashboard", request.url));
+
+      case "TEACHER":
+        return NextResponse.redirect(
+          new URL("/teacher-dashboard", request.url),
+        );
+
+      case "STUDENT":
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+
+      case "INSTITUTION":
+        return NextResponse.redirect(
+          new URL("/institution-dashboard", request.url),
+        );
+
+      case "VENDOR":
+        return NextResponse.redirect(new URL("/vendor-dashboard", request.url));
+
+      default:
+        return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
 
   /**
    * Resolve allowed routes

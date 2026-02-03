@@ -11,7 +11,7 @@ function ProblemInfo({ content }: any) {
     <div className={`w-full ${Colors.background.primary}`}>
       <Tabs defaultValue="solution" className="flex flex-col h-full">
         <TabsList
-          className={` w-full ${Colors.border.defaultThin} ${Colors.background.secondary} px-4`}
+          className={` w-full ${Colors.border.defaultThin} ${Colors.background.secondary} ${Colors.text.primary} px-4`}
         >
           <TabsTrigger className="cursor-pointer" value="solution">
             Solution

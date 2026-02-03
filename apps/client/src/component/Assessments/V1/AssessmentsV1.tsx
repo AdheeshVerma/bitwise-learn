@@ -14,6 +14,7 @@ import { getAllBatches } from "@/api/batches/get-all-batches";
 import { useStudent } from "@/store/studentStore";
 import { getAssessmentsByInstitution } from "@/api/assessments/get-assessments-by-batch";
 import { useInstitution } from "@/store/institutionStore";
+import { useAdmin } from "@/store/adminStore";
 
 // colors ------------------------------------------------------------------
 const Colors = useColors();
@@ -486,30 +487,34 @@ const AssessmentsV1 = () => {
   const [openCreateAssessment, setOpenCreateAssessment] = useState(false);
   const [searchText, setSearchText] = useState("");
   const { info: instituteInfo } = useInstitution();
+  const { info: adminInfo } = useAdmin();
   const fetchAssessments = async () => {
     try {
       setLoading(true);
       // console.log(instituteInfo?.data.id);
+      if (!instituteInfo?.data.id && !adminInfo?.data.id) return;
+      let res: any;
       if (!instituteInfo?.data.id) {
-        const res = await getAllAssessments();
+        res = await getAllAssessments();
+        console.log(res);
         setAssessments(res.data || []);
       } else {
-        const res = await getAssessmentsByInstitution((data: any) => {
-          // console.log(data);
+        res = await getAssessmentsByInstitution((data: any) => {
           //@ts-ignore
-          setAssessments(res.data || []);
+          setAssessments(data || []);
         }, instituteInfo.data.id);
       }
+      setLoading(false);
     } catch (error) {
+      console.log(error);
       toast.error("Failed to load Assessments");
-    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchAssessments();
-  }, [instituteInfo?.data.id]);
+  }, [instituteInfo?.data.id, adminInfo?.data.id]);
 
   const filteredAssessments = assessments.filter((assessment) => {
     if (!searchText.trim()) return true;

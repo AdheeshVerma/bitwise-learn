@@ -159,15 +159,19 @@ export const Tabs = ({
         ))}
 
         {/* Add New */}
-        {!logsLoading && logRole != null && logRole != 5 && logRole != 4 && (
-          <button
-            onClick={() => setAddNew(true)}
-            className={`flex items-center gap-2 border ${Colors.border.specialThick} ${Colors.text.special} ${Colors.hover.special} cursor-pointer active:scale-95 px-3 py-2 rounded`}
-          >
-            <Plus size={18} />
-            Add New {value}
-          </button>
-        )}
+        {!logsLoading &&
+          logRole != null &&
+          logRole != 5 &&
+          value !== "Assessments" &&
+          logRole != 4 && (
+            <button
+              onClick={() => setAddNew(true)}
+              className={`flex items-center gap-2 border ${Colors.border.specialThick} ${Colors.text.special} ${Colors.hover.special} cursor-pointer active:scale-95 px-3 py-2 rounded`}
+            >
+              <Plus size={18} />
+              Add New {value}
+            </button>
+          )}
 
         {/* Bulk Upload (Students only) */}
         {value === "Students" &&
