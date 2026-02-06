@@ -7,6 +7,7 @@ export const submitIndividualQuestion = async (
   type: "CODE" | "NO_CODE",
 ) => {
   try {
+    console.log(data);
     await axiosInstance.post("/api/assessments/submit/question/" + id, data);
   } catch (error) {
     toast.error("error submitting question");

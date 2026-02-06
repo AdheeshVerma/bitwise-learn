@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 type question = {
   question?: string;
   options?: string[];
-  correctOption?: number;
+  correctOption?: string;
   problem?: string;
   maxMarks: number;
 };

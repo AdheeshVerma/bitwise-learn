@@ -596,7 +596,7 @@ const UpdateQuestionModal = ({
       const updated = await updateAssessmentQuestion(question.id, {
         question: text,
         options,
-        correctOption: correct,
+        correctOption: options[correct],
         maxMarks: marks,
       });
 
@@ -1096,7 +1096,8 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                         <div className="grid grid-cols-2 gap-2">
                           {q &&
                             q.options.map((opt, idx) => {
-                              const isCorrect = idx === q.correctOption;
+                              const isCorrect =
+                                q.options[idx] === q.correctOption;
 
                               return (
                                 <div
@@ -1122,7 +1123,7 @@ const AssessmentBuilderV1 = ({ assessmentId }: BuilderProps) => {
                         </div>
 
                         <p className={`text-xs ${Colors.text.secondary}`}>
-                          Max Marks: {q.maxMarks}
+                          Max Marks: {(q && q.maxMarks) || 0}
                         </p>
                       </div>
                     ))

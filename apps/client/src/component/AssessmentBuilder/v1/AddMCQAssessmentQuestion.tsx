@@ -63,9 +63,15 @@ const AddAssessmentMCQ = ({
       const created = await createQuestion(sectionId, {
         question,
         options,
-        correctOption: correctAnswer,
+        correctOption: options[correctAnswer],
         maxMarks,
       }); // ✅ STORE RESULT
+      console.log({
+        question,
+        options,
+        correctOption: options[correctAnswer],
+        maxMarks,
+      });
 
       toast.success("Question added");
       onCreated(created); // ✅ NOW VALID

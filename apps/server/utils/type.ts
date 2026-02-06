@@ -277,12 +277,12 @@ export interface CreateAssessmentQuestionBody {
   question: string;
   options: string[];
   problem?: string;
-  correctOption?: number;
+  correctOption?: string;
   maxMarks: number;
 }
 export interface UpdateAssessmentQuestionBody {
   question?: string;
   options: string[];
-  correctOption?: number;
+  correctOption?: string;
   maxMarks?: number;
 }

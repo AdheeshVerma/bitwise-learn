@@ -96,7 +96,7 @@ class AssessmentSubmission {
       });
 
       if (!dbQuestion) throw new Error("assessment Question not found");
-
+      console.log(dbQuestion);
       const dbSubmission =
         await prismaClient.assessmentQuestionSubmission.findFirst({
           where: { questionId: dbQuestion.id, studentId: dbStudent.id },

@@ -37,7 +37,7 @@ class AssessmentQuestionController {
             data: {
               question: data.question,
               options: data.options,
-              correctOption: data.correctOption,
+              correctOption: data.correctOption || "",
               maxMarks: data.maxMarks,
               sectionId: dbSection.id,
             },
@@ -185,6 +185,7 @@ class AssessmentQuestionController {
           maxMarks: true,
           options: true,
           question: true,
+          correctOption: true,
           problem: {
             select: {
               name: true,

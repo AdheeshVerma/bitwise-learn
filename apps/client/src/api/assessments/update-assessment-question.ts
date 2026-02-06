@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 interface UpdateAssessmentQuestionBody {
   question?: string;
   options?: string[];
-  correctOption?: number;
+  correctOption?: string;
   maxMarks?: number;
 }
 

@@ -444,7 +444,7 @@ model AssessmentQuestion {
   id            String            @id @default(auto()) @map("_id") @db.ObjectId
   question      String?
   options       String[]
-  correctOption Int?
+  correctOption String?
   sectionId     String            @db.ObjectId
   section       AssessmentSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
