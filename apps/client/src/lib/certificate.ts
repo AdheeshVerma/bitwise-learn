@@ -179,9 +179,13 @@ const defaultTemplate = `
 .name {
 	position: absolute;
 	white-space: nowrap;
+	display:inline-flex;
+	justify-content: center;
+	align-items: center;
 	font-size: 1.932599em;
 	left:14.8983em;
 	top:12em;
+	margin:auto 0;
 }
 .name-text {
 	position: absolute;

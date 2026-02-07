@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useColors } from "@/component/general/(Color Manager)/useColors";
 
 type TestCase = {
@@ -13,9 +13,11 @@ type TestCase = {
 function TestCases({
   testCases = [],
   output = [],
+  tab = "example",
 }: {
   testCases?: TestCase[];
   output: any[];
+  tab: "example" | "output";
 }) {
   const Colors = useColors();
 
@@ -26,6 +28,10 @@ function TestCases({
     () => testCases.filter((t) => t.testType === "EXAMPLE"),
     [testCases],
   );
+
+  useEffect(() => {
+    setMode(tab);
+  }, [tab]);
 
   const currentTest = exampleCases[activeCase];
 
@@ -196,97 +202,106 @@ function TestCases({
                 </div>
 
                 {/* Active Output */}
-                {output[activeCase] && (() => {
-                  const o = output[activeCase];
-                  const parsedInput = parseInput(o.input);
+                {output[activeCase] &&
+                  (() => {
+                    const o = output[activeCase];
+                    const parsedInput = parseInput(o.input);
 
-                  return (
-                    <div
-                      className={`
+                    return (
+                      <div
+                        className={`
                         rounded-xl p-4 space-y-4
                         ${Colors.background.primary}
                         ${Colors.border.fadedThin}
                       `}
-                    >
-                      <div className="flex justify-between items-center">
-                        <span className={`text-xs ${Colors.text.secondary}`}>
-                          Testcase {activeCase + 1}
-                        </span>
-                        <span
-                          className={`text-xs font-semibold ${
-                            o.isCorrect
-                              ? Colors.text.special
-                              : Colors.text.secondary
-                          }`}
-                        >
-                          {o.isCorrect ? "Passed" : "Failed"}
-                        </span>
-                      </div>
+                      >
+                        <div className="flex justify-between items-center">
+                          <span className={`text-xs ${Colors.text.secondary}`}>
+                            Testcase {activeCase + 1}
+                          </span>
+                          <span
+                            className={`text-xs font-semibold ${
+                              o.isCorrect
+                                ? Colors.text.special
+                                : Colors.text.secondary
+                            }`}
+                          >
+                            {o.isCorrect ? "Passed" : "Failed"}
+                          </span>
+                        </div>
 
-                      {/* Input */}
-                      <div>
-                        <p className={`mb-1 text-xs ${Colors.text.secondary}`}>
-                          Input
-                        </p>
-                        <div
-                          className={`
+                        {/* Input */}
+                        <div>
+                          <p
+                            className={`mb-1 text-xs ${Colors.text.secondary}`}
+                          >
+                            Input
+                          </p>
+                          <div
+                            className={`
                             rounded-md p-2 font-mono text-sm
                             ${Colors.background.secondary}
                             ${Colors.border.fadedThin}
                           `}
-                        >
-                          {Object.entries(parsedInput).map(([key, value], i) => (
-                            <div key={i}>
-                              <span className={Colors.text.primary}>
-                                {key}
-                              </span>
-                              {" : "}
-                              <span className={Colors.text.special}>
-                                {Array.isArray(value)
-                                  ? JSON.stringify(value)
-                                  : String(value)}
-                              </span>
-                            </div>
-                          ))}
+                          >
+                            {Object.entries(parsedInput).map(
+                              ([key, value], i) => (
+                                <div key={i}>
+                                  <span className={Colors.text.primary}>
+                                    {key}
+                                  </span>
+                                  {" : "}
+                                  <span className={Colors.text.special}>
+                                    {Array.isArray(value)
+                                      ? JSON.stringify(value)
+                                      : String(value)}
+                                  </span>
+                                </div>
+                              ),
+                            )}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Expected */}
-                      <div>
-                        <p className={`mb-1 text-xs ${Colors.text.secondary}`}>
-                          Expected Output
-                        </p>
-                        <pre
-                          className={`
+                        {/* Expected */}
+                        <div>
+                          <p
+                            className={`mb-1 text-xs ${Colors.text.secondary}`}
+                          >
+                            Expected Output
+                          </p>
+                          <pre
+                            className={`
                             rounded-md p-2 font-mono text-sm
                             ${Colors.background.secondary}
                             ${Colors.border.fadedThin}
                             ${Colors.text.primary}
                           `}
-                        >
-                          {o.expectedOutput}
-                        </pre>
-                      </div>
+                          >
+                            {o.expectedOutput}
+                          </pre>
+                        </div>
 
-                      {/* Actual */}
-                      <div>
-                        <p className={`mb-1 text-xs ${Colors.text.secondary}`}>
-                          Your Output
-                        </p>
-                        <pre
-                          className={`
+                        {/* Actual */}
+                        <div>
+                          <p
+                            className={`mb-1 text-xs ${Colors.text.secondary}`}
+                          >
+                            Your Output
+                          </p>
+                          <pre
+                            className={`
                             rounded-md p-2 font-mono text-sm
                             ${Colors.background.secondary}
                             ${Colors.border.fadedThin}
                             ${o.isCorrect ? Colors.text.special : Colors.text.secondary}
                           `}
-                        >
-                          {o.actualOutput || "—"}
-                        </pre>
+                          >
+                            {o.actualOutput || "—"}
+                          </pre>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })()}
+                    );
+                  })()}
               </>
             )}
           </>

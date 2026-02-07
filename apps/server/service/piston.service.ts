@@ -55,7 +55,7 @@ class CodeExecution {
       return null;
     }
   }
-  async compileDsaProblem(code: string, language: string) {
+  async compileDsaProblem(code: string, language: string, input: string) {
     try {
       if (this.client === null) {
         throw new Error("the client wasn't initialized properly");
@@ -73,7 +73,7 @@ class CodeExecution {
             content: code,
           },
         ],
-        stdin: "",
+        stdin: input,
         args: [],
         compile_timeout: 10000,
         run_timeout: 3000,
@@ -82,6 +82,8 @@ class CodeExecution {
         compile_memory_limit: -1,
         run_memory_limit: -1,
       };
+      console.log(code);
+      console.log(input);
 
       const result = await axios.post(
         this.client + "api/v2/execute",

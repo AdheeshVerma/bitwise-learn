@@ -71,13 +71,13 @@ class CodeRunnerController {
 
       for (const testcase of exampleTestCases) {
         let testrun = executionCode;
-        const input = JSON.parse(testcase.input as string);
+        const input = testcase.input;
 
-        Object.keys(input).forEach((key) => {
-          testrun = testrun.replace(`input_${key}`, `${input[key]}`);
-        });
-
-        const result = await CodeExecution.compileDsaProblem(testrun, language);
+        const result = await CodeExecution.compileDsaProblem(
+          testrun,
+          language,
+          input,
+        );
         console.log(result);
         const hasRuntimeError =
           result?.run?.stderr && result.run.stderr.length > 0;
@@ -164,13 +164,13 @@ class CodeRunnerController {
       // ---- Run Example Testcases (for feedback)
       for (const testcase of exampleTestCases) {
         let testrun = executionCode;
-        const input = JSON.parse(testcase.input as string);
+        const input = testcase.input;
 
-        Object.keys(input).forEach((key) => {
-          testrun = testrun.replace(`input_${key}`, `${input[key]}`);
-        });
-
-        const result = await CodeExecution.compileDsaProblem(testrun, language);
+        const result = await CodeExecution.compileDsaProblem(
+          testrun,
+          language,
+          input,
+        );
         const runtime = result?.run?.time ?? 0;
         const memory = result?.run?.memory ?? 0;
 
@@ -306,13 +306,13 @@ class CodeRunnerController {
       // ---- Run Example Testcases (for feedback)
       for (const testcase of exampleTestCases) {
         let testrun = executionCode;
-        const input = JSON.parse(testcase.input as string);
+        const input = testcase.input;
 
-        Object.keys(input).forEach((key) => {
-          testrun = testrun.replace(`input_${key}`, `${input[key]}`);
-        });
-
-        const result = await CodeExecution.compileDsaProblem(testrun, language);
+        const result = await CodeExecution.compileDsaProblem(
+          testrun,
+          language,
+          input,
+        );
 
         const execStatus = classifyExecutionResult(result);
 

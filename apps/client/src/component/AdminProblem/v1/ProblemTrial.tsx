@@ -9,7 +9,7 @@ function ProblemTrial({ data }: { data: any }) {
   const [editorRatio, setEditorRatio] = useState(60);
   const rightPanelRef = useRef<HTMLDivElement>(null);
   const isEditorResizing = useRef(false);
-
+  const [tab, setTab] = useState<"example" | "output">("example");
   /* Editor resize */
   const handleEditorMouseDown = () => {
     isEditorResizing.current = true;
@@ -23,6 +23,7 @@ function ProblemTrial({ data }: { data: any }) {
         {/* Code Editor */}
         <div style={{ flex: `${editorRatio} 0 0` }} className="min-h-0">
           <CodeEditor
+            setTab={setTab}
             questionId={data.id}
             output={setOutput}
             template={data.problemTemplates}
@@ -46,7 +47,7 @@ function ProblemTrial({ data }: { data: any }) {
           }}
           className="overflow-y-auto min-h-0"
         >
-          <TestCases output={output} testCases={data.testCases} />
+          <TestCases tab={tab} output={output} testCases={data.testCases} />
         </div>
       </div>
     </>

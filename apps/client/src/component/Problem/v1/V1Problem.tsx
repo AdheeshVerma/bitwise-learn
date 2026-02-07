@@ -25,6 +25,7 @@ function V1Problem({ data }: any) {
   /* Editor split */
   const [editorRatio, setEditorRatio] = useState(60);
   const rightPanelRef = useRef<HTMLDivElement>(null);
+  const [tab, setTab] = useState<"example" | "output">("example");
   const isEditorResizing = useRef(false);
 
   const router = useRouter();
@@ -159,6 +160,7 @@ function V1Problem({ data }: any) {
         <div style={{ flex: `${editorRatio} 0 0` }} className="min-h-0">
           <CodeEditor
             questionId={data.id}
+            setTab={setTab}
             output={setOutput}
             template={data.problemTemplates}
           />
@@ -185,7 +187,7 @@ function V1Problem({ data }: any) {
           }}
           className="overflow-y-auto min-h-0"
         >
-          <TestCases output={output} testCases={data.testCases} />
+          <TestCases tab={tab} output={output} testCases={data.testCases} />
         </div>
       </div>
     </div>

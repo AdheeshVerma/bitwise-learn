@@ -11,7 +11,9 @@ import { updateProblemTestcase } from "@/api/problems/update-testcase";
 import { uploadBatches } from "@/api/batches/create-batches";
 import toast from "react-hot-toast";
 import { useColors } from "@/component/general/(Color Manager)/useColors";
-
+import Link from "next/link";
+//@ts-ignore
+import testcaseFormat from "@/../public/testcase.ods";
 type TestCase = {
   id: string;
   testType: string;
@@ -51,7 +53,7 @@ export default function AllTestCases() {
 
       await uploadBatches(param.id as string, file, "TESTCASE", null);
       await getAllProblemTestCases(setData, problemId);
-      toast.success("Students uploaded successfully", {
+      toast.success("Testcase uploaded successfully", {
         id: "bulk-upload",
       });
     } catch (error) {
@@ -67,7 +69,10 @@ export default function AllTestCases() {
   };
   const handleAdd = async (payload: any) => {
     const created = await createTestCase(problemId, payload);
-    setData((prev) => [...prev, created]);
+    await getAllProblemTestCases(setData, problemId);
+    toast.success("Testcase uploaded successfully", {
+      id: "bulk-upload",
+    });
     setShowTestCaseForm(false);
   };
 
@@ -101,8 +106,19 @@ export default function AllTestCases() {
       {/* TABLE */}
       <div className="flex-1 p-4">
         <div className="flex justify-between mb-4">
-          <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>Test Cases</h2>
+          <h2 className={`text-lg font-semibold ${Colors.text.primary}`}>
+            Test Cases
+          </h2>
           <div className="flex gap-2">
+            <Link
+              href="https://res.cloudinary.com/djy3ewpb8/raw/upload/v1770455092/testcase_fxz96x.ods"
+              target="_blank"
+              download
+              className={`px-4 py-2 rounded-md ${Colors.hover.special} ${Colors.text.special} ${Colors.border.specialThick} cursor-pointer active:scale-95 transition-all`}
+            >
+              <button>Download Format</button>
+            </Link>
+
             <button
               onClick={() => fileInputRef.current?.click()}
               className={`px-4 py-2 rounded-md ${Colors.hover.special} ${Colors.text.special} ${Colors.border.specialThick} cursor-pointer active:scale-95 transition-all`}
@@ -118,9 +134,13 @@ export default function AllTestCases() {
           </div>
         </div>
 
-        <div className={`overflow-x-auto border ${Colors.border.defaultThick} rounded-lg`}>
+        <div
+          className={`overflow-x-auto border ${Colors.border.defaultThick} rounded-lg`}
+        >
           <table className="w-full text-sm">
-            <thead className={` ${Colors.text.primary} ${Colors.background.secondary}`}>
+            <thead
+              className={` ${Colors.text.primary} ${Colors.background.secondary}`}
+            >
               <tr>
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Type</th>
@@ -147,7 +167,10 @@ export default function AllTestCases() {
               ))}
               {data.length === 0 && (
                 <tr>
-                  <td colSpan={4} className={`text-center py-6 ${Colors.text.secondary}`}>
+                  <td
+                    colSpan={4}
+                    className={`text-center py-6 ${Colors.text.secondary}`}
+                  >
                     No test cases found
                   </td>
                 </tr>
@@ -185,38 +208,15 @@ function EditableTestCaseSidebar({
   const [isSaving, setIsSaving] = useState(false);
   const Colors = useColors();
 
-  const parsedInput = (() => {
-    try {
-      return JSON.parse(testCase.input);
-    } catch {
-      return {};
-    }
-  })();
-
-  const [inputFields, setInputFields] = useState(
-    Object.entries(parsedInput).map(([k, v]) => ({
-      key: k,
-      value: Array.isArray(v) ? JSON.stringify(v) : String(v),
-    })),
-  );
-
+  const [input, setInput] = useState(testCase.input);
   const [output, setOutput] = useState(testCase.output);
 
   const handleSave = async () => {
     setIsSaving(true);
 
-    const input: Record<string, any> = {};
-    inputFields.forEach(({ key, value }) => {
-      try {
-        input[key] = JSON.parse(value);
-      } catch {
-        input[key] = value;
-      }
-    });
-
     onSaved({
       ...testCase,
-      input: JSON.stringify(input),
+      input,
       output,
     });
 
@@ -225,52 +225,51 @@ function EditableTestCaseSidebar({
   };
 
   return (
-    <div className={`fixed right-0 top-0 h-screen w-[420px] ${Colors.background.primary} ${Colors.border.default} flex flex-col`}>
-      <div className={`flex justify-between p-4 border-b ${Colors.border.default}`}>
+    <div
+      className={`fixed right-0 top-0 h-screen w-[420px] ${Colors.background.primary} ${Colors.border.default} flex flex-col`}
+    >
+      {/* Header */}
+      <div
+        className={`flex justify-between p-4 border-b ${Colors.border.default}`}
+      >
         <h3 className={`font-semibold ${Colors.text.primary}`}>Test Case</h3>
         <button onClick={onClose}>
           <X size={18} />
         </button>
       </div>
 
+      {/* Body */}
       <div className="p-4 space-y-4 overflow-y-auto">
-        {inputFields.map((f, i) => (
-          <div key={i} className="flex gap-2">
-            <input
-              disabled={!isEditing}
-              value={f.key}
-              onChange={(e) =>
-                setInputFields((prev) =>
-                  prev.map((x, idx) =>
-                    idx === i ? { ...x, key: e.target.value } : x,
-                  ),
-                )
-              }
-              className={`w-1/3 ${Colors.background.secondary} p-2 rounded ${Colors.text.primary}`}
-            />
-            <input
-              disabled={!isEditing}
-              value={f.value}
-              onChange={(e) =>
-                setInputFields((prev) =>
-                  prev.map((x, idx) =>
-                    idx === i ? { ...x, value: e.target.value } : x,
-                  ),
-                )
-              }
-              className={`flex-1 ${Colors.background.secondary} p-2 rounded ${Colors.text.primary}`}
-            />
-          </div>
-        ))}
+        {/* Input */}
+        <div>
+          <label className={`block mb-1 text-xs ${Colors.text.secondary}`}>
+            Input
+          </label>
+          <textarea
+            disabled={!isEditing}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            rows={4}
+            className={`w-full font-mono text-xs ${Colors.background.secondary} p-2 rounded ${Colors.text.primary}`}
+          />
+        </div>
 
-        <textarea
-          disabled={!isEditing}
-          value={output}
-          onChange={(e) => setOutput(e.target.value)}
-          className={`w-full ${Colors.background.secondary} p-2 rounded ${Colors.text.primary}`}
-        />
+        {/* Output */}
+        <div>
+          <label className={`block mb-1 text-xs ${Colors.text.secondary}`}>
+            Output
+          </label>
+          <textarea
+            disabled={!isEditing}
+            value={output}
+            onChange={(e) => setOutput(e.target.value)}
+            rows={3}
+            className={`w-full font-mono text-xs ${Colors.background.secondary} p-2 rounded ${Colors.text.primary}`}
+          />
+        </div>
       </div>
 
+      {/* Footer */}
       <div className={`p-4 border-t ${Colors.border.default} space-y-2`}>
         {!isEditing ? (
           <button
@@ -301,7 +300,7 @@ function EditableTestCaseSidebar({
 }
 
 function truncate(text: string, length: number) {
-  return text.length > length ? text.slice(0, length) + "…" : text;
+  return text;
 }
 
 function Detail({ label, value }: { label: string; value: string }) {

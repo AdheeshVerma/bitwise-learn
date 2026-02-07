@@ -21,7 +21,7 @@ export default function CodeRightSection({
   onSubmit,
 }: Props) {
   const [output, setOutput] = useState([]);
-
+  const [tab, setTab] = useState<"example" | "output">("example");
   return (
     <div className="h-full w-full flex flex-col min-h-0 rounded-xl p-4 bg-[#0f172a] text-white font-mono">
       {/* Header */}
@@ -35,6 +35,7 @@ export default function CodeRightSection({
           <>
             <div className="h-2/3">
               <CodeEditor
+                setTab={setTab}
                 questionId={problemId}
                 template={problem.problemTemplates}
                 output={setOutput}
@@ -42,7 +43,11 @@ export default function CodeRightSection({
               />
             </div>
             <div className="overflow-y-auto min-h-0">
-              <TestCases output={output} testCases={problem.testCases} />
+              <TestCases
+                tab={tab}
+                output={output}
+                testCases={problem.testCases}
+              />
             </div>
           </>
         )}

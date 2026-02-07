@@ -4,6 +4,7 @@ import CourseForm from "@/component/general/CourseForm";
 import TeacherForm from "@/component/general/TeacherForm";
 import BatchStudentForm from "./BatchStudentForm";
 import { Plus, X } from "lucide-react";
+import Link from "next/link";
 import { use, useRef, useState } from "react";
 import AssessmentsForm from "./AssessmentsForm";
 import { useParams } from "next/navigation";
@@ -180,12 +181,21 @@ export const Tabs = ({
           logRole != null &&
           logRole != 5 &&
           logRole != 4 && (
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className={`flex items-center gap-2 border ${Colors.border.specialThick} ${Colors.text.special} ${Colors.hover.special} cursor-pointer active:scale-95 px-3 py-2 rounded`}
-            >
-              Upload Bulk
-            </button>
+            <>
+              <Link
+                href="https://res.cloudinary.com/djy3ewpb8/raw/upload/v1770455127/student-info_rsa5q9.ods"
+                download
+                className={`px-4 py-2 rounded-md ${Colors.hover.special} ${Colors.text.special} ${Colors.border.specialThick} cursor-pointer active:scale-95 transition-all`}
+              >
+                <button>Download Format</button>
+              </Link>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className={`flex items-center gap-2 border ${Colors.border.specialThick} ${Colors.text.special} ${Colors.hover.special} cursor-pointer active:scale-95 px-3 py-2 rounded`}
+              >
+                Upload Bulk
+              </button>
+            </>
           )}
       </div>
     </>

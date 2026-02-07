@@ -23,11 +23,13 @@ export default function CodeEditor({
   questionId,
   output: setOutput,
   customSubmit,
+  setTab,
 }: {
   template: any[];
   questionId: string;
   output: any;
   customSubmit?: (language: string, code: string) => void;
+  setTab: any;
 }) {
   const Colors = useColors();
   const theme = useTheme();
@@ -92,6 +94,7 @@ export default function CodeEditor({
       questionId,
     });
     setOutput(res.testCases || []);
+    setTab("output");
     toast.success("Execution Completed", { id: "run" });
   };
 
