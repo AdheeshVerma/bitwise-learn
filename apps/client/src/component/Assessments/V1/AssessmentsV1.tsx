@@ -141,12 +141,15 @@ const AddAssessmentModal = ({
   const [institutes, setInstitutes] = useState<{ id: string; name: string }[]>(
     [],
   );
+  const [clockColor, setClockColor] = useState("Dark");
   const [selectedInstitute, setSelectedInstitute] = useState("");
 
   const [batches, setBatches] = useState<
     { id: string; batchname: string; branch: string; batchEndYear: string }[]
   >([]);
-
+  useEffect(() => {
+    setClockColor(localStorage.getItem("app-theme") || "Dark");
+  }, []);
   const fetchInstitutes = async () => {
     try {
       if (role === null) return;
@@ -346,7 +349,7 @@ const AddAssessmentModal = ({
             <div className="grid grid-cols-3 gap-2 mt-1">
               <input
                 type="date"
-                className={`${inputBase} date-white ${Colors.text.primary} mt-0 col-span-2  startTime",
+                className={`${inputBase} ${clockColor === "Dark" ? "date-white" : ""} ${Colors.text.primary} mt-0 col-span-2  startTime",
                 )}`}
                 value={startDate}
                 onChange={(e) => {
@@ -356,7 +359,7 @@ const AddAssessmentModal = ({
               />
               <input
                 type="time"
-                className={`${inputBase} date-white mt-0 ${Colors.text.primary} `}
+                className={`${inputBase} ${clockColor === "Dark" ? "date-white" : ""}  mt-0 ${Colors.text.primary} `}
                 value={startClock}
                 onChange={(e) => {
                   setStartClock(e.target.value);
@@ -368,11 +371,13 @@ const AddAssessmentModal = ({
           </div>
 
           <div>
-            <label className={`text-sm ${Colors.text.primary}`}>End time</label>
+            <label className={`text-sm  ${Colors.text.primary}`}>
+              End time
+            </label>
             <div className="grid grid-cols-3 gap-2 mt-1">
               <input
                 type="date"
-                className={`${inputBase} mt-0 col-span-2 endTime",
+                className={`${inputBase} date-white mt-0 col-span-2 endTime",
 
                 )}`}
                 value={endDate}
@@ -383,7 +388,7 @@ const AddAssessmentModal = ({
               />
               <input
                 type="time"
-                className={`${inputBase} mt-0 ${Colors.text.primary} `}
+                className={`${inputBase} date-white mt-0 ${Colors.text.primary} `}
                 value={endClock}
                 onChange={(e) => {
                   setEndClock(e.target.value);

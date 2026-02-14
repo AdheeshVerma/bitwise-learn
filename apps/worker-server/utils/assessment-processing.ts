@@ -114,11 +114,11 @@ export default async function assessmentProcessing(payload: string) {
           assessmentTotalMarks > 0
             ? (totalMarks / assessmentTotalMarks) * 100
             : 0;
-
+        console.log(submission);
         const totalTimeSpent = submission.createdAt
           ? Number(
               (
-                (submission.submittedAt.getTime() -
+                (submission.startedAt.getTime() -
                   dbAssessment.startTime.getTime()) /
                 (1000 * 60)
               ).toFixed(2),

@@ -431,9 +431,6 @@ class AssessmentController {
         throw new Error("wait for test to end");
       }
       //TODO: Send the response to the queue
-      console.log(MQClient.connected);
-      console.log(MQClient.uri);
-
       await MQClient.connect();
       await MQClient.registerNewChannel("assessment-report");
 
@@ -441,6 +438,7 @@ class AssessmentController {
         "assessment-report",
         JSON.stringify({ id: dbAssessment.id }),
       );
+      if (!messageSent) throw new Error("request failed");
 
       await prismaClient.assessment.update({
         where: { id: dbAssessment.id },
@@ -448,7 +446,6 @@ class AssessmentController {
           reportStatus: "PROCESSING",
         },
       });
-      if (!messageSent) throw new Error("request failed");
 
       return res
         .status(200)
