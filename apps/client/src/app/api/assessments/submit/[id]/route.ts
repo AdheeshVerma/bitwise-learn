@@ -11,7 +11,7 @@ export async function POST(
     if (!token) throw new Error("Token not found");
     const cookieHeader = req.headers.get("cookie");
 
-    const request = await axiosInstance.get("http://jsonip.com/?callback=?");
+    const request = await axiosInstance.get("http://jsonip.com/");
     const clientIp = request.data.ip;
 
     const body = await req.json();
@@ -33,6 +33,7 @@ export async function POST(
 
     return NextResponse.json(data, { status: res.status });
   } catch (error: any) {
+    console.log(JSON.stringify(error));
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

@@ -33,7 +33,12 @@ interface CSVCloudInfo {
   cloudurl: string;
   email: string;
 }
-
+interface CSVAssignmentQuestion {
+  question: string;
+  type: "SCQ" | "MCQ";
+  options: string;
+  correctAnswer: string;
+}
 class CSVUploader {
   async uploadMultipleBatches(req: Request, res: Response) {
     try {
@@ -248,6 +253,235 @@ class CSVUploader {
       return res.status(200).json(apiResponse(200, "students uploaded", null));
     } catch (error: any) {
       console.log(error);
+      return res.status(200).json(apiResponse(500, error.message, null));
+    }
+  }
+  async uploadAssignmentQuestion(req: Request, res: Response) {
+    try {
+      const userId = req.user?.id;
+      const assignmentId = req.params.id as string;
+      const file = req.file;
+
+      if (!userId) throw new Error("unauthenticated user");
+      if (!file) throw new Error("file is required");
+      if (req.user?.type === "STUDENT" || req.user?.type === "TEACHER") {
+        throw new Error("unauthorized to perform this task");
+      }
+
+      const dbAdmin = await prismaClient.user.findFirst({
+        where: { id: userId },
+      });
+      if (!dbAdmin) throw new Error("no such admin found");
+
+      /* ---------------- XLSX PARSING ---------------- */
+      const workbook = XLSX.read(file.buffer, { type: "buffer" });
+      const sheetName = workbook.SheetNames[0];
+      if (!sheetName) throw new Error("no sheet found");
+
+      const sheet = workbook.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json<any>(sheet!, {
+        defval: "",
+        raw: false,
+      });
+
+      if (!rows.length) throw new Error("empty file");
+
+      /* ---------------- EXISTING QUESTIONS ---------------- */
+      const existingQuestions =
+        await prismaClient.courseAssignemntQuestion.findMany({
+          where: { assignmentId },
+          select: { question: true },
+        });
+
+      const existingSet = new Set(
+        existingQuestions.map((q) => q.question.trim().toLowerCase()),
+      );
+
+      /* ---------------- TRANSFORM & VALIDATE ---------------- */
+      const validQuestions: any[] = [];
+      const skipped: any[] = [];
+
+      for (const row of rows) {
+        const question = row.question?.trim();
+        const optionsRaw = row.options;
+        const correctRaw = row.correctAnswer;
+
+        if (!question || !optionsRaw || !correctRaw) {
+          skipped.push({ row, reason: "missing required fields" });
+          continue;
+        }
+
+        if (existingSet.has(question.toLowerCase())) {
+          skipped.push({ row, reason: "duplicate question" });
+          continue;
+        }
+
+        const options = optionsRaw
+          .split("|")
+          .map((o: string) => o.trim())
+          .filter(Boolean);
+
+        const correctAnswer = correctRaw
+          .split("|")
+          .map((c: string) => c.trim())
+          .filter(Boolean);
+
+        if (options.length < 1) {
+          skipped.push({ row, reason: "options missing" });
+          continue;
+        }
+
+        const invalidCorrect = correctAnswer.some(
+          (ans: string) => !options.includes(ans),
+        );
+
+        if (invalidCorrect) {
+          skipped.push({
+            row,
+            reason: "correct answer not present in options",
+          });
+          continue;
+        }
+
+        validQuestions.push({
+          question,
+          options,
+          correctAnswer,
+          assignmentId,
+          type: options.length === 1 ? "SCQ" : "MCQ",
+        });
+      }
+
+      /* ---------------- BULK INSERT ---------------- */
+      if (validQuestions.length) {
+        await prismaClient.courseAssignemntQuestion.createMany({
+          data: validQuestions,
+        });
+      }
+
+      return res.status(200).json(
+        apiResponse(200, "assignment questions uploaded", {
+          totalRows: rows.length,
+          inserted: validQuestions.length,
+          skipped: skipped.length,
+          skippedDetails: skipped,
+        }),
+      );
+    } catch (error: any) {
+      console.error(error);
+      return res.status(200).json(apiResponse(500, error.message, null));
+    }
+  }
+  async uploadAssessmentMCQQuestions(req: Request, res: Response) {
+    try {
+      const userId = req.user?.id;
+      const sectionId = req.params.id as string;
+      const file = req.file;
+
+      if (!userId) throw new Error("unauthenticated user");
+      if (!file) throw new Error("file is required");
+      if (req.user?.type === "STUDENT") {
+        throw new Error("user not authorized to upload assessment questions");
+      }
+
+      const dbSection = await prismaClient.assessmentSection.findUnique({
+        where: { id: sectionId },
+      });
+      if (!dbSection) throw new Error("assessment section not found");
+
+      /* ---------------- READ FILE ---------------- */
+      const workbook = XLSX.read(file.buffer, { type: "buffer" });
+      const sheetName = workbook.SheetNames[0];
+      if (!sheetName) throw new Error("no sheet found");
+
+      const sheet = workbook.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json<any>(sheet!, {
+        defval: "",
+        raw: false,
+      });
+
+      if (!rows.length) throw new Error("empty file");
+
+      /* ---------------- PROCESS ROWS ---------------- */
+      const validQuestions: any[] = [];
+      const skipped: any[] = [];
+
+      rows.forEach((row, index) => {
+        const rowNumber = index + 2; // Excel header = row 1
+
+        const question = row.question?.trim();
+        const optionsRaw = row.options;
+        const correctOption = row.correctOption?.trim();
+        const maxMarks = Number(row.maxMarks);
+
+        /* ---- base validation ---- */
+        if (!maxMarks || maxMarks <= 0) {
+          skipped.push({ rowNumber, reason: "invalid maxMarks" });
+          return;
+        }
+
+        /* ---- MCQ validation ---- */
+        if (!optionsRaw || !correctOption) {
+          skipped.push({
+            rowNumber,
+            reason: "options or correctOption missing",
+          });
+          return;
+        }
+
+        const options = optionsRaw
+          .split("|")
+          .map((o: string) => o.trim())
+          .filter(Boolean);
+
+        if (options.length < 2) {
+          skipped.push({
+            rowNumber,
+            reason: "MCQ must have at least 2 options",
+          });
+          return;
+        }
+
+        if (!options.includes(correctOption)) {
+          skipped.push({
+            rowNumber,
+            reason: "correctOption not present in options",
+          });
+          return;
+        }
+
+        validQuestions.push({
+          question,
+          options,
+          correctOption,
+          maxMarks,
+          sectionId,
+        });
+      });
+
+      /* ---------------- BULK INSERT ---------------- */
+      if (validQuestions.length) {
+        await prismaClient.assessmentQuestion.createMany({
+          data: validQuestions.map((q) => ({
+            question: q.question,
+            options: q.options,
+            correctOption: q.correctOption,
+            maxMarks: q.maxMarks,
+            sectionId: q.sectionId,
+          })),
+        });
+      }
+
+      return res.status(200).json(
+        apiResponse(200, "assessment MCQ questions uploaded successfully", {
+          totalRows: rows.length,
+          inserted: validQuestions.length,
+          skipped: skipped.length,
+          skippedRows: skipped,
+        }),
+      );
+    } catch (error: any) {
+      console.error(error);
       return res.status(200).json(apiResponse(500, error.message, null));
     }
   }

@@ -75,7 +75,7 @@ export default function LeftSection({
 
               <div className="flex flex-col gap-3">
                 {testCases.map((tc, index) => {
-                  const parsedInput = JSON.parse(tc.input);
+                  const parsedInput = tc.input;
 
                   return (
                     <div
@@ -87,14 +87,7 @@ export default function LeftSection({
                       <p>
                         <span className="opacity-60">Input:</span>{" "}
                         <code className="opacity-90">
-                          {Object.keys(parsedInput).map((key, index) => {
-                            return (
-                              <p key={index}>
-                                {" "}
-                                {key} : {parsedInput[key]}{" "}
-                              </p>
-                            );
-                          })}
+                          {parsedInput}
                           {/* array = [{parsedInput.array.join(", ")}], target ={" "}
                           {parsedInput.target} */}
                         </code>

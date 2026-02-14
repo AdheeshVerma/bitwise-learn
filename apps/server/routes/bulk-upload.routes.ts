@@ -28,4 +28,16 @@ router.post(
   upload.single("file"),
   csvUploadController.uploadCloudCred,
 );
+router.post(
+  "/assignment/:id",
+  authMiddleware,
+  upload.single("file"),
+  csvUploadController.uploadAssignmentQuestion,
+);
+router.post(
+  "/assessment/:id",
+  authMiddleware,
+  upload.single("file"),
+  csvUploadController.uploadAssessmentMCQQuestions,
+);
 export default router;

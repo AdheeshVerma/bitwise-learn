@@ -130,6 +130,7 @@ function IndividualAssessmentReportV1({
     };
 
     const marksPercent = student.totalMarks;
+    //TODO: fetch assessment start time
     const duration = calculateDuration(student.startedAt, student.submittedAt);
 
     // Determine status color
