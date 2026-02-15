@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Pencil, Save, X, Trash } from "lucide-react";
 import InfoBlock from "./InfoBlock";
 import { deleteEntity, updateEntity } from "@/api/institutions/entity";
 import { useRouter } from "next/navigation";
+import { useColors } from "@/component/general/(Color Manager)/useColors";
 
 type VendorSidebarProps = {
   vendor: any;
@@ -33,6 +34,8 @@ const formatDate = (dateString: string | Date): string => {
   return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
 };
 
+const Colors = useColors();
+
 const InputField = ({
   label,
   value,
@@ -45,12 +48,12 @@ const InputField = ({
   onChange: (v: string) => void;
 }) => (
   <div className="space-y-1">
-    <label className="text-xs text-gray-400">{label}</label>
+    <label className={`text-xs ${Colors.text.secondary}`}>{label}</label>
     <input
       value={value}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+      className={`w-full ${Colors.background.primary} ${Colors.border.defaultThick} ${Colors.text.primary} rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500`}
     />
   </div>
 );
@@ -100,7 +103,7 @@ const VendorSidebar = ({ vendor, onUpdate, onDelete }: VendorSidebarProps) => {
   };
 
   return (
-    <aside className="w-[320px] bg-[#1b1b1b] text-white p-6 rounded-xl min-h-[93vh]">
+    <aside className={`w-[320px] ${Colors.background.secondary} ${Colors.text.primary} p-6 rounded-xl min-h-[93vh]`}>
       {/* Header */}
       <div className="mb-4">
         {isEditing ? (
@@ -120,12 +123,12 @@ const VendorSidebar = ({ vendor, onUpdate, onDelete }: VendorSidebarProps) => {
             value={formData.tagline || ""}
             onChange={(e) => handleChange("tagline", e.target.value)}
             placeholder="Enter tagline"
-            className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+            className={`w-full ${Colors.background.primary} ${Colors.border.defaultThick} ${Colors.text.primary} rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none`}
             rows={2}
           />
         </>
       ) : (
-        <p className="text-sm text-gray-400 mb-6">{vendor.tagline || "—"}</p>
+        <p className={`text-sm ${Colors.text.secondary} mb-6`}>{vendor.tagline || "—"}</p>
       )}
 
       {/* Content */}
@@ -169,14 +172,14 @@ const VendorSidebar = ({ vendor, onUpdate, onDelete }: VendorSidebarProps) => {
           <>
             <button
               onClick={handleSave}
-              className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
+              className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 px-4 py-2 rounded cursor-pointer hover:opacity-80 active:scale-95 transition-all"
             >
               <Save size={16} />
               Save
             </button>
             <button
               onClick={() => setIsEditing(false)}
-              className="flex-1 flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded"
+              className="flex-1 flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded cursor-pointer hover:opacity-80 active:scale-95 transition-all"
             >
               <X size={16} />
               Cancel
@@ -186,14 +189,14 @@ const VendorSidebar = ({ vendor, onUpdate, onDelete }: VendorSidebarProps) => {
           <>
             <button
               onClick={() => setIsEditing(true)}
-              className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
+              className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded cursor-pointer hover:opacity-80 active:scale-95 transition-all"
             >
               <Pencil size={16} />
               Edit
             </button>
             <button
               onClick={handleDelete}
-              className="flex-1 flex items-center justify-center gap-2 text-white border border-white px-4 py-2 rounded"
+              className={`flex-1 flex items-center justify-center gap-2 ${Colors.text.primary} ${Colors.background.primary} px-4 py-2 rounded cursor-pointer hover:opacity-80 active:scale-95 transition-all`}
             >
               <Trash size={16} />
               Delete

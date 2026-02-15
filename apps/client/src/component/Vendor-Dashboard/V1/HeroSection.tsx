@@ -6,6 +6,7 @@ import { useColors } from "@/component/general/(Color Manager)/useColors";
 import useVendor from "@/store/vendorStore";
 import { getVendorDashboard } from "@/api/vendors/get-vendor-dashboard";
 import { getAllInstitutions } from "@/api/institutions/get-all-institutions";
+import { getVendorInstitutions } from "@/api/institutions/get-institutions-by-vendor";
 import DashboardInfo from "@/component/AllInstitutions/v1/DashboardInfo";
 import Filter from "@/component/general/Filter";
 import InstitutionForm from "@/component/AllInstitutions/v1/InstitutionForm";
@@ -48,11 +49,10 @@ export default function HeroSection() {
   const vendor = useVendor();
   const setVendor = useVendor((s) => s.setData);
 
-  if (!vendor) return null;
-
   const [institutionData, setInstitutionData] = useState<any>([]);
   const [filteredData, setFilteredData] = useState<any>([]);
   const [addNew, setAddNew] = useState(false);
+  const vendorId = vendor?.info?.data?.id|| "";
 
   useEffect(() => {
     if (!vendor) {
@@ -61,8 +61,10 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
-    getAllInstitutions(setInstitutionData);
-  }, []);
+    if (vendorId) {
+      getVendorInstitutions(setInstitutionData, vendorId as string);
+    }
+  }, [vendorId]);
 
   const handleCreateInstitution = async (data: any) => {
     const toastId = toast.loading("Creating Institute...");

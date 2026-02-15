@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { X } from "lucide-react";
+import { useColors } from "@/component/general/(Color Manager)/useColors";
 
 type Props = {
   openForm: (value: boolean) => void;
@@ -36,6 +37,7 @@ export default function InstitutionForm({ openForm, onSubmit }: Props) {
     websiteLink: "",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof InstitutionFormData, string>>>({});
+  const Colors = useColors();
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -152,21 +154,21 @@ export default function InstitutionForm({ openForm, onSubmit }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-divBg p-6 shadow-2xl">
+      <div className={`relative w-full max-w-lg rounded-2xl ${Colors.border.defaultThick} ${Colors.background.secondary} p-6 shadow-2xl`}>
         {/* Close */}
         <button
           onClick={() => openForm(false)}
-          className="absolute right-4 top-4 text-white/50 hover:text-white"
+          className={`absolute right-4 top-4 ${Colors.text.primary} hover:text-red-500 cursor-pointer hover:opacity-80 active:scale-95 transition-all`}
         >
           <X size={20} />
         </button>
 
         {/* Header */}
         <div className="mb-6">
-          <p className="text-xs text-primaryBlue">
+          <p className={`text-xs ${Colors.text.special}`}>
             Step {step} of {TOTAL_STEPS}
           </p>
-          <h2 className="text-lg font-semibold text-white mt-1">
+          <h2 className={`text-lg font-semibold ${Colors.text.primary} mt-1`}>
             Create Institution
           </h2>
         </div>
@@ -174,7 +176,7 @@ export default function InstitutionForm({ openForm, onSubmit }: Props) {
         {/* Progress bar */}
         <div className="mb-6 h-1 w-full bg-white/10 rounded">
           <div
-            className="h-1 bg-primaryBlue rounded transition-all"
+            className={`h-1 ${Colors.background.special} rounded transition-all`}
             style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
           />
         </div>
@@ -257,7 +259,7 @@ export default function InstitutionForm({ openForm, onSubmit }: Props) {
                   rows={3}
                   className={`mt-1 w-full rounded-lg border ${
                     errors.address ? "border-red-500" : "border-white/10"
-                  } bg-black/30 px-3 py-2 text-sm text-white focus:ring-2 focus:ring-primaryBlue`}
+                  } ${Colors.background.primary} ${Colors.text.primary} px-3 py-2 text-sm focus:ring-2 focus:ring-primaryBlue`}
                 />
                 {errors.address && (
                   <p className="mt-1 text-xs text-red-500">{errors.address}</p>
@@ -279,7 +281,7 @@ export default function InstitutionForm({ openForm, onSubmit }: Props) {
               <button
                 type="button"
                 onClick={back}
-                className="text-sm text-white/60 hover:text-white"
+                className={`text-sm ${Colors.text.special} hover:underline cursor-pointer hover:opacity-80 active:scale-95 transition-all`}
               >
                 Back
               </button>
@@ -291,14 +293,14 @@ export default function InstitutionForm({ openForm, onSubmit }: Props) {
               <button
                 type="button"
                 onClick={next}
-                className="rounded-md bg-primaryBlue px-4 py-2 text-sm font-semibold text-white"
+                className={`rounded-md ${Colors.background.special} px-4 py-2 text-sm font-semibold ${Colors.text.primary} cursor-pointer hover:opacity-80 active:scale-95 transition-all`}
               >
                 Continue
               </button>
             ) : (
               <button
                 type="submit"
-                className="rounded-md bg-primaryBlue px-4 py-2 text-sm font-semibold text-white"
+                className={`rounded-md ${Colors.background.special} px-4 py-2 text-sm font-semibold ${Colors.text.primary} cursor-pointer hover:opacity-80 active:scale-95 transition-all`}
               >
                 Create Institution
               </button>
@@ -313,8 +315,9 @@ export default function InstitutionForm({ openForm, onSubmit }: Props) {
 /* ---------- UI Primitives ---------- */
 
 function Label({ children }: { children: React.ReactNode }) {
+    const Colors = useColors();
   return (
-    <label className="text-[11px] uppercase tracking-wide text-primaryBlue">
+    <label className={`${Colors.text.secondary} text-xs uppercase tracking-wide`}>
       {children}
     </label>
   );
@@ -328,6 +331,7 @@ function Input({
   label: string;
   error?: string;
 }) {
+    const Colors = useColors();
   return (
     <div>
       <Label>{label}</Label>
@@ -335,7 +339,7 @@ function Input({
         {...props}
         className={`mt-1 w-full rounded-lg border ${
           error ? "border-red-500" : "border-white/10"
-        } bg-black/30 px-3 py-2 text-sm text-white focus:ring-2 focus:ring-primaryBlue`}
+        } ${Colors.background.primary} ${Colors.text.primary} px-3 py-2 text-sm focus:ring-2 focus:ring-primaryBlue`}
       />
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>

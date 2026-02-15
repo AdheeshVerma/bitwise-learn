@@ -310,16 +310,6 @@ class InstitutionController {
 
       if (!vendorId) throw new Error("institution id is required");
 
-      const dbAdmin = await prismaClient.user.findFirst({
-        where: { id: userId },
-      });
-
-      if (!dbAdmin) throw new Error("no such user found!");
-
-      if (dbAdmin.ROLE !== "ADMIN" && dbAdmin.ROLE !== "SUPERADMIN") {
-        throw new Error("only admin/superadmin can view institutions");
-      }
-
       const institute = await prismaClient.institution.findMany({
         where: {
           createdBy: vendorId as string,

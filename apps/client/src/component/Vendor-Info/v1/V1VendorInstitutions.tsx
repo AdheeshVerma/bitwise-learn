@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import InstitutionForm from "./InstitutionForm";
 import { createInstitution } from "@/api/institutions/create-institution";
 import toast from "react-hot-toast";
+import { useColors } from "@/component/general/(Color Manager)/useColors";
 
 type V1VendorInstitutionsProps = {
   vendorId: string;
@@ -16,6 +17,7 @@ function V1VendorInstitutions({ vendorId }: V1VendorInstitutionsProps) {
   const [data, setData] = useState<any>([]);
   const [addNew, setAddNew] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const Colors = useColors();
 
   useEffect(() => {
     getVendorInstitutions(setData, vendorId);
@@ -44,12 +46,12 @@ function V1VendorInstitutions({ vendorId }: V1VendorInstitutionsProps) {
 
       <div className="w-full">
         <div className="w-full mb-5 flex justify-between">
-          <h1 className="text-3xl ml-3 text-white/60">Manage Institutions</h1>
+          <h1 className={`text-3xl ml-3 ${Colors.text.primary}`}>Manage Institutions</h1>
           <button
             onClick={() => setAddNew(true)}
-            className="text-primaryBlue flex gap-2 border-primaryBlue border p-2 rounded-xl"
+            className={`flex gap-2 ${Colors.text.special} ${Colors.border.specialThick} ${Colors.hover.special} p-2 rounded-lg cursor-pointer hover:opacity-80 active:scale-95 transition-all`}
           >
-            <Plus className="text-primaryBlue" />
+            <Plus className={`${Colors.text.special}`} />
             Add Institution
           </button>
         </div>

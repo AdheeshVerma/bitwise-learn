@@ -63,10 +63,9 @@ function Solution({ content }: any) {
                 shadow-lg
               `}
             >
-              <video
+              <iframe
                 src={content.videoSolution}
                 className="w-full h-full"
-                controls
               />
             </div>
           </div>
@@ -109,7 +108,7 @@ function Solution({ content }: any) {
                 height={700}
                 //@ts-ignore
                 value={content.solution as string}
-                onChange={() => {}}
+                onChange={() => { }}
                 preview="preview"
                 hideToolbar
                 spellCheck
