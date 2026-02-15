@@ -1,10 +1,10 @@
 import React from "react";
-import V1Home from "./V1/V1Home";
+import HomeV2 from "./V2/HomeV2";
 
 function Home() {
   return (
     <div>
-      <V1Home />
+      <HomeV2 />
     </div>
   );
 }

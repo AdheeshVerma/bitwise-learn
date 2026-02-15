@@ -220,3 +220,103 @@ select {
 .animate-scroll > *:hover {
   animation-play-state: paused;
 }
+
+
+
+.title-react {
+  transition: color 0.25s ease, background-color 0.25s ease;
+  padding: 0.08em 0.2em;
+  margin: -0.08em -0.2em;
+  border-radius: 0.2rem;
+}
+.title-react:hover {
+  /* background-color: #fff;
+  color: #000; */
+  scale: 1.05;
+  transition: scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Scroll-triggered transitions – smooth easing, GPU-friendly */
+.scroll-reveal,
+.scroll-reveal-left,
+.scroll-reveal-right,
+.scroll-reveal-scale {
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Pop up: hidden below, then reveal bottom → up on scroll */
+.scroll-reveal {
+  opacity: 0;
+  transform: translate3d(0, 56px, 0);
+  transition: opacity var(--reveal-duration) var(--reveal-ease), transform var(--reveal-duration) var(--reveal-ease);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+/* Same pop-up (bottom to up) for left/right/scale so entire page is consistent */
+.scroll-reveal-left {
+  opacity: 0;
+  transform: translate3d(0, 56px, 0);
+  transition: opacity var(--reveal-duration) var(--reveal-ease), transform var(--reveal-duration) var(--reveal-ease);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-left.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+.scroll-reveal-right {
+  opacity: 0;
+  transform: translate3d(0, 56px, 0);
+  transition: opacity var(--reveal-duration) var(--reveal-ease), transform var(--reveal-duration) var(--reveal-ease);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-right.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+.scroll-reveal-scale {
+  opacity: 0;
+  transform: translate3d(0, 56px, 0);
+  transition: opacity var(--reveal-duration) var(--reveal-ease), transform var(--reveal-duration) var(--reveal-ease);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-scale.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+/* Stagger delays – spread out for slower feel */
+.scroll-stagger-1 { transition-delay: 0.12s; }
+.scroll-stagger-2 { transition-delay: 0.24s; }
+.scroll-stagger-3 { transition-delay: 0.36s; }
+.scroll-stagger-4 { transition-delay: 0.48s; }
+.scroll-stagger-5 { transition-delay: 0.6s; }
+.scroll-stagger-6 { transition-delay: 0.72s; }
+
+/* Companies marquee: right to left */
+@keyframes companies-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.companies-marquee {
+  animation: companies-marquee 40s linear infinite;
+}

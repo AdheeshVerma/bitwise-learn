@@ -293,6 +293,7 @@ class AssessmentController {
           individualSectionTimeLimit: true,
           status: true,
           batchId: true,
+          autoSubmit: true,
           sections: {
             include: {
               questions: true,

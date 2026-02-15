@@ -78,6 +78,7 @@ export default function AttemptV1({
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const intentionalExitRef = useRef(false);
+  const [autoSubmit, setAutoSubmit] = useState(false);
 
   const attemptConfig = {
     label: "Assessment",
@@ -179,6 +180,7 @@ export default function AttemptV1({
         setLoading(true);
         const res = await getAssessmentById(id);
         setAttemptData(normalizeAssessmentData(res.data));
+        setAutoSubmit(res.data.autoSubmit);
       } catch {
         toast.error("Assessment not found");
       } finally {
@@ -208,15 +210,21 @@ export default function AttemptV1({
     });
   });
 
-  const tabSwitchCount = useTabSwitchCounter(started);
-  useEffect(() => {
-    if (tabSwitchCount >= 3) {
-      toast.error("Too many tab switches");
-      if (assessment.autoSubmit) {
-        router.push(attemptConfig.redirectPath);
-      }
-    }
-  }, [tabSwitchCount]);
+  const isProctoringEnabled = started && autoSubmit;
+
+  const tabSwitchCount = useTabSwitchCounter(isProctoringEnabled);
+useEffect(() => {
+  if (!autoSubmit) return;
+
+  if (tabSwitchCount >= 3) {
+    toast.error("Too many tab switches. Auto-submitting...");
+    
+    submitTest(id, { tabSwitchCount }).then(() => {
+      router.push(attemptConfig.redirectPath);
+    });
+  }
+}, [tabSwitchCount, autoSubmit]);
+
 
   useAntiCheatControls(started);
 
