@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import cloudinaryService from "../service/cloudinary.service";
+import cloudinaryService from "../service/s3.service";
 import apiResponse from "../utils/apiResponse";
 import prismaClient from "../utils/prisma";
 import type { CourseContentBody, updateCourseContent } from "../utils/type";

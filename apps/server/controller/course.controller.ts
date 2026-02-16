@@ -2,7 +2,8 @@ import type { Request, Response } from "express";
 import apiResponse from "../utils/apiResponse";
 import prismaClient from "../utils/prisma";
 import type { CourseBody, UpdateCourse } from "../utils/type";
-import cloudinaryService from "../service/cloudinary.service";
+import cloudinaryService from "../service/s3.service";
+// import  from "../service/cloudinary.service";
 
 /**
  * this module is reponsible for creating courses and course sections
@@ -149,68 +150,65 @@ class CoursesController {
       return res.status(200).json(apiResponse(500, error.message, null));
     }
   }
-async changePublishStatus(req: Request, res: Response) {
-  try {
-    const courseId = req.params.id;
-    if (!courseId) throw new Error("courseId is required");
+  async changePublishStatus(req: Request, res: Response) {
+    try {
+      const courseId = req.params.id;
+      if (!courseId) throw new Error("courseId is required");
 
-    const course = await prismaClient.course.findUnique({
-      where: { id: courseId },
-    });
+      const course = await prismaClient.course.findUnique({
+        where: { id: courseId as string },
+      });
 
-    if (!course) throw new Error("Course not found");
+      if (!course) throw new Error("Course not found");
 
-    const isUnpublishing = course.isPublished === "PUBLISHED";
-    const newStatus = isUnpublishing ? "NOT_PUBLISHED" : "PUBLISHED";
+      const isUnpublishing = course.isPublished === "PUBLISHED";
+      const newStatus = isUnpublishing ? "NOT_PUBLISHED" : "PUBLISHED";
 
-    await prismaClient.$transaction(async (tx) => {
-      if (isUnpublishing) {
-        const enrollments = await tx.courseEnrollment.findMany({
-          where: { courseId },
-          select: { batchId: true },
-        });
-
-        const batchIds = enrollments.map((e) => e.batchId);
-
-        if (batchIds.length > 0) {
-          const students = await tx.student.findMany({
-            where: { batchId: { in: batchIds } },
-            select: { id: true },
+      await prismaClient.$transaction(async (tx) => {
+        if (isUnpublishing) {
+          const enrollments = await tx.courseEnrollment.findMany({
+            where: { courseId: courseId as string },
+            select: { batchId: true },
           });
 
-          const studentIds = students.map((s) => s.id);
+          const batchIds = enrollments.map((e) => e.batchId);
 
-          if (studentIds.length > 0) {
-            await tx.courseEnrollment.deleteMany({
-              where: {
-                courseId
-              },
+          if (batchIds.length > 0) {
+            const students = await tx.student.findMany({
+              where: { batchId: { in: batchIds } },
+              select: { id: true },
             });
+
+            const studentIds = students.map((s) => s.id);
+
+            if (studentIds.length > 0) {
+              await tx.courseEnrollment.deleteMany({
+                where: {
+                  courseId: courseId as string,
+                },
+              });
+            }
           }
         }
-      }
 
-      await tx.course.update({
-        where: { id: courseId },
-        data: {
-          isPublished: isUnpublishing ? "NOT_PUBLISHED" : "PUBLISHED",
-        },
+        await tx.course.update({
+          where: { id: courseId as string },
+          data: {
+            isPublished: isUnpublishing ? "NOT_PUBLISHED" : "PUBLISHED",
+          },
+        });
       });
-    });
 
-    return res
-      .status(200)
-      .json(apiResponse(200, "Publish status updated", {
-        isPublished:newStatus==="PUBLISHED"
-      }));
-  } catch (error: any) {
-    console.error("changePublishStatus error:", error);
-    return res
-      .status(500)
-      .json(apiResponse(500, error.message, null));
+      return res.status(200).json(
+        apiResponse(200, "Publish status updated", {
+          isPublished: newStatus === "PUBLISHED",
+        }),
+      );
+    } catch (error: any) {
+      console.error("changePublishStatus error:", error);
+      return res.status(500).json(apiResponse(500, error.message, null));
+    }
   }
-}
-
 
   async updateCourse(req: Request, res: Response) {
     try {

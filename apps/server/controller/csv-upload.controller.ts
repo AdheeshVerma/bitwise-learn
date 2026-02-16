@@ -303,11 +303,12 @@ class CSVUploader {
 
       for (const row of rows) {
         const question = row.question?.trim();
-        let options = row.options.split("|");
         const correct = row.correctAnswer;
-        options = options.map((opt: string) => {
-          return opt.trim();
-        });
+        let options = [];
+        options.push(row.option1.trim() ?? "");
+        options.push(row.option2.trim() ?? "");
+        options.push(row.option3.trim() ?? "");
+        options.push(row.option4.trim() ?? "");
 
         if (!question || !options || !correct) {
           skipped.push({ row, reason: "missing required fields" });
@@ -390,7 +391,11 @@ class CSVUploader {
         const rowNumber = index + 2; // Excel header = row 1
 
         const question = row.question?.trim();
-        let optionsRaw = row.options.split("|");
+        let optionsRaw = [];
+        optionsRaw.push(row.option1.trim() ?? "");
+        optionsRaw.push(row.option2.trim() ?? "");
+        optionsRaw.push(row.option3.trim() ?? "");
+        optionsRaw.push(row.option4.trim() ?? "");
         const correctOption = row.correctAnswer?.trim();
         const maxMarks = dbSection.marksPerQuestion;
         optionsRaw = optionsRaw.map((opt: string) => opt.trim());

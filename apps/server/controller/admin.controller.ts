@@ -3,8 +3,6 @@ import { hashPassword } from "../utils/password";
 import apiResponse from "../utils/apiResponse";
 import prismaClient from "../utils/prisma";
 import type { CreateAdminBody, UpdateAdminBody } from "../utils/type";
-import { createAbstractBuilder } from "typescript";
-import cloudinaryService from "../service/cloudinary.service";
 import { handleSendMail } from "../utils/nodemailer/mailHandler";
 import { generatePassword } from "../utils/nodemailer/GeneratePass";
 class AdminController {
@@ -77,7 +75,7 @@ class AdminController {
 
       const admin = await prismaClient.user.findFirst({
         where: {
-          id: adminId,
+          id: adminId as string,
           ROLE: "ADMIN",
         },
       });
@@ -93,7 +91,7 @@ class AdminController {
       }
 
       const updatedAdmin = await prismaClient.user.update({
-        where: { id: adminId },
+        where: { id: adminId as string },
         data: {
           name: data.name ?? admin.name,
           email: data.email ?? admin.email,
@@ -141,7 +139,7 @@ class AdminController {
       const admin = await prismaClient.user.findFirst({
         where: {
           ROLE: "ADMIN",
-          id: adminId,
+          id: adminId as string,
         },
       });
       if (!admin) throw new Error("admin not found");
@@ -149,7 +147,7 @@ class AdminController {
         throw new Error("superadmin cannot delete themselves");
       }
       const deletedAdmin = await prismaClient.user.delete({
-        where: { id: adminId },
+        where: { id: adminId as string },
       });
       if (!deletedAdmin) throw new Error("Error deleting admin");
       return res
@@ -219,7 +217,7 @@ class AdminController {
       const admin = await prismaClient.user.findFirst({
         where: {
           ROLE: "ADMIN",
-          id: adminId,
+          id: adminId as string,
         },
         select: {
           id: true,
