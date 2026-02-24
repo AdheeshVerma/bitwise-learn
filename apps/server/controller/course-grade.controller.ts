@@ -189,7 +189,7 @@ class CourseGradeController {
       const assignmentId = req.params.id;
       const data: GradesBody[] = req.body;
       const studentId = req.user?.id;
-
+      console.log(data);
       if (!assignmentId) throw new Error("assignmentId is required");
       if (!studentId) throw new Error("no new student found");
       if (!Array.isArray(data) || data.length === 0)
@@ -199,6 +199,7 @@ class CourseGradeController {
         where: { id: studentId },
       });
       if (!dbStudent) throw new Error("no such student found");
+
       const dbAssignment = await prismaClient.courseAssignemnt.findUnique({
         where: { id: assignmentId as string },
       });
@@ -206,46 +207,49 @@ class CourseGradeController {
 
       const createdSubmissions: any[] = [];
 
-      await prismaClient.$transaction(async (tx) => {
-        for (const submission of data) {
-          if (!submission.questionId || !submission.answer) {
-            throw new Error("questionId and answer are required");
-          }
+      for (const submission of data) {
+        if (!submission.questionId || !submission.answer) {
+          throw new Error("questionId and answer are required");
+        }
 
-          // check if already submitted
-          const alreadySubmitted =
-            await tx.courseAssignemntSubmission.findFirst({
-              where: {
-                questionId: submission.questionId,
-                studentId: dbStudent.id,
-              },
-            });
+        console.log(submission);
 
-          if (alreadySubmitted) continue;
+        // check if already submitted
+        const alreadySubmitted =
+          await prismaClient.courseAssignemntSubmission.findFirst({
+            where: {
+              questionId: submission.questionId,
+              studentId: dbStudent.id,
+            },
+          });
+        console.log(alreadySubmitted);
+        if (alreadySubmitted) continue;
 
-          // fetch question with assignment for evaluation
-          const dbQuestion = await tx.courseAssignemntQuestion.findUnique({
+        // fetch question with assignment for evaluation
+        const dbQuestion =
+          await prismaClient.courseAssignemntQuestion.findUnique({
             where: { id: submission.questionId },
             include: {
               assignment: true,
             },
           });
 
-          if (!dbQuestion) throw new Error("question not found");
+        if (!dbQuestion) throw new Error("question not found");
+        console.log(dbQuestion);
+        // evaluation logic
+        const correctAnswers = dbQuestion.correctAnswer.sort();
+        const submittedAnswers = submission.answer.sort();
 
-          // evaluation logic
-          const correctAnswers = dbQuestion.correctAnswer.sort();
-          const submittedAnswers = submission.answer.sort();
+        const isCorrect =
+          correctAnswers.length === submittedAnswers.length &&
+          correctAnswers.every((ans, idx) => ans === submittedAnswers[idx]);
 
-          const isCorrect =
-            correctAnswers.length === submittedAnswers.length &&
-            correctAnswers.every((ans, idx) => ans === submittedAnswers[idx]);
+        const marksObtained = isCorrect
+          ? Number(dbQuestion.assignment.marksPerQuestion)
+          : 0;
 
-          const marksObtained = isCorrect
-            ? Number(dbQuestion.assignment.marksPerQuestion)
-            : 0;
-
-          const createdSubmission = await tx.courseAssignemntSubmission.create({
+        const createdSubmission =
+          await prismaClient.courseAssignemntSubmission.create({
             data: {
               questionId: dbQuestion.id,
               studentId: dbStudent.id,
@@ -256,9 +260,9 @@ class CourseGradeController {
             },
           });
 
-          createdSubmissions.push(createdSubmission);
-        }
-      });
+        console.log(createdSubmission);
+        createdSubmissions.push(createdSubmission);
+      }
 
       return res
         .status(200)

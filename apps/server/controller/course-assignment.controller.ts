@@ -177,7 +177,10 @@ class CourseAssignmentController {
     try {
       if (!req.user) throw new Error("user not authenticated");
 
+      const studentId = req.user.id;
       const assignmentId = req.params.id;
+
+      if (!assignmentId) throw new Error("Assignment ID is Required !");
 
       const assignment = await prismaClient.courseAssignemnt.findUnique({
         where: {
@@ -185,15 +188,22 @@ class CourseAssignmentController {
         },
         include: {
           courseAssignemntQuestions: true,
+          courseAssignemntSubmissions: {
+            where: {
+              studentId: studentId,
+            },
+            select: {
+              id: true,
+            },
+          },
         },
       });
-
-      console.log(assignment)
 
       if (!assignment) throw new Error("assignment not found");
 
       const mappedAssignment = {
         ...assignment,
+        isAttempted: assignment.courseAssignemntSubmissions.length > 0,
       };
 
       return res
@@ -336,6 +346,65 @@ class CourseAssignmentController {
     } catch (error: any) {
       console.log(error);
       return res.status(200).json(apiResponse(500, error.message, null));
+    }
+  }
+  async getStudentAssignmentsFromSection(req: Request, res: Response) {
+    try {
+      if (!req.user) throw new Error("User not authenticated");
+
+      const studentId = req.user?.id;
+      const couresId = req.params.id;
+
+      if (!couresId) throw new Error("sectionId is required");
+      const dbSection = await prismaClient.courseSections.findMany({
+        where: {
+          courseId:couresId
+        },
+      });
+      if (!dbSection) throw new Error("section id not found");
+      console.log(dbSection);
+      let assignemnts = [];
+      for(let i=0;i<dbSection.length;i++){
+
+        const data = await prismaClient.courseAssignemnt.findMany({
+          where: {
+            sectionId:dbSection[i]?.id,
+          },
+        });
+
+        assignemnts.push(...data);
+      }
+
+      console.log(assignemnts);
+      const assignmentSubmission = [];
+      for (let i = 0; i < assignemnts.length; i++) {
+        const data = await prismaClient.courseAssignemntSubmission.findFirst({
+          where: {
+            studentId,
+            assignmentId: assignemnts[0]?.id,
+          },
+        });
+        if (data) {
+          assignmentSubmission.push({
+            assignmentId: assignemnts[0]?.id,
+            isSubmitted: true,
+          });
+        } else {
+          assignmentSubmission.push({
+            assignmentId: assignemnts[0]?.id,
+            isSubmitted: false,
+          });
+        }
+      }
+      console.log(assignmentSubmission);
+      return res
+        .status(200)
+        .json(
+          apiResponse(200, "student assignments fetched", assignmentSubmission),
+        );
+    } catch (error: any) {
+      console.log(error);
+      return res.status(500).json(apiResponse(500, error.message, null));
     }
   }
 }

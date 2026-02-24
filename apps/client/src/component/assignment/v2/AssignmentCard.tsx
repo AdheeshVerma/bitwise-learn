@@ -67,18 +67,20 @@ export default function AssignmentCard({
         </div>
 
         <button
-          disabled={assignment.status === "UPCOMING"}
+          disabled={assignment.status === "UPCOMING" || assignment.isAttempted}
           onClick={() => setOpen(true)}
           className={`
-            mt-auto w-full rounded-md py-2 text-sm font-medium
-            ${Colors.background.special} ${Colors.text.primary}
-            hover:opacity-90 transition
-            disabled:opacity-50 disabled:cursor-not-allowed
-          `}
+    mt-auto w-full rounded-md py-2 text-sm font-medium
+    ${Colors.background.special} ${Colors.text.primary}
+    hover:opacity-90 transition
+    disabled:opacity-50 disabled:cursor-not-allowed
+  `}
         >
-          {assignment.status === "ENDED"
-            ? "View Assignment"
-            : "Start Assignment"}
+          {assignment.isAttempted
+            ? "Assignment Attempted"
+            : assignment.status === "ENDED"
+              ? "View Assignment"
+              : "Start Assignment"}
         </button>
       </motion.div>
 

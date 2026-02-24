@@ -67,6 +67,7 @@ function AttemptAssignmentV1({ assignmentId }: { assignmentId: string }) {
       ...prev,
       [currentQuestion.id]: [option], // MCQ
     }));
+    console.log(answers);
   }
 
   function toggleReview(questionId: string) {
@@ -92,6 +93,7 @@ function AttemptAssignmentV1({ assignmentId }: { assignmentId: string }) {
         questionId: q.id,
         answer: answers[q.id],
       }));
+    console.log(payload);
 
     if (payload.length === 0) {
       alert("No answers selected");
@@ -103,7 +105,7 @@ function AttemptAssignmentV1({ assignmentId }: { assignmentId: string }) {
     await submitAssignment(assignmentId, payload);
     setLoading(false);
 
-    router.push(`/courses/${params.id}`);
+    // router.push(`/courses/${params.id}`);
     setShowReviewScreen(false);
   }
 
@@ -169,8 +171,12 @@ function AttemptAssignmentV1({ assignmentId }: { assignmentId: string }) {
   return (
     <div className={`flex h-screen ${Colors.background.secondary}`}>
       {/* SIDEBAR */}
-      <div className={`w-64 ${Colors.background.primary} border-r p-4 overflow-y-auto`}>
-        <h3 className={`font-semibold mb-4 ${Colors.text.primary}`}>Questions</h3>
+      <div
+        className={`w-64 ${Colors.background.primary} border-r p-4 overflow-y-auto`}
+      >
+        <h3 className={`font-semibold mb-4 ${Colors.text.primary}`}>
+          Questions
+        </h3>
 
         <div className="space-y-2">
           {questions.map((q: any, idx: number) => {
@@ -182,9 +188,10 @@ function AttemptAssignmentV1({ assignmentId }: { assignmentId: string }) {
                 key={q.id}
                 onClick={() => setCurrentIndex(idx)}
                 className={`flex justify-between px-3 py-2 rounded cursor-pointer
-                  ${idx === currentIndex
-                    ? `${Colors.background.secondary} ${Colors.text.primary}`
-                    : `${Colors.hover.textSpecial}`
+                  ${
+                    idx === currentIndex
+                      ? `${Colors.background.primary} ${Colors.text.primary}`
+                      : `${Colors.hover.textSpecial} ${Colors.text.primary}`
                   }`}
               >
                 <span>Q{idx + 1}</span>
@@ -201,7 +208,9 @@ function AttemptAssignmentV1({ assignmentId }: { assignmentId: string }) {
       {/* CONTENT */}
       <div className="flex-1 p-8">
         <div className="flex justify-between mb-4">
-          <h2 className={`text-xl ${Colors.text.secondary} font-semibold`}>{assignment.name}</h2>
+          <h2 className={`text-xl ${Colors.text.secondary} font-semibold`}>
+            {assignment.name}
+          </h2>
           <span className="font-mono text-red-600">
             ⏱ {formatTime(timeLeft)}
           </span>
@@ -222,7 +231,9 @@ function AttemptAssignmentV1({ assignmentId }: { assignmentId: string }) {
             </button>
           </div>
 
-          <p className={`mb-4 ${Colors.text.secondary}`}>{currentQuestion.question}</p>
+          <p className={`mb-4 ${Colors.text.secondary}`}>
+            {currentQuestion.question}
+          </p>
 
           <div className="space-y-3">
             {currentQuestion.options.map((opt: string) => {
@@ -234,9 +245,10 @@ function AttemptAssignmentV1({ assignmentId }: { assignmentId: string }) {
                   onClick={() => handleOptionSelect(opt)}
                   className={`p-3 border rounded cursor-pointer ${Colors.background.secondary}
                               ${Colors.text.primary}
-                    ${selected
-                      ? `${Colors.background.heroSecondaryFaded} ${Colors.border.defaultThick}`
-                      : `${Colors.hover.textSpecial}`
+                    ${
+                      selected
+                        ? `${Colors.background.heroSecondaryFaded} ${Colors.border.defaultThick}`
+                        : `${Colors.hover.textSpecial}`
                     }`}
                 >
                   {opt}
