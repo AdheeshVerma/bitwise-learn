@@ -24,6 +24,7 @@ import Assignment from "@/component/assignment/Assignment";
 import { getCourseProgressById } from "@/api/courses/course/course-progress-by-id";
 import createCertificate from "@/lib/certificate";
 import { useStudent } from "@/store/studentStore";
+import { getStudentAssignmentsBySection } from "@/api/courses/assignment/get-student-section-assignment";
 
 /* ================= TYPES ================= */
 
@@ -77,6 +78,8 @@ export default function CourseV2() {
   const [completedSection, setCompletedSection] = useState<{ id: string }[]>(
     [],
   );
+  const [completedAssignment, setCompletedAssignment] =
+    useState<Record<string, boolean>>();
   const [showSidebar, setShowSidebar] = useState(true);
   const [pdfMode, setPdfMode] = useState(false);
 
@@ -121,15 +124,26 @@ export default function CourseV2() {
       if (!params.id) return;
 
       const res = await getCourseProgressById(params.id as string);
+      // console.log(res.data);
       const progress = res.data;
+      // console.log(res);
       if (!progress || !progress.completedContentIds) {
         setCompletedSection([]);
-        return;
       }
-
-      setCompletedSection(
-        progress.completedContentIds.map((id: string) => ({ id })),
+      // console.log("calling get assignemnt");
+      const assignmentData = await getStudentAssignmentsBySection(
+        params.id as string,
       );
+      // console.log(assignmentData);
+      // console.log("iterating over it");
+      const map = {};
+      for (let i = 0; i < assignmentData.length; i++) {
+        //@ts-ignore
+        map[assignmentData[i].assignmentId] = assignmentData[i].isSubmitted;
+      }
+      // console.log("iterating ended");
+      // console.log(map);
+      setCompletedAssignment(map);
     }
 
     fetchProgress();
@@ -396,6 +410,7 @@ export default function CourseV2() {
                 assignments={
                   activeAssignment ? [activeAssignment] : allAssignments
                 }
+                map={completedAssignment as any}
               />
             )}
           </div>

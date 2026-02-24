@@ -9,6 +9,7 @@ export type BackendAssignment = {
   description: string;
   instruction: string;
   marksPerQuestion: number;
+  isAttempted: boolean;
 };
 
 export type AssignmentCardData = {
@@ -18,12 +19,15 @@ export type AssignmentCardData = {
   totalMarks: number;
   durationInMinutes: number;
   status: "UPCOMING" | "LIVE" | "ENDED";
+  isAttempted: boolean;
 };
 
 export default function AssignmentV2({
   assignments = [],
+  map = {},
 }: {
   assignments?: BackendAssignment[];
+  map: Object;
 }) {
   useEffect(() => {}, [assignments]);
 
@@ -37,7 +41,7 @@ export default function AssignmentV2({
 
   const mappedAssignments: AssignmentCardData[] = assignments.map((a) => {
     const totalMarks = a.marksPerQuestion;
-
+    console.log(map);
     return {
       id: a.id,
       name: a.name,
@@ -45,6 +49,8 @@ export default function AssignmentV2({
       totalMarks,
       durationInMinutes: totalMarks * 2,
       status: "LIVE",
+      //@ts-ignore
+      isAttempted: map[a.id] !== undefined ? true : false,
     };
   });
 

@@ -218,4 +218,16 @@ router.get(
   authMiddleware,
   courseController.getStudentCourses,
 );
+
+router.get(
+  "/listed-courses",
+  courseController.getAllListedCourses
+);
+
+router.get(
+  "/get-student-section-assignments/:id",
+  authMiddleware,
+  courseAssignmentController.getStudentAssignmentsFromSection,
+);
+
 export default router;

@@ -628,6 +628,29 @@ class CoursesController {
       return res.status(200).json(apiResponse(500, error.message, null));
     }
   }
+  async getAllListedCourses(req:Request,res:Response){
+    try {
+      const courses = await prismaClient.course.findMany({
+        where:{
+          isPublished:"PUBLISHED"
+        }
+      });
+  
+      if(courses.length === 0){
+        return res
+        .status(200)
+        .json(apiResponse(200,"No Courses Yet !",null));
+      }
+      return res
+      .status(200)
+      .json(apiResponse(200,"Courses : ",courses));
+    } catch (error:any) {
+      console.log(error);
+      return res
+      .status(200)
+      .json(apiResponse(500,error.message,null));
+    }
+  }
 }
 
 export default new CoursesController();
